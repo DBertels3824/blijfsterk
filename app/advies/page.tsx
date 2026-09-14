@@ -79,65 +79,75 @@ export default function AdviesPagina() {
   };
 
   return (
-    <div style={{ maxWidth: 680, margin: '0 auto', padding: '28px 24px', display: 'flex', flexDirection: 'column', height: '82vh' }}>
+    <div style={{ maxWidth: 560, margin: '0 auto', display: 'flex', flexDirection: 'column', height: '85vh' }}>
 
-      <div style={{ textAlign: 'center', marginBottom: 20 }}>
-        <div style={{ fontSize: 12.5, fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase', color: '#B7A88F' }}>
-          Jouw coach
+      {/* header */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '20px 20px 16px', borderBottom: '1px solid #F3E4C8', background: '#FFFFFF' }}>
+        <div
+          style={{
+            width: 44, height: 44, borderRadius: 999, flexShrink: 0,
+            background: 'linear-gradient(135deg,#FFBE0A,#FF8601)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontWeight: 800, color: '#3A1E00',
+          }}
+        >
+          S
         </div>
-        <div style={{ fontSize: 13.5, color: '#B9601A', fontWeight: 500, marginTop: 4 }}>
-          Kleine stappen, veel plezier in bewegen en goed eten.
+        <div>
+          <div style={{ fontWeight: 700, fontSize: 16 }}>Sam, jouw AI-coach</div>
+          <div style={{ fontSize: 13, color: '#8A7561' }}>Training &amp; voeding</div>
         </div>
       </div>
 
-      <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 16, padding: '4px 0' }}>
+      {/* messages */}
+      <div style={{ flex: 1, overflowY: 'auto', padding: 20, display: 'flex', flexDirection: 'column', gap: 14 }}>
         {laden && <p style={{ color: '#8A7561', fontSize: 14.5 }}>Even denken...</p>}
 
         {berichten.map((bericht, i) => (
-          <div key={i} style={{ alignSelf: bericht.role === 'user' ? 'flex-end' : 'flex-start', maxWidth: '85%' }}>
+          <div key={i} style={{ alignSelf: bericht.role === 'user' ? 'flex-end' : 'flex-start', maxWidth: '84%' }}>
             {bericht.role === 'assistant' && bericht.agent && (
-              <div style={{ fontSize: 11, fontWeight: 600, color: '#E85D00', textTransform: 'uppercase', marginBottom: 4, letterSpacing: '.04em' }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: '#E85D00', textTransform: 'uppercase', marginBottom: 4, letterSpacing: '.04em' }}>
                 {bericht.agent}
               </div>
             )}
-            <div
-              style={{
-                background: bericht.role === 'user' ? 'linear-gradient(135deg,#FF8601,#E85D00)' : '#FFFFFF',
-                border: bericht.role === 'user' ? 'none' : '1px solid #F3E4C8',
-                color: bericht.role === 'user' ? '#FFF8EE' : '#2B1B0E',
-                padding: '14px 18px',
-                borderRadius: bericht.role === 'user' ? '16px 4px 16px 16px' : '4px 16px 16px 16px',
-                whiteSpace: 'pre-line',
-                lineHeight: 1.6,
-                fontSize: 15,
-              }}
-            >
-              {bericht.content}
-            </div>
+            {bericht.role === 'assistant' ? (
+              <div style={{ background: '#FFFFFF', border: '1px solid #F3E4C8', borderRadius: '20px 20px 20px 6px', padding: '16px 18px', whiteSpace: 'pre-line', lineHeight: 1.6, fontSize: 15 }}>
+                {bericht.content}
+              </div>
+            ) : (
+              <div style={{ background: '#E85D00', color: '#FFFFFF', borderRadius: '20px 20px 6px 20px', padding: '14px 18px', fontWeight: 500, whiteSpace: 'pre-line', lineHeight: 1.6, fontSize: 15 }}>
+                {bericht.content}
+              </div>
+            )}
           </div>
         ))}
         <div ref={eindeRef}></div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 18, padding: '6px 6px 6px 18px', background: '#FFFFFF', border: '1px solid #F3E4C8', borderRadius: 16 }}>
+      {/* input */}
+      <div style={{ display: 'flex', gap: 10, padding: '14px 16px 20px', borderTop: '1px solid #F3E4C8', background: '#FFFFFF' }}>
         <input
           value={invoer}
           onChange={(e) => setInvoer(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && versturenHandler()}
-          placeholder="Stel een vraag aan je coach..."
-          style={{ flex: 1, padding: '10px 0', border: 'none', outline: 'none', fontSize: 15, background: 'transparent' }}
+          placeholder="Typ je vraag..."
+          style={{
+            fontFamily: 'inherit', fontSize: 16, width: '100%', minHeight: 52,
+            borderRadius: 999, border: '2px solid #F3E4C8', background: '#FFF8EE',
+            padding: '0 20px', color: '#2B1B0E',
+          }}
         />
         <button
           onClick={versturenHandler}
           disabled={versturen}
           style={{
-            padding: '11px 22px', borderRadius: 12, border: 'none',
-            background: 'linear-gradient(135deg,#FF8601,#E85D00)', color: '#FFF8EE',
-            fontWeight: 600, fontSize: 14.5, cursor: versturen ? 'default' : 'pointer',
-            opacity: versturen ? 0.7 : 1,
+            width: 52, height: 52, borderRadius: 999, border: 'none', flexShrink: 0,
+            background: 'linear-gradient(135deg,#FFBE0A,#FF8601)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            cursor: versturen ? 'default' : 'pointer', opacity: versturen ? 0.7 : 1,
           }}
         >
-          Stuur
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 20l16-8L4 4v6l10 2-10 2v6z" fill="#3A1E00" /></svg>
         </button>
       </div>
     </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
@@ -17,13 +18,22 @@ type GekozenPersoon = {
 };
 
 function initialen(naam: string) {
-  return naam
-    .split(' ')
-    .map((deel) => deel[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase();
+  return naam.split(' ').map((d) => d[0]).join('').slice(0, 2).toUpperCase();
 }
+
+function groet() {
+  const uur = new Date().getHours();
+  if (uur < 12) return 'Goedemorgen';
+  if (uur < 18) return 'Goedemiddag';
+  return 'Goedenavond';
+}
+
+const card: CSSProperties = {
+  borderRadius: 24,
+  border: '2px solid #F3E4C8',
+  background: '#FFFFFF',
+  padding: 20,
+};
 
 export default function DashboardPagina() {
   const router = useRouter();
@@ -76,137 +86,154 @@ export default function DashboardPagina() {
   if (laden) return <p style={{ padding: 24 }}>Laden...</p>;
 
   return (
-    <div style={{ maxWidth: 1000, margin: '0 auto', padding: '40px 24px 100px' }}>
+    <div style={{ maxWidth: 480, margin: '0 auto', padding: '24px 20px 60px' }}>
 
-      {/* Welkomstbanner */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '24px 28px',
-          background: '#FFF1DC',
-          borderRadius: 20,
-          marginBottom: 36,
-          gap: 16,
-          flexWrap: 'wrap',
-        }}
-      >
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
         <div>
-          <h1 style={{ margin: '0 0 4px', fontSize: 24 }}>
-            Welkom terug{naam ? `, ${naam}` : ''}
-          </h1>
-          <p style={{ margin: 0, fontSize: 14.5, color: '#5A4636' }}>
-            Goed dat je er weer bent — elke stap telt.
-          </p>
+          <p style={{ color: '#8A7561', fontSize: 14, margin: 0 }}>{groet()}</p>
+          <h1 style={{ fontSize: 24, margin: '2px 0 0' }}>{naam || 'daar'}</h1>
+        </div>
+        <div
+          style={{
+            width: 48, height: 48, borderRadius: 999, flexShrink: 0,
+            background: 'linear-gradient(135deg,#FFBE0A,#FF8601)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontWeight: 800, color: '#3A1E00', fontSize: 17,
+          }}
+        >
+          {naam ? naam[0].toUpperCase() : '?'}
         </div>
       </div>
 
-      {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 40 }}>
-        <div style={{ padding: 20, background: '#FFFFFF', border: '1px solid #F3E4C8', borderRadius: 16 }}>
-          <div style={{ fontSize: 12.5, fontWeight: 600, color: '#8A7561', marginBottom: 8 }}>Trainingen gelogd</div>
-          <div style={{ fontSize: 28, fontWeight: 700, color: '#E85D00' }}>{aantalTrainingen}</div>
-        </div>
-        <div style={{ padding: 20, background: '#FFFFFF', border: '1px solid #F3E4C8', borderRadius: 16 }}>
-          <div style={{ fontSize: 12.5, fontWeight: 600, color: '#8A7561', marginBottom: 8 }}>Jouw doel</div>
-          <div style={{ fontSize: 15.5, fontWeight: 600, color: '#2B1B0E' }}>{profiel?.doel || 'nog niet ingevuld'}</div>
-        </div>
-        <div style={{ padding: 20, background: '#FFFFFF', border: '1px solid #F3E4C8', borderRadius: 16 }}>
-          <div style={{ fontSize: 12.5, fontWeight: 600, color: '#8A7561', marginBottom: 8 }}>Ervaring</div>
-          <div style={{ fontSize: 15.5, fontWeight: 600, color: '#2B1B0E' }}>{profiel?.ervaring || 'nog niet ingevuld'}</div>
-        </div>
-      </div>
-
-      {/* Begeleiding */}
-      <div style={{ fontSize: 17, fontWeight: 700, marginBottom: 16 }}>Jouw begeleiding</div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16, marginBottom: 40 }}>
-
-        <div style={{ padding: 20, background: '#FFFFFF', border: '1px solid #F3E4C8', borderRadius: 16, display: 'flex', gap: 14, alignItems: 'center' }}>
+      {/* Voortgang */}
+      <div style={{ ...card, marginBottom: 20 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
           <div
             style={{
-              width: 52, height: 52, borderRadius: '50%', flex: '0 0 auto',
-              background: trainer ? 'linear-gradient(135deg,#FFBE0A,#FF8601)' : '#FFF1DC',
-              border: trainer ? 'none' : '1px solid #F3E4C8',
+              width: 64, height: 64, borderRadius: 999, flexShrink: 0,
+              background: '#FFF1DC', border: '2px solid #F3E4C8',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 17, fontWeight: 700, color: trainer ? '#FFF8EE' : '#B9601A',
+              fontWeight: 800, fontSize: 19, color: '#E85D00',
+            }}
+          >
+            {aantalTrainingen}
+          </div>
+          <div>
+            <p style={{ fontWeight: 700, fontSize: 16, margin: 0 }}>
+              {aantalTrainingen === 1 ? 'Training gelogd' : 'Trainingen gelogd'}
+            </p>
+            <p style={{ color: '#8A7561', fontSize: 14, marginTop: 4 }}>
+              {aantalTrainingen === 0 ? 'Zet vandaag de eerste stap.' : 'Goed bezig — blijf dit volhouden.'}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Team */}
+      <p style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#8A7561', marginBottom: 12 }}>
+        Jouw team
+      </p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 24 }}>
+
+        <div style={{ ...card, padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 14 }}>
+          <div
+            style={{
+              width: 52, height: 52, borderRadius: 16, flexShrink: 0,
+              background: trainer ? 'linear-gradient(135deg,#FFBE0A,#FF8601)' : '#FFF1DC',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontWeight: 700, fontSize: 15, color: trainer ? '#3A1E00' : '#B9601A',
             }}
           >
             {trainer ? initialen(trainer.naam) : '?'}
           </div>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.04em', textTransform: 'uppercase', color: '#B9601A', marginBottom: 2 }}>
-              Jouw trainer
-            </div>
-            {trainer ? (
-              <>
-                <div style={{ fontSize: 16, fontWeight: 700 }}>{trainer.naam}</div>
-                <div style={{ fontSize: 13, color: '#8A7561' }}>{trainer.plaats} &middot; {trainer.specialisatie}</div>
-              </>
-            ) : (
-              <Link href="/matching" style={{ fontSize: 13.5, fontWeight: 600 }}>Nog geen trainer — kies er een &rarr;</Link>
-            )}
+            <p style={{ margin: 0, fontWeight: 700 }}>{trainer ? trainer.naam : 'Nog geen trainer'}</p>
+            <p style={{ margin: '2px 0 0', color: '#8A7561', fontSize: 13 }}>
+              {trainer ? `${trainer.plaats} · ${trainer.specialisatie}` : 'Jouw trainer'}
+            </p>
           </div>
+          <Link
+            href="/matching"
+            style={{
+              fontFamily: 'inherit', fontWeight: 700, fontSize: 13, borderRadius: 999,
+              border: '2px solid #F3E4C8', background: '#FFFFFF', minHeight: 36,
+              padding: '0 14px', display: 'inline-flex', alignItems: 'center', color: '#2B1B0E',
+            }}
+          >
+            {trainer ? 'Bekijk' : 'Kies'}
+          </Link>
         </div>
 
-        <div style={{ padding: 20, background: '#FFFFFF', border: '1px solid #F3E4C8', borderRadius: 16, display: 'flex', gap: 14, alignItems: 'center' }}>
+        <div style={{ ...card, padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 14 }}>
           <div
             style={{
-              width: 52, height: 52, borderRadius: '50%', flex: '0 0 auto',
+              width: 52, height: 52, borderRadius: 16, flexShrink: 0,
               background: voedingsdeskundige ? 'linear-gradient(135deg,#FFBE0A,#FF8601)' : '#FFF1DC',
-              border: voedingsdeskundige ? 'none' : '1px solid #F3E4C8',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 17, fontWeight: 700, color: voedingsdeskundige ? '#FFF8EE' : '#B9601A',
+              fontWeight: 700, fontSize: 15, color: voedingsdeskundige ? '#3A1E00' : '#B9601A',
             }}
           >
             {voedingsdeskundige ? initialen(voedingsdeskundige.naam) : '?'}
           </div>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.04em', textTransform: 'uppercase', color: '#B9601A', marginBottom: 2 }}>
-              Jouw voedingsdeskundige
-            </div>
-            {voedingsdeskundige ? (
-              <>
-                <div style={{ fontSize: 16, fontWeight: 700 }}>{voedingsdeskundige.naam}</div>
-                <div style={{ fontSize: 13, color: '#8A7561' }}>{voedingsdeskundige.plaats} &middot; {voedingsdeskundige.specialisatie}</div>
-              </>
-            ) : (
-              <Link href="/matching" style={{ fontSize: 13.5, fontWeight: 600 }}>Nog geen voedingsdeskundige — kies er een &rarr;</Link>
-            )}
+            <p style={{ margin: 0, fontWeight: 700 }}>{voedingsdeskundige ? voedingsdeskundige.naam : 'Nog geen voedingsdeskundige'}</p>
+            <p style={{ margin: '2px 0 0', color: '#8A7561', fontSize: 13 }}>
+              {voedingsdeskundige ? `${voedingsdeskundige.plaats} · ${voedingsdeskundige.specialisatie}` : 'Jouw voedingsdeskundige'}
+            </p>
           </div>
+          <Link
+            href="/matching"
+            style={{
+              fontFamily: 'inherit', fontWeight: 700, fontSize: 13, borderRadius: 999,
+              border: '2px solid #F3E4C8', background: '#FFFFFF', minHeight: 36,
+              padding: '0 14px', display: 'inline-flex', alignItems: 'center', color: '#2B1B0E',
+            }}
+          >
+            {voedingsdeskundige ? 'Bekijk' : 'Kies'}
+          </Link>
         </div>
 
       </div>
 
-      {/* Snel verder */}
-      <div style={{ fontSize: 17, fontWeight: 700, marginBottom: 16 }}>Snel verder</div>
-      <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
-        <Link
-          href="/advies"
-          style={{
-            flex: '1 1 240px', padding: '20px 22px', borderRadius: 16,
-            background: 'linear-gradient(135deg,#FF8601,#E85D00)',
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            textDecoration: 'none',
-          }}
-        >
-          <span style={{ fontSize: 15.5, fontWeight: 600, color: '#FFF8EE' }}>Vraag de AI-coach iets</span>
-          <span style={{ fontSize: 18, color: '#FFF8EE' }}>&rarr;</span>
-        </Link>
-        <Link
-          href="/voortgang"
-          style={{
-            flex: '1 1 240px', padding: '20px 22px', borderRadius: 16,
-            background: '#FFFFFF', border: '1px solid #F3E4C8',
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            textDecoration: 'none',
-          }}
-        >
-          <span style={{ fontSize: 15.5, fontWeight: 600, color: '#2B1B0E' }}>Log een training</span>
-          <span style={{ fontSize: 18, color: '#E85D00' }}>&rarr;</span>
-        </Link>
+      {/* Snelle acties */}
+      <p style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#8A7561', marginBottom: 12 }}>
+        Snelle acties
+      </p>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0,1fr))', gap: 12 }}>
+        <Tegel href="/advies" label="Advies" icon={
+          <path d="M4 4h16v12H8l-4 4V4z" stroke="#E85D00" strokeWidth="2" strokeLinejoin="round" />
+        } />
+        <Tegel href="/matching" label="Matching" icon={
+          <>
+            <circle cx="9" cy="9" r="3" stroke="#E85D00" strokeWidth="2" />
+            <circle cx="17" cy="10" r="2.4" stroke="#E85D00" strokeWidth="2" />
+            <path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#E85D00" strokeWidth="2" strokeLinecap="round" />
+            <path d="M15.5 14.2c2.3.3 4.2 2.3 4.5 4.8" stroke="#E85D00" strokeWidth="2" strokeLinecap="round" />
+          </>
+        } />
+        <Tegel href="/voortgang" label="Loggen" icon={
+          <path d="M4 12l5 5L20 6" stroke="#E85D00" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+        } />
       </div>
 
     </div>
+  );
+}
+
+function Tegel({ href, label, icon }: { href: string; label: string; icon: ReactNode }) {
+  return (
+    <Link
+      href={href}
+      style={{
+        borderRadius: 20, border: '2px solid #F3E4C8', background: '#FFFFFF',
+        padding: '16px 10px', display: 'flex', flexDirection: 'column', alignItems: 'center',
+        gap: 8, textAlign: 'center', textDecoration: 'none',
+      }}
+    >
+      <div style={{ width: 44, height: 44, borderRadius: 14, background: '#FFF8EE', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">{icon}</svg>
+      </div>
+      <span style={{ fontWeight: 700, fontSize: 13, color: '#2B1B0E' }}>{label}</span>
+    </Link>
   );
 }

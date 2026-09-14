@@ -29,13 +29,14 @@ type Aanbeveling = {
 };
 
 function initialen(naam: string) {
-  return naam
-    .split(' ')
-    .map((deel) => deel[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase();
+  return naam.split(' ').map((d) => d[0]).join('').slice(0, 2).toUpperCase();
 }
+
+const sterIcon = (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+    <path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8L5.8 21l1.6-7-5.4-4.7 7.1-.6L12 2z" fill="#E85D00" />
+  </svg>
+);
 
 export default function MatchingPagina() {
   const router = useRouter();
@@ -85,7 +86,6 @@ export default function MatchingPagina() {
 
       setLaden(false);
 
-      // Aanbeveling ophalen, los van het laden van de rest van de pagina.
       const metGemiddelde = (lijst: Trainer[]) =>
         lijst.map((t) => {
           const eigenReviews = (alleReviews || []).filter((r) => r.trainer_id === t.id);
@@ -130,13 +130,13 @@ export default function MatchingPagina() {
   if (laden) return <p style={{ padding: 24 }}>Laden...</p>;
 
   return (
-    <div style={{ maxWidth: 720, margin: '0 auto', padding: '40px 24px 100px' }}>
-      <h1 style={{ marginBottom: 6 }}>Vind je trainer en voedingsdeskundige</h1>
-      <p style={{ fontSize: 14.5, color: '#B9601A', fontWeight: 500, marginTop: 0 }}>
-        De juiste begeleiding maakt fit-zijn nog leuker.
-      </p>
+    <div style={{ maxWidth: 480, margin: '0 auto', padding: '24px 20px 60px' }}>
+      <h1 style={{ fontSize: 26, margin: '0 0 6px' }}>Kies wie bij je past</h1>
+      <p style={{ color: '#8A7561', margin: '0 0 24px' }}>Op basis van je doelen en woonplaats.</p>
 
-      <h2 style={{ marginTop: 36, fontSize: 19 }}>Trainers</h2>
+      <p style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#8A7561', marginBottom: 12 }}>
+        Trainers
+      </p>
       <Lijst
         items={trainers}
         type="trainer"
@@ -149,7 +149,9 @@ export default function MatchingPagina() {
         aanbevolenReden={aanbeveling?.trainer_reden || null}
       />
 
-      <h2 style={{ marginTop: 40, fontSize: 19 }}>Voedingsdeskundigen</h2>
+      <p style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#8A7561', margin: '32px 0 12px' }}>
+        Voedingsdeskundigen
+      </p>
       <Lijst
         items={voeding}
         type="voedingsdeskundige"
@@ -187,12 +189,12 @@ function Lijst({
   aanbevolenReden: string | null;
 }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 16 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
       {items.map((item) => {
         const eigenReviews = reviews.filter((r) => r.trainer_id === item.id);
         const gemiddelde =
           eigenReviews.length > 0
-            ? (eigenReviews.reduce((som, r) => som + r.rating, 0) / eigenReviews.length).toFixed(1)
+            ? (eigenReviews.reduce((som, r) => som + r.rating, 0) / eigenReviews.length).toFixed(1).replace('.', ',')
             : null;
         const isAanbevolen = aanbevolenId === item.id;
         const isGekozen = gekozenId === item.id;
@@ -201,81 +203,64 @@ function Lijst({
           <div
             key={item.id}
             style={{
-              border: isAanbevolen ? '2px solid #E85D00' : '1px solid #F3E4C8',
-              borderRadius: 16,
-              padding: 22,
-              background: isGekozen ? '#FFF1DC' : '#FFFFFF',
+              borderRadius: 24,
+              border: `2px solid ${isAanbevolen ? '#FF8601' : '#F3E4C8'}`,
+              background: isAanbevolen ? 'linear-gradient(180deg,#fff,#FFF3DE)' : '#FFFFFF',
+              padding: 18,
             }}
           >
             {isAanbevolen && (
-              <div style={{ marginBottom: 14 }}>
-                <span
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: 6,
-                    background: '#FFF1DC',
-                    color: '#B9601A',
-                    fontSize: 12,
-                    fontWeight: 700,
-                    padding: '5px 12px',
-                    borderRadius: 999,
-                    marginBottom: 6,
-                  }}
-                >
-                  ✨ Aanbevolen voor jou
-                </span>
-                {aanbevolenReden && (
-                  <p style={{ fontSize: 13.5, color: '#8A7561', margin: '6px 0 0' }}>{aanbevolenReden}</p>
-                )}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 800, color: '#E85D00', marginBottom: 10 }}>
+                {sterIcon} AANBEVOLEN VOOR JOU
               </div>
             )}
 
-            <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+            <div style={{ display: 'flex', gap: 14 }}>
               <div
                 style={{
-                  width: 50, height: 50, borderRadius: '50%', flex: '0 0 auto',
+                  width: 56, height: 56, borderRadius: 18, flexShrink: 0,
                   background: isAanbevolen ? 'linear-gradient(135deg,#FFBE0A,#FF8601)' : '#FFF1DC',
-                  border: isAanbevolen ? 'none' : '1px solid #F3E4C8',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 16, fontWeight: 700, color: isAanbevolen ? '#FFF8EE' : '#B9601A',
+                  fontWeight: 700, fontSize: 16, color: isAanbevolen ? '#3A1E00' : '#B9601A',
                 }}
               >
                 {initialen(item.naam)}
               </div>
               <div style={{ flex: 1 }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, flexWrap: 'wrap' }}>
-                  <strong style={{ fontSize: 16.5 }}>{item.naam}</strong>
-                  <div style={{ fontSize: 13.5 }}>
-                    {gemiddelde ? `⭐ ${gemiddelde} (${eigenReviews.length} reviews)` : 'Nog geen reviews'}
-                  </div>
+                <div style={{ fontWeight: 700, fontSize: 17 }}>{item.naam}</div>
+                <div style={{ color: '#8A7561', fontSize: 14, marginTop: 2 }}>{item.specialisatie}</div>
+                <div style={{ display: 'flex', gap: 14, marginTop: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 13, fontWeight: 700, color: '#E85D00' }}>
+                    {gemiddelde ? <>{sterIcon} {gemiddelde} ({eigenReviews.length})</> : 'Nog geen reviews'}
+                  </span>
+                  <span style={{ color: '#8A7561', fontSize: 13 }}>{item.plaats} &middot; reist tot {item.reisbereidheid_km} km</span>
                 </div>
-                <div style={{ color: '#8A7561', fontSize: 13.5, marginTop: 2 }}>{item.plaats} &middot; {item.specialisatie}</div>
-                <div style={{ color: '#8A7561', fontSize: 12.5, marginTop: 2 }}>Reist tot {item.reisbereidheid_km} km</div>
               </div>
-              <button
-                onClick={() => onKies(item.id, type)}
-                disabled={isGekozen}
-                style={{
-                  padding: '10px 18px',
-                  borderRadius: 10,
-                  border: isGekozen ? '1px solid #F3E4C8' : 'none',
-                  background: isGekozen ? '#FFFFFF' : 'linear-gradient(135deg,#FF8601,#E85D00)',
-                  color: isGekozen ? '#8A7561' : '#FFF8EE',
-                  fontWeight: 600,
-                  fontSize: 14,
-                  cursor: isGekozen ? 'default' : 'pointer',
-                  flex: '0 0 auto',
-                }}
-              >
-                {isGekozen ? 'Gekozen' : 'Kies'}
-              </button>
             </div>
+
+            {isAanbevolen && aanbevolenReden && (
+              <p style={{ fontSize: 14, color: '#4A3624', margin: '12px 0 0', background: '#FFFFFF', borderRadius: 14, padding: '10px 12px' }}>
+                {aanbevolenReden}
+              </p>
+            )}
+
+            <button
+              onClick={() => onKies(item.id, type)}
+              disabled={isGekozen}
+              style={{
+                fontFamily: 'inherit', fontWeight: 700, fontSize: 15, borderRadius: 999, cursor: isGekozen ? 'default' : 'pointer',
+                border: 'none', minHeight: 44, width: '100%', marginTop: 14,
+                background: isGekozen ? '#2B1B0E' : 'linear-gradient(135deg,#FFBE0A,#FF8601)',
+                color: isGekozen ? '#FFFFFF' : '#3A1E00',
+              }}
+            >
+              {isGekozen ? 'Gekozen' : `Kies ${item.naam.split(' ')[0]}`}
+            </button>
 
             {eigenReviews.length > 0 && (
               <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {eigenReviews.map((r) => (
-                  <div key={r.id} style={{ fontSize: 14, background: '#FFF8EE', padding: 10, borderRadius: 10 }}>
+                  <div key={r.id} style={{ fontSize: 14, background: '#FFF8EE', padding: 10, borderRadius: 12 }}>
                     {'⭐'.repeat(r.rating)} {r.tekst}
                   </div>
                 ))}
@@ -327,7 +312,7 @@ function ReviewFormulier({
     return (
       <button
         onClick={() => setOpen(true)}
-        style={{ marginTop: 12, fontSize: 13, background: 'none', border: 'none', color: '#E85D00', cursor: 'pointer', padding: 0, fontWeight: 600 }}
+        style={{ marginTop: 12, fontSize: 13, background: 'none', border: 'none', color: '#E85D00', cursor: 'pointer', padding: 0, fontWeight: 700 }}
       >
         {bestaandeReview ? 'Review aanpassen' : 'Review achterlaten'}
       </button>
@@ -335,7 +320,7 @@ function ReviewFormulier({
   }
 
   return (
-    <div style={{ marginTop: 14, padding: 14, background: '#FFF8EE', borderRadius: 12 }}>
+    <div style={{ marginTop: 14, padding: 14, background: '#FFF8EE', borderRadius: 16 }}>
       <div style={{ marginBottom: 8 }}>
         {[1, 2, 3, 4, 5].map((n) => (
           <button
@@ -352,11 +337,11 @@ function ReviewFormulier({
         onChange={(e) => setTekst(e.target.value)}
         placeholder="Hoe was je ervaring?"
         rows={3}
-        style={{ width: '100%', padding: 10, borderRadius: 8, border: '1px solid #F3E4C8', boxSizing: 'border-box', fontFamily: 'inherit' }}
+        style={{ width: '100%', padding: 10, borderRadius: 10, border: '2px solid #F3E4C8', boxSizing: 'border-box', fontFamily: 'inherit' }}
       />
       <div style={{ marginTop: 10, display: 'flex', gap: 8 }}>
-        <button onClick={opslaan} style={{ padding: '8px 16px', borderRadius: 8, background: '#E85D00', color: 'white', border: 'none', fontWeight: 600 }}>Opslaan</button>
-        <button onClick={() => setOpen(false)} style={{ padding: '8px 16px', borderRadius: 8, background: 'none', border: '1px solid #F3E4C8' }}>
+        <button onClick={opslaan} style={{ padding: '8px 16px', borderRadius: 999, background: '#E85D00', color: 'white', border: 'none', fontWeight: 700 }}>Opslaan</button>
+        <button onClick={() => setOpen(false)} style={{ padding: '8px 16px', borderRadius: 999, background: 'none', border: '2px solid #F3E4C8' }}>
           Annuleren
         </button>
       </div>

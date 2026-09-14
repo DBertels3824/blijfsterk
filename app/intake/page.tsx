@@ -54,11 +54,14 @@ function Chip({ label, actief, onClick }: { label: string; actief: boolean; onCl
       type="button"
       onClick={onClick}
       style={{
-        padding: '10px 16px',
+        fontFamily: 'inherit',
+        padding: '13px 18px',
+        minHeight: 48,
         borderRadius: 999,
-        border: actief ? '2px solid #E85D00' : '1px solid #ccc',
-        background: actief ? '#FFF1DC' : 'white',
-        color: '#2B1B0E',
+        border: actief ? '2px solid #E85D00' : '2px solid #F3E4C8',
+        background: actief ? '#E85D00' : 'white',
+        color: actief ? '#FFFFFF' : '#2B1B0E',
+        fontWeight: 600,
         fontSize: 15,
         cursor: 'pointer',
         margin: '4px 8px 4px 0',
@@ -93,7 +96,7 @@ function ChipGroup({
     }
   }
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', marginTop: 8 }}>
+    <div style={{ display: 'flex', flexWrap: 'wrap', marginTop: 10 }}>
       {options.map((opt) => (
         <Chip key={opt} label={opt} actief={isActief(opt)} onClick={() => handleClick(opt)} />
       ))}
@@ -103,8 +106,8 @@ function ChipGroup({
 
 function Vraag({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div style={{ marginTop: 22 }}>
-      <p style={{ fontWeight: 600, marginBottom: 0 }}>{label}</p>
+    <div style={{ marginTop: 26 }}>
+      <p style={{ fontWeight: 700, marginBottom: 0, fontSize: 16 }}>{label}</p>
       {children}
     </div>
   );
@@ -188,9 +191,9 @@ export default function IntakePage() {
   if (laden) return <p style={{ padding: 24 }}>Laden...</p>;
 
   return (
-    <div style={{ padding: 24, maxWidth: 640, margin: '0 auto' }}>
-      <h1>Vertel iets over jezelf</h1>
-      <p style={{ color: '#555' }}>
+    <div style={{ padding: '32px 20px 60px', maxWidth: 640, margin: '0 auto' }}>
+      <h1 style={{ fontSize: 26 }}>Vertel iets over jezelf</h1>
+      <p style={{ color: '#8A7561', fontSize: 15.5, lineHeight: 1.6 }}>
         Deze vragen helpen je coach om gericht advies te geven — geen quiz, gewoon een goed beeld van jouw situatie.
         Tik gewoon aan wat past.
       </p>
@@ -202,18 +205,21 @@ export default function IntakePage() {
           onChange={(e) => setWoonplaats(e.target.value)}
           placeholder="bijv. Utrecht"
           style={{
-            marginTop: 8,
-            padding: '10px 14px',
-            borderRadius: 8,
-            border: '1px solid #ccc',
-            fontSize: 15,
+            fontFamily: 'inherit',
+            marginTop: 10,
+            padding: '0 16px',
+            minHeight: 52,
+            borderRadius: 14,
+            border: '2px solid #F3E4C8',
+            fontSize: 16,
             width: '100%',
             maxWidth: 320,
+            boxSizing: 'border-box',
           }}
         />
       </Vraag>
 
-      <h2 style={{ marginTop: 32 }}>Doelen &amp; training</h2>
+      <h2 style={{ marginTop: 40, fontSize: 20 }}>Doelen &amp; training</h2>
 
       <Vraag label="Wat wil je bereiken? (meerdere mogelijk)">
         <ChipGroup options={DOELEN_OPTIES} selected={doelen} onSelect={setDoelen} multi />
@@ -251,7 +257,7 @@ export default function IntakePage() {
         <ChipGroup options={ERVARING_OPTIES} selected={ervaring} onSelect={setErvaring} />
       </Vraag>
 
-      <h2 style={{ marginTop: 36 }}>Dagelijks leven</h2>
+      <h2 style={{ marginTop: 44, fontSize: 20 }}>Dagelijks leven</h2>
 
       <Vraag label="Hoe actief ben je overdag, los van trainen?">
         <ChipGroup options={ACTIVITEIT_OPTIES} selected={dagelijkseActiviteit} onSelect={setDagelijkseActiviteit} />
@@ -261,7 +267,7 @@ export default function IntakePage() {
         <ChipGroup options={WERK_OPTIES} selected={werksituatie} onSelect={setWerksituatie} />
       </Vraag>
 
-      <h2 style={{ marginTop: 36 }}>Voeding</h2>
+      <h2 style={{ marginTop: 44, fontSize: 20 }}>Voeding</h2>
 
       <Vraag label="Hoe zou je je eetpatroon omschrijven?">
         <ChipGroup options={EETPATROON_OPTIES} selected={eetpatroon} onSelect={setEetpatroon} />
@@ -275,43 +281,29 @@ export default function IntakePage() {
         <ChipGroup options={EIWITTEN_OPTIES} selected={eiwitten} onSelect={setEiwitten} />
       </Vraag>
 
-      <h2 style={{ marginTop: 36 }}>Veiligheid</h2>
-      <p style={{ color: '#555' }}>Vink aan wat op jou van toepassing is.</p>
+      <h2 style={{ marginTop: 44, fontSize: 20 }}>Veiligheid</h2>
+      <p style={{ color: '#8A7561', fontSize: 15 }}>Vink aan wat op jou van toepassing is.</p>
 
-      <label style={{ display: 'block', marginTop: 10 }}>
-        <input type="checkbox" checked={risicoHart} onChange={(e) => setRisicoHart(e.target.checked)} /> Hartklachten
-      </label>
-      <label style={{ display: 'block', marginTop: 10 }}>
-        <input
-          type="checkbox"
-          checked={risicoDuizeligheid}
-          onChange={(e) => setRisicoDuizeligheid(e.target.checked)}
-        />{' '}
-        Duizeligheid
-      </label>
-      <label style={{ display: 'block', marginTop: 10 }}>
-        <input
-          type="checkbox"
-          checked={risicoBotGewricht}
-          onChange={(e) => setRisicoBotGewricht(e.target.checked)}
-        />{' '}
-        Bot- of gewrichtsklachten
-      </label>
-      <label style={{ display: 'block', marginTop: 10 }}>
-        <input type="checkbox" checked={risicoMedicatie} onChange={(e) => setRisicoMedicatie(e.target.checked)} />{' '}
-        Medicatiegebruik dat van invloed kan zijn
-      </label>
-      <label style={{ display: 'block', marginTop: 10 }}>
-        <input
-          type="checkbox"
-          checked={risicoZwangerschap}
-          onChange={(e) => setRisicoZwangerschap(e.target.checked)}
-        />{' '}
-        Zwangerschap
-      </label>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 8 }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0', fontSize: 15.5 }}>
+          <input type="checkbox" checked={risicoHart} onChange={(e) => setRisicoHart(e.target.checked)} style={{ width: 20, height: 20 }} /> Hartklachten
+        </label>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0', fontSize: 15.5 }}>
+          <input type="checkbox" checked={risicoDuizeligheid} onChange={(e) => setRisicoDuizeligheid(e.target.checked)} style={{ width: 20, height: 20 }} /> Duizeligheid
+        </label>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0', fontSize: 15.5 }}>
+          <input type="checkbox" checked={risicoBotGewricht} onChange={(e) => setRisicoBotGewricht(e.target.checked)} style={{ width: 20, height: 20 }} /> Bot- of gewrichtsklachten
+        </label>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0', fontSize: 15.5 }}>
+          <input type="checkbox" checked={risicoMedicatie} onChange={(e) => setRisicoMedicatie(e.target.checked)} style={{ width: 20, height: 20 }} /> Medicatiegebruik dat van invloed kan zijn
+        </label>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0', fontSize: 15.5 }}>
+          <input type="checkbox" checked={risicoZwangerschap} onChange={(e) => setRisicoZwangerschap(e.target.checked)} style={{ width: 20, height: 20 }} /> Zwangerschap
+        </label>
+      </div>
 
       {risicoGesignaleerd && (
-        <p style={{ color: '#a33', marginTop: 12 }}>
+        <p style={{ color: '#B3261E', marginTop: 14, fontSize: 14.5, fontWeight: 600 }}>
           Overleg bij twijfel eerst met je huisarts of fysiotherapeut voordat je begint.
         </p>
       )}
@@ -320,15 +312,19 @@ export default function IntakePage() {
         onClick={opslaanIntake}
         disabled={opslaan}
         style={{
-          marginTop: 32,
+          fontFamily: 'inherit',
+          marginTop: 36,
           marginBottom: 40,
-          padding: '12px 24px',
-          fontSize: 16,
-          borderRadius: 8,
-          background: '#E85D00',
-          color: 'white',
+          padding: '0 32px',
+          minHeight: 56,
+          fontSize: 17,
+          fontWeight: 700,
+          borderRadius: 999,
+          background: 'linear-gradient(135deg,#FFBE0A,#FF8601)',
+          color: '#3A1E00',
           border: 'none',
-          cursor: 'pointer',
+          cursor: opslaan ? 'default' : 'pointer',
+          opacity: opslaan ? 0.7 : 1,
         }}
       >
         {opslaan ? 'Opslaan...' : 'Opslaan en verder'}

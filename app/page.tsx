@@ -43,70 +43,67 @@ export default function Home() {
     <div>
       {/* HERO */}
       <section style={{ maxWidth: 1140, margin: "0 auto", padding: "56px 24px 64px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1.05fr .95fr", gap: 48, alignItems: "center" }} className="hero-grid">
-          <div>
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                background: "#FFFFFF",
-                border: "1px solid #F3E4C8",
-                borderRadius: 999,
-                padding: "7px 16px",
-                fontWeight: 600,
-                fontSize: 13.5,
-                color: "#E85D00",
-              }}
-            >
-              Voor volwassenen van 55+
-            </span>
-            <h1 style={{ fontSize: "clamp(30px, 5vw, 48px)", lineHeight: 1.1, margin: "20px 0 0", fontWeight: 800, letterSpacing: "-0.01em" }}>
-              Sterk blijven begint vandaag.
-            </h1>
-            <p style={{ fontSize: 18, color: "#4A3624", marginTop: 20, maxWidth: 500, lineHeight: 1.6 }}>
-              Persoonlijk advies over kracht en voeding, gekoppeld aan een trainer en voedingsdeskundige die bij je
-              passen. Zodat je blijft doen wat je wilt: zelfstandig bewegen, wonen en leven.
-            </p>
-            <div style={{ display: "flex", gap: 16, marginTop: 30, flexWrap: "wrap" }}>
-              <Link href="/login" style={btnPrimary}>Start gratis</Link>
-              <a href="#hoe-het-werkt" style={btnSecondary}>Bekijk hoe het werkt</a>
-            </div>
-            <p style={{ marginTop: 18, fontSize: 13.5, color: "#8A7561", fontWeight: 600 }}>
-              Gratis intake &middot; Geen verplichtingen
-            </p>
+        <div style={{ maxWidth: 720, margin: "0 auto 40px", textAlign: "center" }}>
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              background: "#FFFFFF",
+              border: "1px solid #F3E4C8",
+              borderRadius: 999,
+              padding: "7px 16px",
+              fontWeight: 600,
+              fontSize: 13.5,
+              color: "#E85D00",
+            }}
+          >
+            Voor volwassenen van 55+
+          </span>
+          <h1 style={{ fontSize: "clamp(30px, 5vw, 48px)", lineHeight: 1.1, margin: "20px 0 0", fontWeight: 800, letterSpacing: "-0.01em" }}>
+            Sterk blijven begint vandaag.
+          </h1>
+          <p style={{ fontSize: 18, color: "#4A3624", margin: "20px auto 0", maxWidth: 520, lineHeight: 1.6 }}>
+            Persoonlijk advies over kracht en voeding, gekoppeld aan een trainer en voedingsdeskundige die bij je
+            passen. Zodat je blijft doen wat je wilt: zelfstandig bewegen, wonen en leven.
+          </p>
+          <div style={{ display: "flex", gap: 16, marginTop: 30, flexWrap: "wrap", justifyContent: "center" }}>
+            <Link href="/login" style={btnPrimary}>Start gratis</Link>
+            <a href="#hoe-het-werkt" style={btnSecondary}>Bekijk hoe het werkt</a>
           </div>
+          <p style={{ marginTop: 18, fontSize: 13.5, color: "#8A7561", fontWeight: 600 }}>
+            Gratis intake &middot; Geen verplichtingen
+          </p>
+        </div>
 
-          <div style={{ position: "relative" }}>
-            <img
-              src="/hero-photo.jpg"
-              alt="Fitte 55-plusser tijdens krachttraining"
-              style={{
-                width: "100%",
-                aspectRatio: "4 / 3",
-                objectFit: "cover",
-                borderRadius: 28,
-                display: "block",
-                border: "1px solid #F3E4C8",
-              }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                left: -12,
-                bottom: 20,
-                background: "#FFFFFF",
-                border: "1px solid #F3E4C8",
-                borderRadius: 18,
-                padding: "12px 18px",
-                boxShadow: "0 10px 28px rgba(43,27,14,0.14)",
-                fontWeight: 700,
-                fontSize: 13.5,
-                maxWidth: 220,
-              }}
-            >
-              In beweging, op elke leeftijd
-            </div>
+        <div style={{ position: "relative" }}>
+          <img
+            src="/hero-photo.jpg"
+            alt="Fitte 55-plussers tijdens krachttraining in het park"
+            style={{
+              width: "100%",
+              height: "auto",
+              borderRadius: 28,
+              display: "block",
+              border: "1px solid #F3E4C8",
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              left: 20,
+              bottom: 20,
+              background: "#FFFFFF",
+              border: "1px solid #F3E4C8",
+              borderRadius: 18,
+              padding: "12px 18px",
+              boxShadow: "0 10px 28px rgba(43,27,14,0.14)",
+              fontWeight: 700,
+              fontSize: 13.5,
+              maxWidth: 220,
+            }}
+          >
+            In beweging, op elke leeftijd
           </div>
         </div>
       </section>
