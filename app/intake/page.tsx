@@ -117,6 +117,7 @@ export default function IntakePage() {
   const router = useRouter();
   const [laden, setLaden] = useState(true);
   const [opslaan, setOpslaan] = useState(false);
+  const [bestaandProfiel, setBestaandProfiel] = useState(false);
 
   const [woonplaats, setWoonplaats] = useState('');
   const [doelen, setDoelen] = useState<string[]>([]);
@@ -144,8 +145,50 @@ export default function IntakePage() {
     risicoHart || risicoDuizeligheid || risicoBotGewricht || risicoMedicatie || risicoZwangerschap;
 
   useEffect(() => {
-    setLaden(false);
-  }, []);
+    const laadProfiel = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        router.push('/login');
+        return;
+      }
+
+      const { data: profielData } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      if (profielData) {
+        setBestaandProfiel(true);
+        setWoonplaats(profielData.woonplaats || '');
+        setDoelen(profielData.doelen || []);
+        setHuidigeStaat(profielData.huidige_staat || '');
+        setTrainingslocatie(profielData.trainingslocatie || []);
+        setDagenPerWeek(profielData.dagen_per_week || '');
+        setVoorkeur(profielData.voorkeur || '');
+        setZekerheid(profielData.zekerheid || '');
+        setEetpatroon(profielData.eetpatroon || '');
+        setSupplementen(profielData.supplementen || '');
+        setEiwitten(profielData.eiwitten || '');
+        setDagelijkseActiviteit(profielData.dagelijkse_activiteit || '');
+        setWerksituatie(profielData.werksituatie || '');
+        setSamenOfAlleen(profielData.samen_of_alleen || '');
+        setGewenstResultaat(profielData.gewenst_resultaat || '');
+        setErvaring(profielData.ervaring || '');
+        setRisicoHart(!!profielData.risico_hart);
+        setRisicoDuizeligheid(!!profielData.risico_duizeligheid);
+        setRisicoBotGewricht(!!profielData.risico_bot_gewricht);
+        setRisicoMedicatie(!!profielData.risico_medicatie);
+        setRisicoZwangerschap(!!profielData.risico_zwangerschap);
+      }
+
+      setLaden(false);
+    };
+    laadProfiel();
+  }, [router]);
 
   async function opslaanIntake() {
     setOpslaan(true);
@@ -185,17 +228,18 @@ export default function IntakePage() {
     });
 
     setOpslaan(false);
-    router.push('/advies');
+    router.push(bestaandProfiel ? '/dashboard' : '/advies');
   }
 
   if (laden) return <p style={{ padding: 24 }}>Laden...</p>;
 
   return (
     <div style={{ padding: '32px 20px 60px', maxWidth: 640, margin: '0 auto' }}>
-      <h1 style={{ fontSize: 26 }}>Vertel iets over jezelf</h1>
+      <h1 style={{ fontSize: 26 }}>{bestaandProfiel ? 'Jouw profiel' : 'Vertel iets over jezelf'}</h1>
       <p style={{ color: '#8A7561', fontSize: 15.5, lineHeight: 1.6 }}>
-        Deze vragen helpen je coach om gericht advies te geven — geen quiz, gewoon een goed beeld van jouw situatie.
-        Tik gewoon aan wat past.
+        {bestaandProfiel
+          ? 'Werk je gegevens bij wanneer er iets verandert. Je coach en matching gebruiken dit voor advies op maat.'
+          : 'Deze vragen helpen je coach om gericht advies te geven — geen quiz, gewoon een goed beeld van jouw situatie. Tik gewoon aan wat past.'}
       </p>
 
       <Vraag label="In welke plaats woon je ongeveer?">
@@ -327,7 +371,7 @@ export default function IntakePage() {
           opacity: opslaan ? 0.7 : 1,
         }}
       >
-        {opslaan ? 'Opslaan...' : 'Opslaan en verder'}
+        {opslaan ? 'Opslaan...' : bestaandProfiel ? 'Profiel opslaan' : 'Opslaan en verder'}
       </button>
     </div>
   );

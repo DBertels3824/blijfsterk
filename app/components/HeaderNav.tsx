@@ -10,6 +10,7 @@ const LINKS = [
   { href: '/advies', label: 'Advies' },
   { href: '/matching', label: 'Matching' },
   { href: '/voortgang', label: 'Voortgang' },
+  { href: '/intake', label: 'Profiel' },
 ];
 
 export default function HeaderNav() {
