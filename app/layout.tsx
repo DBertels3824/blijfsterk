@@ -47,18 +47,42 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 
         <main style={{ flex: 1 }}>{children}</main>
 
-        <footer
-          style={{
-            padding: "20px 24px",
-            borderTop: "1px solid #F3E4C8",
-            background: "#FFFFFF",
-            fontSize: 12.5,
-            color: "#8A7561",
-          }}
-        >
-          Blijf Sterk geeft algemene informatie en ondersteuning bij krachttraining voor 55-plussers.
-          Dit is geen medisch advies en vervangt niet het advies van je huisarts, fysiotherapeut of diëtist.
-          Twijfel je over jouw gezondheid? Overleg dan altijd eerst met een arts.
+        <footer style={{ borderTop: "1px solid #F3E4C8", background: "#FFFFFF", padding: "48px 24px 32px" }}>
+          <div style={{ maxWidth: 1140, margin: "0 auto" }}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+                gap: 32,
+                paddingBottom: 28,
+              }}
+            >
+              <div>
+                <img src="/logo.png" alt="Blijf Sterk" style={{ height: 28, width: "auto" }} />
+                <p style={{ color: "#8A7561", fontSize: 13.5, marginTop: 12, maxWidth: 260 }}>
+                  Sterk, beweeglijk en zelfstandig blijven — op elke leeftijd.
+                </p>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8, fontSize: 14 }}>
+                <span style={{ fontWeight: 700, color: "#2B1B0E", marginBottom: 2 }}>Blijf Sterk</span>
+                <Link href="/#hoe-het-werkt" style={{ color: "#2B1B0E" }}>Hoe het werkt</Link>
+                <Link href="/#voor-wie" style={{ color: "#2B1B0E" }}>Voor wie</Link>
+                <Link href="/login" style={{ color: "#2B1B0E" }}>Inloggen</Link>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8, fontSize: 14 }}>
+                <span style={{ fontWeight: 700, color: "#2B1B0E", marginBottom: 2 }}>Contact</span>
+                <span style={{ color: "#2B1B0E" }}>info@blijfsterk.nl</span>
+              </div>
+            </div>
+            <div style={{ borderTop: "1px solid #F3E4C8", paddingTop: 24, fontSize: 12.5, color: "#8A7561", lineHeight: 1.6 }}>
+              <p style={{ margin: 0, maxWidth: 820 }}>
+                Blijf Sterk geeft algemene adviezen over training en voeding en vervangt geen medisch advies.
+                Raadpleeg bij twijfel, blessures of gezondheidsklachten altijd eerst je huisarts of behandelend
+                specialist voordat je begint met een nieuw trainings- of voedingsprogramma.
+              </p>
+              <p style={{ margin: "12px 0 0" }}>&copy; 2026 Blijf Sterk. Alle rechten voorbehouden.</p>
+            </div>
+          </div>
         </footer>
       </body>
     </html>

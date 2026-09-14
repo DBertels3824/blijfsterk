@@ -9,6 +9,7 @@ export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [toonWachtwoord, setToonWachtwoord] = useState(false);
   const [bericht, setBericht] = useState('');
   const [bezig, setBezig] = useState(false);
 
@@ -42,105 +43,104 @@ export default function LoginPage() {
     router.push('/dashboard');
   }
 
+  async function handleWachtwoordVergeten() {
+    if (!email) {
+      setBericht('Vul eerst je e-mailadres in, dan sturen we je een link.');
+      return;
+    }
+    setBezig(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(email);
+    setBezig(false);
+    setBericht(
+      error ? error.message : 'Check je e-mail — we hebben je een link gestuurd om je wachtwoord opnieuw in te stellen.'
+    );
+  }
+
   return (
-    <div
-      style={{
-        minHeight: '70vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '48px 24px',
-      }}
-    >
-      <div
-        style={{
-          width: '100%',
-          maxWidth: 420,
-          background: '#FFFFFF',
-          borderRadius: 24,
-          border: '1px solid #F3E4C8',
-          boxShadow: '0 20px 48px rgba(43,27,14,0.08)',
-          padding: '40px 36px',
-        }}
-      >
-        <div style={{ textAlign: 'center', marginBottom: 28 }}>
-          <h1 style={{ margin: '0 0 8px', fontSize: 26, fontWeight: 700, color: '#2B1B0E' }}>Welkom terug</h1>
-          <p style={{ margin: 0, fontSize: 15, color: '#8A7561' }}>Log in en voel je weer sterk.</p>
+    <div style={{ minHeight: '78vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '32px 24px' }}>
+      <div style={{ width: '100%', maxWidth: 380, margin: '0 auto' }}>
+
+        <h1 style={{ fontSize: 27, textAlign: 'center', margin: 0 }}>Welkom terug</h1>
+        <p style={{ textAlign: 'center', color: '#8A7561', marginTop: 10, fontSize: 15 }}>
+          Log in om verder te gaan met je training.
+        </p>
+
+        <div style={{ marginTop: 28, display: 'flex', flexDirection: 'column', gap: 18 }}>
+          <div>
+            <label style={{ fontWeight: 700, fontSize: 13.5, display: 'block', marginBottom: 8 }}>E-mailadres</label>
+            <input
+              type="email"
+              placeholder="naam@voorbeeld.nl"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              style={{
+                fontFamily: 'inherit', fontSize: 16, width: '100%', minHeight: 52,
+                borderRadius: 14, border: '2px solid #F3E4C8', background: '#FFFFFF',
+                padding: '0 16px', boxSizing: 'border-box', color: '#2B1B0E',
+              }}
+            />
+          </div>
+
+          <div>
+            <label style={{ fontWeight: 700, fontSize: 13.5, display: 'block', marginBottom: 8 }}>Wachtwoord</label>
+            <div style={{ position: 'relative' }}>
+              <input
+                type={toonWachtwoord ? 'text' : 'password'}
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSignIn()}
+                style={{
+                  fontFamily: 'inherit', fontSize: 16, width: '100%', minHeight: 52,
+                  borderRadius: 14, border: '2px solid #F3E4C8', background: '#FFFFFF',
+                  padding: '0 64px 0 16px', boxSizing: 'border-box', color: '#2B1B0E',
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => setToonWachtwoord((v) => !v)}
+                style={{
+                  position: 'absolute', right: 6, top: 6, bottom: 6, border: 'none',
+                  background: 'transparent', color: '#E85D00', fontWeight: 700, fontSize: 13.5,
+                  cursor: 'pointer', padding: '0 10px',
+                }}
+              >
+                {toonWachtwoord ? 'Verberg' : 'Toon'}
+              </button>
+            </div>
+          </div>
+
+          <div style={{ textAlign: 'right' }}>
+            <button
+              type="button"
+              onClick={handleWachtwoordVergeten}
+              disabled={bezig}
+              style={{ background: 'none', border: 'none', color: '#E85D00', fontWeight: 600, fontSize: 13.5, cursor: 'pointer', padding: 0 }}
+            >
+              Wachtwoord vergeten?
+            </button>
+          </div>
+
+          <button
+            onClick={handleSignIn}
+            disabled={bezig}
+            style={{
+              fontFamily: 'inherit', fontWeight: 700, fontSize: 16.5, borderRadius: 999,
+              cursor: bezig ? 'default' : 'pointer', border: 'none', minHeight: 54, width: '100%',
+              background: 'linear-gradient(135deg,#FFBE0A,#FF8601)', color: '#3A1E00',
+              opacity: bezig ? 0.7 : 1,
+            }}
+          >
+            {bezig ? 'Bezig...' : 'Inloggen'}
+          </button>
         </div>
 
-        <label style={{ display: 'block', fontSize: 13.5, fontWeight: 600, color: '#5A4636', marginBottom: 6 }}>
-          E-mailadres
-        </label>
-        <input
-          placeholder="naam@voorbeeld.nl"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          style={{
-            display: 'block',
-            width: '100%',
-            marginBottom: 16,
-            padding: '12px 14px',
-            borderRadius: 10,
-            border: '1px solid #F3E4C8',
-            fontSize: 15.5,
-            boxSizing: 'border-box',
-          }}
-        />
-
-        <label style={{ display: 'block', fontSize: 13.5, fontWeight: 600, color: '#5A4636', marginBottom: 6 }}>
-          Wachtwoord
-        </label>
-        <input
-          placeholder="••••••••"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSignIn()}
-          style={{
-            display: 'block',
-            width: '100%',
-            marginBottom: 24,
-            padding: '12px 14px',
-            borderRadius: 10,
-            border: '1px solid #F3E4C8',
-            fontSize: 15.5,
-            boxSizing: 'border-box',
-          }}
-        />
-
-        <button
-          onClick={handleSignIn}
-          disabled={bezig}
-          style={{
-            width: '100%',
-            padding: '14px 0',
-            borderRadius: 12,
-            border: 'none',
-            background: 'linear-gradient(135deg,#FF8601,#E85D00)',
-            color: '#FFF8EE',
-            fontWeight: 600,
-            fontSize: 16,
-            cursor: bezig ? 'default' : 'pointer',
-            opacity: bezig ? 0.7 : 1,
-          }}
-        >
-          {bezig ? 'Bezig...' : 'Inloggen'}
-        </button>
-
-        <p style={{ textAlign: 'center', fontSize: 14, color: '#8A7561', margin: '18px 0 0' }}>
+        <p style={{ textAlign: 'center', marginTop: 26, fontSize: 15, color: '#8A7561' }}>
           Nog geen account?{' '}
           <button
             onClick={handleSignUp}
             disabled={bezig}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: '#E85D00',
-              fontWeight: 600,
-              fontSize: 14,
-              cursor: bezig ? 'default' : 'pointer',
-              padding: 0,
-            }}
+            style={{ background: 'none', border: 'none', color: '#E85D00', fontWeight: 700, fontSize: 15, cursor: bezig ? 'default' : 'pointer', padding: 0 }}
           >
             Registreer hier
           </button>
@@ -150,10 +150,8 @@ export default function LoginPage() {
           <p style={{ textAlign: 'center', fontSize: 13.5, color: '#B9601A', marginTop: 16 }}>{bericht}</p>
         )}
 
-        <p style={{ textAlign: 'center', marginTop: 24 }}>
-          <Link href="/" style={{ fontSize: 13.5, color: '#8A7561' }}>
-            &larr; Terug naar de homepage
-          </Link>
+        <p style={{ textAlign: 'center', marginTop: 22 }}>
+          <Link href="/" style={{ fontSize: 13.5, color: '#8A7561' }}>&larr; Terug naar de homepage</Link>
         </p>
       </div>
     </div>

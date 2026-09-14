@@ -36,3 +36,9 @@ a {
 h1, h2, h3 {
   color: var(--brand-orange-deep);
 }
+
+@media (max-width: 680px) {
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+  }
+}

@@ -1,175 +1,256 @@
 import Link from "next/link";
+import type { CSSProperties } from "react";
+
+const btnPrimary: CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 8,
+  fontWeight: 700,
+  fontSize: 16,
+  borderRadius: 999,
+  minHeight: 52,
+  padding: "0 30px",
+  background: "linear-gradient(135deg,#FFBE0A,#FF8601)",
+  color: "#3A1E00",
+  textDecoration: "none",
+  boxShadow: "0 6px 18px rgba(232,93,0,0.28)",
+};
+
+const btnSecondary: CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontWeight: 700,
+  fontSize: 16,
+  borderRadius: 999,
+  minHeight: 52,
+  padding: "0 30px",
+  background: "#FFFFFF",
+  color: "#E85D00",
+  border: "2px solid #F3E4C8",
+  textDecoration: "none",
+};
+
+const card: CSSProperties = {
+  background: "#FFFFFF",
+  border: "1px solid #F3E4C8",
+  borderRadius: 24,
+};
 
 export default function Home() {
   return (
     <div>
-      {/* Hero */}
-      <section style={{ padding: "56px 24px 8px", textAlign: "center", maxWidth: 720, margin: "0 auto" }}>
-        <div
-          style={{
-            display: "inline-block",
-            padding: "7px 16px",
-            background: "#FFF1DC",
-            border: "1px solid #F3E4C8",
-            borderRadius: 999,
-            fontSize: 12.5,
-            fontWeight: 600,
-            color: "#B9601A",
-            letterSpacing: "0.02em",
-            textTransform: "uppercase",
-            marginBottom: 20,
-          }}
-        >
-          Voor 55-plussers die sterk willen blijven
+      {/* HERO */}
+      <section style={{ maxWidth: 1140, margin: "0 auto", padding: "56px 24px 64px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1.05fr .95fr", gap: 48, alignItems: "center" }} className="hero-grid">
+          <div>
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                background: "#FFFFFF",
+                border: "1px solid #F3E4C8",
+                borderRadius: 999,
+                padding: "7px 16px",
+                fontWeight: 600,
+                fontSize: 13.5,
+                color: "#E85D00",
+              }}
+            >
+              Voor volwassenen van 55+
+            </span>
+            <h1 style={{ fontSize: "clamp(30px, 5vw, 48px)", lineHeight: 1.1, margin: "20px 0 0", fontWeight: 800, letterSpacing: "-0.01em" }}>
+              Sterk blijven begint vandaag.
+            </h1>
+            <p style={{ fontSize: 18, color: "#4A3624", marginTop: 20, maxWidth: 500, lineHeight: 1.6 }}>
+              Persoonlijk advies over kracht en voeding, gekoppeld aan een trainer en voedingsdeskundige die bij je
+              passen. Zodat je blijft doen wat je wilt: zelfstandig bewegen, wonen en leven.
+            </p>
+            <div style={{ display: "flex", gap: 16, marginTop: 30, flexWrap: "wrap" }}>
+              <Link href="/login" style={btnPrimary}>Start gratis</Link>
+              <a href="#hoe-het-werkt" style={btnSecondary}>Bekijk hoe het werkt</a>
+            </div>
+            <p style={{ marginTop: 18, fontSize: 13.5, color: "#8A7561", fontWeight: 600 }}>
+              Gratis intake &middot; Geen verplichtingen
+            </p>
+          </div>
+
+          <div style={{ position: "relative" }}>
+            <img
+              src="/hero-photo.jpg"
+              alt="Fitte 55-plusser tijdens krachttraining"
+              style={{
+                width: "100%",
+                aspectRatio: "4 / 3",
+                objectFit: "cover",
+                borderRadius: 28,
+                display: "block",
+                border: "1px solid #F3E4C8",
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                left: -12,
+                bottom: 20,
+                background: "#FFFFFF",
+                border: "1px solid #F3E4C8",
+                borderRadius: 18,
+                padding: "12px 18px",
+                boxShadow: "0 10px 28px rgba(43,27,14,0.14)",
+                fontWeight: 700,
+                fontSize: 13.5,
+                maxWidth: 220,
+              }}
+            >
+              In beweging, op elke leeftijd
+            </div>
+          </div>
         </div>
-        <h1 style={{ fontSize: 36, lineHeight: 1.15, marginBottom: 16 }}>
-          Sterk blijven, op jouw manier
-        </h1>
-        <p style={{ fontSize: 18, color: "#2B1B0E", lineHeight: 1.6, marginBottom: 28 }}>
-          Blijf Sterk helpt 55-plussers om veilig en met vertrouwen aan krachttraining te beginnen —
-          met een AI-coach die met je meedenkt, en trainers en voedingsdeskundigen bij jou in de buurt.
-        </p>
-        <Link
-          href="/login"
-          style={{
-            display: "inline-block",
-            padding: "14px 32px",
-            borderRadius: 999,
-            background: "linear-gradient(135deg,#FF8601,#E85D00)",
-            color: "white",
-            fontWeight: 600,
-            fontSize: 16,
-            textDecoration: "none",
-            boxShadow: "0 10px 24px rgba(232,93,0,0.28)",
-          }}
-        >
-          Start gratis
-        </Link>
       </section>
 
-      {/* Hero-foto */}
-      <section style={{ maxWidth: 1100, margin: "40px auto 0", padding: "0 24px" }}>
-        <img
-          src="/hero-photo.jpg"
-          alt="Fitte 55-plussers die samen buiten trainen"
-          style={{
-            width: "100%",
-            height: "auto",
-            display: "block",
-            borderRadius: 24,
-            boxShadow: "0 20px 48px rgba(43,27,14,0.14)",
-          }}
-        />
-      </section>
-
-      {/* Video-plaatshouder */}
-      <section style={{ maxWidth: 720, margin: "0 auto", padding: "48px 24px 48px" }}>
-        <div
-          style={{
-            aspectRatio: "16 / 9",
-            background: "#2B1B0E",
-            borderRadius: 16,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 12,
-          }}
-        >
+      {/* VIDEO */}
+      <section style={{ maxWidth: 1140, margin: "0 auto", padding: "0 24px 64px" }}>
+        <div style={{ ...card, padding: "40px 32px", textAlign: "center" }}>
+          <h2 style={{ fontSize: 26, margin: 0 }}>Maak kennis met Blijf Sterk</h2>
+          <p style={{ color: "#8A7561", marginTop: 8, fontSize: 15.5 }}>
+            Een korte introductie door de oprichter — binnenkort hier te bekijken.
+          </p>
           <div
             style={{
-              width: 56,
-              height: 56,
-              borderRadius: "50%",
-              background: "#E85D00",
+              margin: "26px auto 0",
+              maxWidth: 700,
+              aspectRatio: "16 / 9",
+              borderRadius: 20,
+              position: "relative",
+              background: "linear-gradient(160deg,#F5E6C8,#EFD9AE)",
+              border: "1px solid #F3E4C8",
+            }}
+          >
+            <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <div
+                style={{
+                  width: 68,
+                  height: 68,
+                  borderRadius: 999,
+                  background: "#FFFFFF",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 8px 24px rgba(43,27,14,0.18)",
+                }}
+              >
+                <svg width="22" height="26" viewBox="0 0 26 30" fill="none"><path d="M2 2v26l22-13L2 2z" fill="#E85D00" /></svg>
+              </div>
+            </div>
+            <span style={{ position: "absolute", bottom: 14, left: 0, right: 0, textAlign: "center", fontSize: 14, color: "#8A7561", fontWeight: 500 }}>
+              Introductievideo — wordt binnenkort toegevoegd
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* PERSOONLIJK VERHAAL */}
+      <section style={{ maxWidth: 1140, margin: "0 auto", padding: "0 24px 64px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: ".8fr 1.2fr", gap: 44, alignItems: "center" }} className="hero-grid">
+          <div
+            style={{
+              aspectRatio: "1 / 1",
+              borderRadius: 28,
+              background: "linear-gradient(160deg,#F5E6C8,#EFD9AE)",
+              border: "1px solid #F3E4C8",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              color: "#8A7561",
+              fontWeight: 600,
+              fontSize: 14,
+              textAlign: "center",
+              padding: 24,
             }}
           >
-            <div
+            [ Foto van Dirk volgt ]
+          </div>
+          <div>
+            <span
               style={{
-                width: 0,
-                height: 0,
-                borderTop: "10px solid transparent",
-                borderBottom: "10px solid transparent",
-                borderLeft: "16px solid white",
-                marginLeft: 4,
+                display: "inline-flex",
+                background: "#FFFFFF",
+                border: "1px solid #F3E4C8",
+                borderRadius: 999,
+                padding: "7px 16px",
+                fontWeight: 600,
+                fontSize: 13.5,
+                color: "#E85D00",
               }}
-            ></div>
-          </div>
-          <p style={{ color: "#F3E4C8", fontSize: 14 }}>Introductievideo volgt binnenkort</p>
-        </div>
-        {/* Zodra je filmpje klaar is: vervang het blok hierboven door bijvoorbeeld
-            <video controls poster="/video-poster.jpg" style={{ width: "100%", borderRadius: 16 }}>
-              <source src="/intro.mp4" type="video/mp4" />
-            </video>
-        */}
-      </section>
-
-      {/* Persoonlijk verhaal */}
-      <section style={{ background: "#FFFFFF", padding: "48px 24px" }}>
-        <div style={{ maxWidth: 640, margin: "0 auto" }}>
-          <h2 style={{ marginTop: 0 }}>Waarom Blijf Sterk</h2>
-          <p style={{ fontSize: 16, lineHeight: 1.7, color: "#2B1B0E" }}>
-            Als krachtsporter weet ik wat kracht met je doet. Naarmate je ouder wordt, verlies je sneller
-            spierkracht en -massa dan je zou denken — en daarmee ook een stukje zelfstandigheid. Zelf de trap op.
-            Vertrouwen om te blijven bewegen. Langer je eigen leven leiden, op je eigen manier.
-          </p>
-          <p style={{ fontSize: 16, lineHeight: 1.7, color: "#2B1B0E" }}>
-            Blijf Sterk is ontstaan vanuit die overtuiging: dat krachttraining voor iedereen toegankelijk moet
-            zijn, ook — juist — na je 55e. Zonder drempels, zonder onzekerheid, met begeleiding die met je
-            meedenkt.
-          </p>
-        </div>
-      </section>
-
-      {/* Hoe het werkt */}
-      <section style={{ padding: "48px 24px" }}>
-        <div style={{ maxWidth: 640, margin: "0 auto" }}>
-          <h2 style={{ marginTop: 0 }}>Hoe het werkt</h2>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: 20, marginTop: 24 }}>
-            <Stap nummer={1} titel="Vertel iets over jezelf" tekst="Een paar korte vragen over je doelen, situatie en gezondheid — geen quiz, gewoon een goed beeld." />
-            <Stap nummer={2} titel="Krijg persoonlijk advies" tekst="Je AI-coach denkt met je mee en verwijst je, indien nodig, altijd door naar een arts of fysiotherapeut." />
-            <Stap nummer={3} titel="Kies wie bij je past" tekst="Een trainer en/of voedingsdeskundige bij jou in de buurt — de app doet zelfs een persoonlijke aanbeveling." />
-            <Stap nummer={4} titel="Blijf sterk, stap voor stap" tekst="Log je voortgang, blijf gemotiveerd, en bouw rustig verder aan je kracht en zelfvertrouwen." />
+            >
+              Waarom Blijf Sterk bestaat
+            </span>
+            <p style={{ fontSize: 21, lineHeight: 1.5, marginTop: 18, fontWeight: 600, color: "#2B1B0E" }}>
+              &ldquo;Ik train al mijn hele leven met gewichten. Ik zag mensen om me heen op hun 65e stoppen met
+              bewegen — niet omdat het moest, maar omdat niemand ze liet zien dat het anders kon. Blijf Sterk is het
+              bewijs dat je op elke leeftijd sterker kunt worden dan je nu bent. Niet morgen. Vandaag.&rdquo;
+            </p>
+            <p style={{ marginTop: 16, fontWeight: 700, color: "#E85D00" }}>&mdash; Dirk, oprichter van Blijf Sterk</p>
           </div>
         </div>
       </section>
 
-      {/* Voor wie */}
-      <section style={{ background: "#FFF1DC", padding: "48px 24px" }}>
-        <div style={{ maxWidth: 640, margin: "0 auto", textAlign: "center" }}>
-          <h2 style={{ marginTop: 0 }}>Voor wie is dit?</h2>
-          <p style={{ fontSize: 16, lineHeight: 1.7, color: "#2B1B0E" }}>
-            Voor iedereen van 55 jaar en ouder die sterker wil worden — of je nu nog nooit aan krachttraining
-            hebt gedaan, een tijdje niet actief bent geweest, of gewoon weer serieus wilt beginnen. Er is geen
-            ervaring nodig, alleen de wens om te starten.
-          </p>
+      {/* HOE HET WERKT */}
+      <section id="hoe-het-werkt" style={{ background: "#FFFFFF", borderTop: "1px solid #F3E4C8", borderBottom: "1px solid #F3E4C8", padding: "64px 24px" }}>
+        <div style={{ maxWidth: 1140, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", maxWidth: 520, margin: "0 auto 40px" }}>
+            <h2 style={{ fontSize: 28, margin: 0 }}>Hoe het werkt</h2>
+            <p style={{ color: "#8A7561", marginTop: 10, fontSize: 16 }}>Vier stappen, geen gedoe.</p>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 20 }}>
+            <Stap nummer={1} titel="Vertel iets over jezelf" tekst="Een paar vragen over je doelen, ervaring en voorkeuren. Geen ellenlange formulieren." />
+            <Stap nummer={2} titel="Krijg persoonlijk advies" tekst="Onze AI-coach geeft je concreet advies over kracht en voeding, afgestemd op jou." />
+            <Stap nummer={3} titel="Kies wie bij je past" tekst="We koppelen je aan een trainer en voedingsdeskundige bij jou in de buurt." />
+            <Stap nummer={4} titel="Blijf sterk, stap voor stap" tekst="Log je voortgang, zie je reeks groeien en voel het verschil." />
+          </div>
         </div>
       </section>
 
-      {/* Slot-CTA */}
-      <section style={{ padding: "56px 24px", textAlign: "center" }}>
-        <h2 style={{ marginTop: 0 }}>Klaar om te beginnen?</h2>
-        <p style={{ fontSize: 16, color: "#8A7561", margin: "8px 0 20px" }}>Het kost je vijf minuten. De rest doen we samen.</p>
-        <Link
-          href="/login"
-          style={{
-            display: "inline-block",
-            padding: "14px 32px",
-            borderRadius: 999,
-            background: "linear-gradient(135deg,#FF8601,#E85D00)",
-            color: "white",
-            fontWeight: 600,
-            fontSize: 16,
-            textDecoration: "none",
-            boxShadow: "0 10px 24px rgba(232,93,0,0.28)",
-          }}
-        >
-          Start gratis
-        </Link>
+      {/* VOOR WIE */}
+      <section id="voor-wie" style={{ maxWidth: 1140, margin: "0 auto", padding: "64px 24px" }}>
+        <div style={{ textAlign: "center", maxWidth: 520, margin: "0 auto 40px" }}>
+          <h2 style={{ fontSize: 28, margin: 0 }}>Voor wie is dit?</h2>
+          <p style={{ color: "#8A7561", marginTop: 10, fontSize: 16 }}>Herken je jezelf hierin?</p>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 20 }}>
+          <div style={{ ...card, padding: "26px 22px" }}>
+            <h3 style={{ fontSize: 17, margin: 0 }}>Je bent net begonnen</h3>
+            <p style={{ color: "#8A7561", marginTop: 10, fontSize: 14.5, lineHeight: 1.6 }}>
+              Je hebt weinig of geen ervaring met krachttraining en wilt een duidelijk startpunt, zonder je dom te voelen.
+            </p>
+          </div>
+          <div style={{ ...card, padding: "26px 22px" }}>
+            <h3 style={{ fontSize: 17, margin: 0 }}>Je bent even gestopt</h3>
+            <p style={{ color: "#8A7561", marginTop: 10, fontSize: 14.5, lineHeight: 1.6 }}>
+              Je hebt eerder getraind, maar door blessure, drukte of gemakzucht ben je gestopt. Tijd voor een herstart die past bij nu.
+            </p>
+          </div>
+          <div style={{ ...card, padding: "26px 22px" }}>
+            <h3 style={{ fontSize: 17, margin: 0 }}>Je wilt zelfstandig blijven</h3>
+            <p style={{ color: "#8A7561", marginTop: 10, fontSize: 14.5, lineHeight: 1.6 }}>
+              Je merkt dat kracht en balans er echt toe doen om te blijven doen wat je wilt — nu en over tien jaar.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA BAND */}
+      <section style={{ background: "linear-gradient(120deg,#FFBE0A,#FF8601)", padding: "56px 24px" }}>
+        <div style={{ maxWidth: 1140, margin: "0 auto", textAlign: "center" }}>
+          <h2 style={{ fontSize: 28, color: "#3A1E00", margin: 0 }}>Klaar om te beginnen?</h2>
+          <p style={{ marginTop: 10, fontSize: 16.5, color: "#4A2C00" }}>Start vandaag nog — het kost je niets om te proberen.</p>
+          <Link href="/login" style={{ ...btnPrimary, marginTop: 22, background: "#2B1B0E", color: "#FFFFFF", boxShadow: "none" }}>
+            Start gratis
+          </Link>
+        </div>
       </section>
     </div>
   );
@@ -177,27 +258,25 @@ export default function Home() {
 
 function Stap({ nummer, titel, tekst }: { nummer: number; titel: string; tekst: string }) {
   return (
-    <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+    <div style={{ ...card, padding: "24px 20px" }}>
       <div
         style={{
-          flex: "none",
-          width: 34,
-          height: 34,
-          borderRadius: "50%",
+          width: 40,
+          height: 40,
+          borderRadius: 999,
           background: "#FFF1DC",
-          color: "#E85D00",
-          fontWeight: 700,
+          border: "1px solid #F3E4C8",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          fontWeight: 800,
+          color: "#E85D00",
         }}
       >
         {nummer}
       </div>
-      <div>
-        <p style={{ fontWeight: 600, margin: 0 }}>{titel}</p>
-        <p style={{ color: "#8A7561", margin: "4px 0 0", lineHeight: 1.5 }}>{tekst}</p>
-      </div>
+      <h3 style={{ fontSize: 17, marginTop: 16 }}>{titel}</h3>
+      <p style={{ color: "#8A7561", marginTop: 8, fontSize: 14 }}>{tekst}</p>
     </div>
   );
 }
