@@ -39,7 +39,11 @@ export async function POST(req: Request) {
     });
 
     if (!res.ok) {
-      return NextResponse.json({ resultaten: [], fout: 'Zoeken bij Google is mislukt.' });
+      const foutdata = await res.text();
+      return NextResponse.json({
+        resultaten: [],
+        fout: `Zoeken bij Google is mislukt (code ${res.status}): ${foutdata.slice(0, 400)}`,
+      });
     }
 
     const data = await res.json();
