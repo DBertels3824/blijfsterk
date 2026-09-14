@@ -51,6 +51,11 @@ export default function TrainersZoekenAdmin() {
   const [fout, setFout] = useState<string | null>(null);
   const [gezocht, setGezocht] = useState(false);
 
+  const [profielen, setProfielen] = useState<{ id: string; woonplaats: string | null }[]>([]);
+  const [matchesTrainer, setMatchesTrainer] = useState<Set<string>>(new Set());
+  const [matchesVoeding, setMatchesVoeding] = useState<Set<string>>(new Set());
+  const [vraagLaden, setVraagLaden] = useState(true);
+
   useEffect(() => {
     const check = async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -63,12 +68,43 @@ export default function TrainersZoekenAdmin() {
         return;
       }
       setToegestaan(true);
+
+      const { data: profielenData } = await supabase.from('profiles').select('id, woonplaats');
+      setProfielen(profielenData || []);
+
+      const { data: matchesData } = await supabase.from('matches').select('user_id, type');
+      const trainerSet = new Set(
+        (matchesData || []).filter((m) => m.type === 'trainer').map((m) => m.user_id)
+      );
+      const voedingSet = new Set(
+        (matchesData || []).filter((m) => m.type === 'voedingsdeskundige').map((m) => m.user_id)
+      );
+      setMatchesTrainer(trainerSet);
+      setMatchesVoeding(voedingSet);
+      setVraagLaden(false);
     };
     check();
   }, [router]);
 
-  const zoek = async () => {
-    if (!plaats.trim()) return;
+  const matchesSet = type === 'trainer' ? matchesTrainer : matchesVoeding;
+  const plaatsenMetVraag = Object.entries(
+    profielen
+      .filter((p) => p.woonplaats && !matchesSet.has(p.id))
+      .reduce((acc: Record<string, number>, p) => {
+        const naam = (p.woonplaats as string).trim();
+        acc[naam] = (acc[naam] || 0) + 1;
+        return acc;
+      }, {})
+  ).sort((a, b) => b[1] - a[1]);
+
+  const zoekHier = (plaatsNaam: string) => {
+    setPlaats(plaatsNaam);
+    setTimeout(() => zoek(plaatsNaam), 0);
+  };
+
+  const zoek = async (overridePlaats?: string) => {
+    const gebruikPlaats = overridePlaats ?? plaats;
+    if (!gebruikPlaats.trim()) return;
     setZoeken(true);
     setFout(null);
     setGezocht(true);
@@ -76,7 +112,7 @@ export default function TrainersZoekenAdmin() {
       const res = await fetch('/api/echte-trainers', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plaats, type }),
+        body: JSON.stringify({ plaats: gebruikPlaats, type }),
       });
       const data = await res.json();
       setResultaten(data.resultaten || []);
@@ -121,6 +157,40 @@ export default function TrainersZoekenAdmin() {
         ))}
       </div>
 
+      <div style={{ borderRadius: 20, border: '2px solid #F3E4C8', background: '#FFFFFF', padding: 18, marginBottom: 24 }}>
+        <p style={{ fontWeight: 700, fontSize: 15, margin: '0 0 4px' }}>Vraag bij gebruikers</p>
+        <p style={{ color: '#8A7561', fontSize: 13.5, margin: '0 0 14px' }}>
+          Gebruikers die nog geen {type === 'trainer' ? 'trainer' : 'voedingsdeskundige'} hebben gekozen, per plaats.
+        </p>
+        {vraagLaden ? (
+          <p style={{ color: '#8A7561', fontSize: 14 }}>Laden...</p>
+        ) : plaatsenMetVraag.length === 0 ? (
+          <p style={{ color: '#8A7561', fontSize: 14 }}>Op dit moment geen openstaande vraag.</p>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {plaatsenMetVraag.map(([plaatsNaam, aantal]) => (
+              <div
+                key={plaatsNaam}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, padding: '8px 12px', borderRadius: 12, background: '#FFF8EE' }}
+              >
+                <span style={{ fontSize: 14.5 }}>
+                  <strong>{plaatsNaam}</strong> — {aantal} op zoek
+                </span>
+                <button
+                  onClick={() => zoekHier(plaatsNaam)}
+                  style={{
+                    fontFamily: 'inherit', fontSize: 13, fontWeight: 700, padding: '7px 14px', borderRadius: 999,
+                    border: 'none', background: '#2B1B0E', color: '#FFFFFF', cursor: 'pointer',
+                  }}
+                >
+                  Zoek hier
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       <div style={{ display: 'flex', gap: 10 }}>
         <input
           type="text"
@@ -140,7 +210,7 @@ export default function TrainersZoekenAdmin() {
           }}
         />
         <button
-          onClick={zoek}
+          onClick={() => zoek()}
           disabled={zoeken || !plaats.trim()}
           style={{
             fontFamily: 'inherit', fontWeight: 700, fontSize: 15, borderRadius: 999,
