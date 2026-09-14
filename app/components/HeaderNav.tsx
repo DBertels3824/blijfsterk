@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import { ADMIN_EMAIL } from '@/lib/admin';
 
 const LINKS = [
   { href: '/dashboard', label: 'Dashboard' },
@@ -13,18 +14,28 @@ const LINKS = [
   { href: '/intake', label: 'Profiel' },
 ];
 
+const ADMIN_LINKS = [
+  { href: '/admin/trainers-zoeken', label: 'Trainers zoeken' },
+  { href: '/admin/product-interesse', label: 'Interesse' },
+];
+
 export default function HeaderNav() {
   const pathname = usePathname();
   const router = useRouter();
   const [ingelogd, setIngelogd] = useState<boolean | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     let mounted = true;
     supabase.auth.getUser().then(({ data }) => {
-      if (mounted) setIngelogd(!!data.user);
+      if (mounted) {
+        setIngelogd(!!data.user);
+        setIsAdmin(data.user?.email === ADMIN_EMAIL);
+      }
     });
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setIngelogd(!!session?.user);
+      setIsAdmin(session?.user?.email === ADMIN_EMAIL);
     });
     return () => {
       mounted = false;
@@ -41,7 +52,7 @@ export default function HeaderNav() {
     <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
       {ingelogd && (
         <nav style={{ display: 'flex', gap: 20 }}>
-          {LINKS.map((l) => (
+          {[...LINKS, { href: '/winkel', label: 'Winkel' }, ...(isAdmin ? ADMIN_LINKS : [])].map((l) => (
             <Link
               key={l.href}
               href={l.href}
@@ -60,6 +71,9 @@ export default function HeaderNav() {
 
       {ingelogd === false && (
         <>
+          <Link href="/winkel" style={{ fontSize: 15, fontWeight: 500, color: '#2B1B0E', textDecoration: 'none' }}>
+            Winkel
+          </Link>
           <Link href="/login" style={{ fontSize: 15, fontWeight: 500, color: '#2B1B0E', textDecoration: 'none' }}>
             Inloggen
           </Link>

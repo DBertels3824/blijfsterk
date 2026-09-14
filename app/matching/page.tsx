@@ -4,17 +4,6 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 
-type EchteTrainer = {
-  id: string | null;
-  naam: string;
-  adres: string;
-  rating: number | null;
-  aantalReviews: number;
-  telefoon: string | null;
-  website: string | null;
-  mapsLink: string | null;
-};
-
 type Trainer = {
   id: string;
   naam: string;
@@ -59,11 +48,6 @@ export default function MatchingPagina() {
   const [gekozenVoedingId, setGekozenVoedingId] = useState<string | null>(null);
   const [aanbeveling, setAanbeveling] = useState<Aanbeveling | null>(null);
   const [laden, setLaden] = useState(true);
-  const [woonplaats, setWoonplaats] = useState('');
-  const [echteTrainers, setEchteTrainers] = useState<EchteTrainer[]>([]);
-  const [echteVoeding, setEchteVoeding] = useState<EchteTrainer[]>([]);
-  const [echteLaden, setEchteLaden] = useState(true);
-  const [echteFout, setEchteFout] = useState<string | null>(null);
   const [tab, setTab] = useState<'trainer' | 'voedingsdeskundige'>('trainer');
 
   useEffect(() => {
@@ -102,29 +86,6 @@ export default function MatchingPagina() {
       setReviews(alleReviews || []);
 
       setLaden(false);
-      setWoonplaats(profielData?.woonplaats || '');
-
-      const zoekEchteTrainers = async (soort: string) => {
-        try {
-          const res = await fetch('/api/echte-trainers', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ plaats: profielData?.woonplaats, type: soort }),
-          });
-          return await res.json();
-        } catch {
-          return { resultaten: [], fout: 'Zoeken bij Google is mislukt.' };
-        }
-      };
-
-      const [trainerResultaat, voedingResultaat] = await Promise.all([
-        zoekEchteTrainers('trainer'),
-        zoekEchteTrainers('voedingsdeskundige'),
-      ]);
-      setEchteTrainers(trainerResultaat.resultaten || []);
-      setEchteVoeding(voedingResultaat.resultaten || []);
-      setEchteFout(trainerResultaat.fout || voedingResultaat.fout || null);
-      setEchteLaden(false);
 
       const metGemiddelde = (lijst: Trainer[]) =>
         lijst.map((t) => {
@@ -174,8 +135,6 @@ export default function MatchingPagina() {
   const gekozenId = isTrainerTab ? gekozenTrainerId : gekozenVoedingId;
   const aanbevolenId = isTrainerTab ? aanbeveling?.trainer_id || null : aanbeveling?.voeding_id || null;
   const aanbevolenReden = isTrainerTab ? aanbeveling?.trainer_reden || null : aanbeveling?.voeding_reden || null;
-  const echteItems = isTrainerTab ? echteTrainers : echteVoeding;
-  const echteLeegTekst = isTrainerTab ? 'Geen trainers gevonden in de buurt.' : 'Geen voedingsdeskundigen gevonden in de buurt.';
 
   return (
     <div style={{ maxWidth: 480, margin: '0 auto', padding: '24px 20px 60px' }}>
@@ -219,78 +178,6 @@ export default function MatchingPagina() {
         aanbevolenId={aanbevolenId}
         aanbevolenReden={aanbevolenReden}
       />
-
-      <p style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#8A7561', margin: '32px 0 6px' }}>
-        Ook gevonden bij jou in de buurt{woonplaats ? ` · ${woonplaats}` : ''}
-      </p>
-      <p style={{ color: '#8A7561', fontSize: 13.5, margin: '0 0 12px' }}>
-        Live gevonden via Google Maps. Vraag een introductie — wij leggen het contact, jij hoeft niet zelf te bellen.
-      </p>
-      {echteLaden ? (
-        <p style={{ color: '#8A7561', fontSize: 14 }}>Zoeken...</p>
-      ) : echteFout ? (
-        <p style={{ color: '#8A7561', fontSize: 14 }}>{echteFout}</p>
-      ) : echteItems.length === 0 ? (
-        <p style={{ color: '#8A7561', fontSize: 14 }}>{echteLeegTekst}</p>
-      ) : (
-        <EchteLijst items={echteItems} type={tab} userId={userId} />
-      )}
-    </div>
-  );
-}
-
-function EchteLijst({ items, type, userId }: { items: EchteTrainer[]; type: string; userId: string | null }) {
-  const [aangevraagd, setAangevraagd] = useState<Record<string, boolean>>({});
-  const [bezigSleutel, setBezigSleutel] = useState<string | null>(null);
-
-  const vraagIntroductie = async (item: EchteTrainer, sleutel: string) => {
-    if (!userId || bezigSleutel) return;
-    setBezigSleutel(sleutel);
-    await supabase.from('interesse_aanvragen').insert({
-      user_id: userId,
-      type,
-      naam: item.naam,
-      adres: item.adres,
-      google_place_id: item.id,
-    });
-    setAangevraagd((huidig) => ({ ...huidig, [sleutel]: true }));
-    setBezigSleutel(null);
-  };
-
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-      {items.map((item, i) => {
-        const sleutel = item.id || `${item.naam}-${i}`;
-        const isAangevraagd = !!aangevraagd[sleutel];
-        const isBezig = bezigSleutel === sleutel;
-        return (
-          <div
-            key={sleutel}
-            style={{ borderRadius: 24, border: '2px solid #F3E4C8', background: '#FFFFFF', padding: 18 }}
-          >
-            <div style={{ fontWeight: 700, fontSize: 17 }}>{item.naam}</div>
-            {item.adres && <div style={{ color: '#8A7561', fontSize: 14, marginTop: 4 }}>{item.adres}</div>}
-            {item.rating !== null && (
-              <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, fontWeight: 700, color: '#E85D00' }}>
-                {sterIcon} {item.rating.toFixed(1).replace('.', ',')} ({item.aantalReviews} Google-reviews)
-              </div>
-            )}
-            <button
-              onClick={() => vraagIntroductie(item, sleutel)}
-              disabled={isAangevraagd || isBezig}
-              style={{
-                fontFamily: 'inherit', fontWeight: 700, fontSize: 15, borderRadius: 999,
-                cursor: isAangevraagd ? 'default' : 'pointer', border: 'none', minHeight: 44, width: '100%', marginTop: 14,
-                background: isAangevraagd ? '#2B1B0E' : 'linear-gradient(135deg,#FFBE0A,#FF8601)',
-                color: isAangevraagd ? '#FFFFFF' : '#3A1E00',
-                opacity: isBezig ? 0.7 : 1,
-              }}
-            >
-              {isAangevraagd ? 'Aanvraag verstuurd' : isBezig ? 'Bezig...' : 'Vraag een introductie'}
-            </button>
-          </div>
-        );
-      })}
     </div>
   );
 }
