@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Link from "next/link";
 import "./globals.css";
+import HeaderNav from "./components/HeaderNav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,8 +27,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <header style={{ background: "#FFFFFF" }}>
-          <div style={{ padding: "14px 24px" }}>
-            <img src="/logo.png" alt="Blijf Sterk" style={{ height: 40, width: "auto" }} />
+          <div
+            style={{
+              padding: "14px 24px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 16,
+              flexWrap: "wrap",
+            }}
+          >
+            <Link href="/" style={{ display: "flex", alignItems: "center" }}>
+              <img src="/logo.png" alt="Blijf Sterk" style={{ height: 40, width: "auto" }} />
+            </Link>
+            <HeaderNav />
           </div>
           <div style={{ height: 4, background: "linear-gradient(90deg, #FFBE0A, #FF8601)" }}></div>
         </header>

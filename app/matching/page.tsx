@@ -28,6 +28,15 @@ type Aanbeveling = {
   voeding_reden: string | null;
 };
 
+function initialen(naam: string) {
+  return naam
+    .split(' ')
+    .map((deel) => deel[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
+}
+
 export default function MatchingPagina() {
   const router = useRouter();
   const [userId, setUserId] = useState<string | null>(null);
@@ -121,10 +130,13 @@ export default function MatchingPagina() {
   if (laden) return <p style={{ padding: 24 }}>Laden...</p>;
 
   return (
-    <div style={{ maxWidth: 640, margin: '0 auto', padding: 24 }}>
-      <h1>Kies je trainer en voedingsdeskundige</h1>
+    <div style={{ maxWidth: 720, margin: '0 auto', padding: '40px 24px 100px' }}>
+      <h1 style={{ marginBottom: 6 }}>Vind je trainer en voedingsdeskundige</h1>
+      <p style={{ fontSize: 14.5, color: '#B9601A', fontWeight: 500, marginTop: 0 }}>
+        De juiste begeleiding maakt fit-zijn nog leuker.
+      </p>
 
-      <h2 style={{ marginTop: 32 }}>Trainers</h2>
+      <h2 style={{ marginTop: 36, fontSize: 19 }}>Trainers</h2>
       <Lijst
         items={trainers}
         type="trainer"
@@ -137,7 +149,7 @@ export default function MatchingPagina() {
         aanbevolenReden={aanbeveling?.trainer_reden || null}
       />
 
-      <h2 style={{ marginTop: 40 }}>Voedingsdeskundigen</h2>
+      <h2 style={{ marginTop: 40, fontSize: 19 }}>Voedingsdeskundigen</h2>
       <Lijst
         items={voeding}
         type="voedingsdeskundige"
@@ -175,7 +187,7 @@ function Lijst({
   aanbevolenReden: string | null;
 }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 16 }}>
       {items.map((item) => {
         const eigenReviews = reviews.filter((r) => r.trainer_id === item.id);
         const gemiddelde =
@@ -183,27 +195,30 @@ function Lijst({
             ? (eigenReviews.reduce((som, r) => som + r.rating, 0) / eigenReviews.length).toFixed(1)
             : null;
         const isAanbevolen = aanbevolenId === item.id;
+        const isGekozen = gekozenId === item.id;
 
         return (
           <div
             key={item.id}
             style={{
               border: isAanbevolen ? '2px solid #E85D00' : '1px solid #F3E4C8',
-              borderRadius: 8,
-              padding: 16,
-              background: gekozenId === item.id ? '#FFF1DC' : 'white',
+              borderRadius: 16,
+              padding: 22,
+              background: isGekozen ? '#FFF1DC' : '#FFFFFF',
             }}
           >
             {isAanbevolen && (
-              <div style={{ marginBottom: 10 }}>
+              <div style={{ marginBottom: 14 }}>
                 <span
                   style={{
-                    display: 'inline-block',
-                    background: '#E85D00',
-                    color: 'white',
-                    fontSize: 11.5,
-                    fontWeight: 600,
-                    padding: '3px 10px',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 6,
+                    background: '#FFF1DC',
+                    color: '#B9601A',
+                    fontSize: 12,
+                    fontWeight: 700,
+                    padding: '5px 12px',
                     borderRadius: 999,
                     marginBottom: 6,
                   }}
@@ -211,41 +226,56 @@ function Lijst({
                   ✨ Aanbevolen voor jou
                 </span>
                 {aanbevolenReden && (
-                  <p style={{ fontSize: 13.5, color: '#8A7561', margin: '4px 0 0' }}>{aanbevolenReden}</p>
+                  <p style={{ fontSize: 13.5, color: '#8A7561', margin: '6px 0 0' }}>{aanbevolenReden}</p>
                 )}
               </div>
             )}
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <strong>{item.naam}</strong> — {item.plaats}
-                <div style={{ color: '#8A7561', fontSize: 14 }}>{item.specialisatie}</div>
-                <div style={{ color: '#8A7561', fontSize: 13, marginTop: 2 }}>
-                  Reist tot {item.reisbereidheid_km} km
+            <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+              <div
+                style={{
+                  width: 50, height: 50, borderRadius: '50%', flex: '0 0 auto',
+                  background: isAanbevolen ? 'linear-gradient(135deg,#FFBE0A,#FF8601)' : '#FFF1DC',
+                  border: isAanbevolen ? 'none' : '1px solid #F3E4C8',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 16, fontWeight: 700, color: isAanbevolen ? '#FFF8EE' : '#B9601A',
+                }}
+              >
+                {initialen(item.naam)}
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, flexWrap: 'wrap' }}>
+                  <strong style={{ fontSize: 16.5 }}>{item.naam}</strong>
+                  <div style={{ fontSize: 13.5 }}>
+                    {gemiddelde ? `⭐ ${gemiddelde} (${eigenReviews.length} reviews)` : 'Nog geen reviews'}
+                  </div>
                 </div>
-                <div style={{ fontSize: 14, marginTop: 4 }}>
-                  {gemiddelde ? `⭐ ${gemiddelde} (${eigenReviews.length} reviews)` : 'Nog geen reviews'}
-                </div>
+                <div style={{ color: '#8A7561', fontSize: 13.5, marginTop: 2 }}>{item.plaats} &middot; {item.specialisatie}</div>
+                <div style={{ color: '#8A7561', fontSize: 12.5, marginTop: 2 }}>Reist tot {item.reisbereidheid_km} km</div>
               </div>
               <button
                 onClick={() => onKies(item.id, type)}
-                disabled={gekozenId === item.id}
+                disabled={isGekozen}
                 style={{
-                  padding: '8px 14px',
-                  borderRadius: 6,
-                  border: 'none',
-                  background: gekozenId === item.id ? '#F3E4C8' : '#E85D00',
-                  color: gekozenId === item.id ? '#8A7561' : 'white',
+                  padding: '10px 18px',
+                  borderRadius: 10,
+                  border: isGekozen ? '1px solid #F3E4C8' : 'none',
+                  background: isGekozen ? '#FFFFFF' : 'linear-gradient(135deg,#FF8601,#E85D00)',
+                  color: isGekozen ? '#8A7561' : '#FFF8EE',
+                  fontWeight: 600,
+                  fontSize: 14,
+                  cursor: isGekozen ? 'default' : 'pointer',
+                  flex: '0 0 auto',
                 }}
               >
-                {gekozenId === item.id ? 'Gekozen' : 'Kies'}
+                {isGekozen ? 'Gekozen' : 'Kies'}
               </button>
             </div>
 
             {eigenReviews.length > 0 && (
-              <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {eigenReviews.map((r) => (
-                  <div key={r.id} style={{ fontSize: 14, background: '#FFF8EE', padding: 8, borderRadius: 6 }}>
+                  <div key={r.id} style={{ fontSize: 14, background: '#FFF8EE', padding: 10, borderRadius: 10 }}>
                     {'⭐'.repeat(r.rating)} {r.tekst}
                   </div>
                 ))}
@@ -297,7 +327,7 @@ function ReviewFormulier({
     return (
       <button
         onClick={() => setOpen(true)}
-        style={{ marginTop: 10, fontSize: 13, background: 'none', border: 'none', color: '#E85D00', cursor: 'pointer', padding: 0 }}
+        style={{ marginTop: 12, fontSize: 13, background: 'none', border: 'none', color: '#E85D00', cursor: 'pointer', padding: 0, fontWeight: 600 }}
       >
         {bestaandeReview ? 'Review aanpassen' : 'Review achterlaten'}
       </button>
@@ -305,7 +335,7 @@ function ReviewFormulier({
   }
 
   return (
-    <div style={{ marginTop: 12, padding: 12, background: '#FFF8EE', borderRadius: 6 }}>
+    <div style={{ marginTop: 14, padding: 14, background: '#FFF8EE', borderRadius: 12 }}>
       <div style={{ marginBottom: 8 }}>
         {[1, 2, 3, 4, 5].map((n) => (
           <button
@@ -322,11 +352,11 @@ function ReviewFormulier({
         onChange={(e) => setTekst(e.target.value)}
         placeholder="Hoe was je ervaring?"
         rows={3}
-        style={{ width: '100%', padding: 8, borderRadius: 6, border: '1px solid #ccc' }}
+        style={{ width: '100%', padding: 10, borderRadius: 8, border: '1px solid #F3E4C8', boxSizing: 'border-box', fontFamily: 'inherit' }}
       />
-      <div style={{ marginTop: 8, display: 'flex', gap: 8 }}>
-        <button onClick={opslaan} style={{ padding: '6px 14px', borderRadius: 6, background: '#E85D00', color: 'white', border: 'none' }}>Opslaan</button>
-        <button onClick={() => setOpen(false)} style={{ padding: '6px 14px', borderRadius: 6, background: 'none', border: '1px solid #ccc' }}>
+      <div style={{ marginTop: 10, display: 'flex', gap: 8 }}>
+        <button onClick={opslaan} style={{ padding: '8px 16px', borderRadius: 8, background: '#E85D00', color: 'white', border: 'none', fontWeight: 600 }}>Opslaan</button>
+        <button onClick={() => setOpen(false)} style={{ padding: '8px 16px', borderRadius: 8, background: 'none', border: '1px solid #F3E4C8' }}>
           Annuleren
         </button>
       </div>

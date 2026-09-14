@@ -4,8 +4,25 @@ export default function Home() {
   return (
     <div>
       {/* Hero */}
-      <section style={{ padding: "56px 24px 40px", textAlign: "center", maxWidth: 720, margin: "0 auto" }}>
-        <h1 style={{ fontSize: 34, lineHeight: 1.15, marginBottom: 16 }}>
+      <section style={{ padding: "56px 24px 8px", textAlign: "center", maxWidth: 720, margin: "0 auto" }}>
+        <div
+          style={{
+            display: "inline-block",
+            padding: "7px 16px",
+            background: "#FFF1DC",
+            border: "1px solid #F3E4C8",
+            borderRadius: 999,
+            fontSize: 12.5,
+            fontWeight: 600,
+            color: "#B9601A",
+            letterSpacing: "0.02em",
+            textTransform: "uppercase",
+            marginBottom: 20,
+          }}
+        >
+          Voor 55-plussers die sterk willen blijven
+        </div>
+        <h1 style={{ fontSize: 36, lineHeight: 1.15, marginBottom: 16 }}>
           Sterk blijven, op jouw manier
         </h1>
         <p style={{ fontSize: 18, color: "#2B1B0E", lineHeight: 1.6, marginBottom: 28 }}>
@@ -18,19 +35,35 @@ export default function Home() {
             display: "inline-block",
             padding: "14px 32px",
             borderRadius: 999,
-            background: "#E85D00",
+            background: "linear-gradient(135deg,#FF8601,#E85D00)",
             color: "white",
             fontWeight: 600,
             fontSize: 16,
             textDecoration: "none",
+            boxShadow: "0 10px 24px rgba(232,93,0,0.28)",
           }}
         >
           Start gratis
         </Link>
       </section>
 
+      {/* Hero-foto */}
+      <section style={{ maxWidth: 1100, margin: "40px auto 0", padding: "0 24px" }}>
+        <img
+          src="/hero-photo.jpg"
+          alt="Fitte 55-plussers die samen buiten trainen"
+          style={{
+            width: "100%",
+            height: "auto",
+            display: "block",
+            borderRadius: 24,
+            boxShadow: "0 20px 48px rgba(43,27,14,0.14)",
+          }}
+        />
+      </section>
+
       {/* Video-plaatshouder */}
-      <section style={{ maxWidth: 720, margin: "0 auto", padding: "0 24px 48px" }}>
+      <section style={{ maxWidth: 720, margin: "0 auto", padding: "48px 24px 48px" }}>
         <div
           style={{
             aspectRatio: "16 / 9",
@@ -106,8 +139,8 @@ export default function Home() {
       </section>
 
       {/* Voor wie */}
-      <section style={{ background: "#FFFFFF", padding: "48px 24px" }}>
-        <div style={{ maxWidth: 640, margin: "0 auto" }}>
+      <section style={{ background: "#FFF1DC", padding: "48px 24px" }}>
+        <div style={{ maxWidth: 640, margin: "0 auto", textAlign: "center" }}>
           <h2 style={{ marginTop: 0 }}>Voor wie is dit?</h2>
           <p style={{ fontSize: 16, lineHeight: 1.7, color: "#2B1B0E" }}>
             Voor iedereen van 55 jaar en ouder die sterker wil worden — of je nu nog nooit aan krachttraining
@@ -120,18 +153,19 @@ export default function Home() {
       {/* Slot-CTA */}
       <section style={{ padding: "56px 24px", textAlign: "center" }}>
         <h2 style={{ marginTop: 0 }}>Klaar om te beginnen?</h2>
+        <p style={{ fontSize: 16, color: "#8A7561", margin: "8px 0 20px" }}>Het kost je vijf minuten. De rest doen we samen.</p>
         <Link
           href="/login"
           style={{
             display: "inline-block",
-            marginTop: 12,
             padding: "14px 32px",
             borderRadius: 999,
-            background: "#E85D00",
+            background: "linear-gradient(135deg,#FF8601,#E85D00)",
             color: "white",
             fontWeight: 600,
             fontSize: 16,
             textDecoration: "none",
+            boxShadow: "0 10px 24px rgba(232,93,0,0.28)",
           }}
         >
           Start gratis

@@ -79,11 +79,19 @@ export default function AdviesPagina() {
   };
 
   return (
-    <div style={{ maxWidth: 560, margin: '0 auto', padding: 24, display: 'flex', flexDirection: 'column', height: '85vh' }}>
-      <h1>Jouw coach</h1>
+    <div style={{ maxWidth: 680, margin: '0 auto', padding: '28px 24px', display: 'flex', flexDirection: 'column', height: '82vh' }}>
 
-      <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 16, padding: '8px 0' }}>
-        {laden && <p style={{ color: '#888' }}>Even denken...</p>}
+      <div style={{ textAlign: 'center', marginBottom: 20 }}>
+        <div style={{ fontSize: 12.5, fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase', color: '#B7A88F' }}>
+          Jouw coach
+        </div>
+        <div style={{ fontSize: 13.5, color: '#B9601A', fontWeight: 500, marginTop: 4 }}>
+          Kleine stappen, veel plezier in bewegen en goed eten.
+        </div>
+      </div>
+
+      <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 16, padding: '4px 0' }}>
+        {laden && <p style={{ color: '#8A7561', fontSize: 14.5 }}>Even denken...</p>}
 
         {berichten.map((bericht, i) => (
           <div key={i} style={{ alignSelf: bericht.role === 'user' ? 'flex-end' : 'flex-start', maxWidth: '85%' }}>
@@ -94,12 +102,14 @@ export default function AdviesPagina() {
             )}
             <div
               style={{
-                background: bericht.role === 'user' ? '#E85D00' : '#f5efe4',
-                color: bericht.role === 'user' ? 'white' : '#2B1B0E',
-                padding: '10px 14px',
-                borderRadius: 10,
+                background: bericht.role === 'user' ? 'linear-gradient(135deg,#FF8601,#E85D00)' : '#FFFFFF',
+                border: bericht.role === 'user' ? 'none' : '1px solid #F3E4C8',
+                color: bericht.role === 'user' ? '#FFF8EE' : '#2B1B0E',
+                padding: '14px 18px',
+                borderRadius: bericht.role === 'user' ? '16px 4px 16px 16px' : '4px 16px 16px 16px',
                 whiteSpace: 'pre-line',
-                lineHeight: 1.5,
+                lineHeight: 1.6,
+                fontSize: 15,
               }}
             >
               {bericht.content}
@@ -109,18 +119,23 @@ export default function AdviesPagina() {
         <div ref={eindeRef}></div>
       </div>
 
-      <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 18, padding: '6px 6px 6px 18px', background: '#FFFFFF', border: '1px solid #F3E4C8', borderRadius: 16 }}>
         <input
           value={invoer}
           onChange={(e) => setInvoer(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && versturenHandler()}
           placeholder="Stel een vraag aan je coach..."
-          style={{ flex: 1, padding: '10px 14px', borderRadius: 8, border: '1px solid #ccc' }}
+          style={{ flex: 1, padding: '10px 0', border: 'none', outline: 'none', fontSize: 15, background: 'transparent' }}
         />
         <button
           onClick={versturenHandler}
           disabled={versturen}
-          style={{ padding: '10px 20px', borderRadius: 8, background: '#E85D00', color: 'white', border: 'none' }}
+          style={{
+            padding: '11px 22px', borderRadius: 12, border: 'none',
+            background: 'linear-gradient(135deg,#FF8601,#E85D00)', color: '#FFF8EE',
+            fontWeight: 600, fontSize: 14.5, cursor: versturen ? 'default' : 'pointer',
+            opacity: versturen ? 0.7 : 1,
+          }}
         >
           Stuur
         </button>
