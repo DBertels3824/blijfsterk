@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { CSSProperties } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 
@@ -14,27 +13,6 @@ type EchteTrainer = {
   telefoon: string | null;
   website: string | null;
   mapsLink: string | null;
-};
-
-const pilLink: CSSProperties = {
-  fontSize: 13,
-  fontWeight: 700,
-  borderRadius: 999,
-  padding: '8px 16px',
-  background: 'linear-gradient(135deg,#FFBE0A,#FF8601)',
-  color: '#3A1E00',
-  textDecoration: 'none',
-};
-
-const pilLinkSecundair: CSSProperties = {
-  fontSize: 13,
-  fontWeight: 700,
-  borderRadius: 999,
-  padding: '8px 16px',
-  background: '#FFFFFF',
-  color: '#E85D00',
-  border: '2px solid #F3E4C8',
-  textDecoration: 'none',
 };
 
 type Trainer = {
@@ -86,6 +64,7 @@ export default function MatchingPagina() {
   const [echteVoeding, setEchteVoeding] = useState<EchteTrainer[]>([]);
   const [echteLaden, setEchteLaden] = useState(true);
   const [echteFout, setEchteFout] = useState<string | null>(null);
+  const [tab, setTab] = useState<'trainer' | 'voedingsdeskundige'>('trainer');
 
   useEffect(() => {
     const laadAlles = async () => {
@@ -190,106 +169,128 @@ export default function MatchingPagina() {
 
   if (laden) return <p style={{ padding: 24 }}>Laden...</p>;
 
+  const isTrainerTab = tab === 'trainer';
+  const partnerItems = isTrainerTab ? trainers : voeding;
+  const gekozenId = isTrainerTab ? gekozenTrainerId : gekozenVoedingId;
+  const aanbevolenId = isTrainerTab ? aanbeveling?.trainer_id || null : aanbeveling?.voeding_id || null;
+  const aanbevolenReden = isTrainerTab ? aanbeveling?.trainer_reden || null : aanbeveling?.voeding_reden || null;
+  const echteItems = isTrainerTab ? echteTrainers : echteVoeding;
+  const echteLeegTekst = isTrainerTab ? 'Geen trainers gevonden in de buurt.' : 'Geen voedingsdeskundigen gevonden in de buurt.';
+
   return (
     <div style={{ maxWidth: 480, margin: '0 auto', padding: '24px 20px 60px' }}>
       <h1 style={{ fontSize: 26, margin: '0 0 6px' }}>Kies wie bij je past</h1>
-      <p style={{ color: '#8A7561', margin: '0 0 24px' }}>Op basis van je doelen en woonplaats.</p>
+      <p style={{ color: '#8A7561', margin: '0 0 20px' }}>Op basis van je doelen en woonplaats.</p>
+
+      <div style={{ display: 'flex', gap: 8, background: '#FFFFFF', border: '2px solid #F3E4C8', borderRadius: 999, padding: 4, marginBottom: 26 }}>
+        {(['trainer', 'voedingsdeskundige'] as const).map((t) => (
+          <button
+            key={t}
+            onClick={() => setTab(t)}
+            style={{
+              flex: 1,
+              fontFamily: 'inherit',
+              fontWeight: 700,
+              fontSize: 14.5,
+              padding: '11px 0',
+              borderRadius: 999,
+              border: 'none',
+              cursor: 'pointer',
+              background: tab === t ? 'linear-gradient(135deg,#FFBE0A,#FF8601)' : 'transparent',
+              color: tab === t ? '#3A1E00' : '#8A7561',
+            }}
+          >
+            {t === 'trainer' ? 'Trainers' : 'Voedingsdeskundigen'}
+          </button>
+        ))}
+      </div>
 
       <p style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#8A7561', marginBottom: 12 }}>
-        Trainers
+        Onze partners
       </p>
       <Lijst
-        items={trainers}
-        type="trainer"
-        gekozenId={gekozenTrainerId}
+        items={partnerItems}
+        type={tab}
+        gekozenId={gekozenId}
         reviews={reviews}
         userId={userId}
         onKies={kies}
         onReviewOpgeslagen={verversReviews}
-        aanbevolenId={aanbeveling?.trainer_id || null}
-        aanbevolenReden={aanbeveling?.trainer_reden || null}
+        aanbevolenId={aanbevolenId}
+        aanbevolenReden={aanbevolenReden}
       />
-
-      <p style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#8A7561', margin: '32px 0 12px' }}>
-        Voedingsdeskundigen
-      </p>
-      <Lijst
-        items={voeding}
-        type="voedingsdeskundige"
-        gekozenId={gekozenVoedingId}
-        reviews={reviews}
-        userId={userId}
-        onKies={kies}
-        onReviewOpgeslagen={verversReviews}
-        aanbevolenId={aanbeveling?.voeding_id || null}
-        aanbevolenReden={aanbeveling?.voeding_reden || null}
-      />
-
-      <p style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#8A7561', margin: '36px 0 6px' }}>
-        Echte trainers bij jou in de buurt{woonplaats ? ` · ${woonplaats}` : ''}
-      </p>
-      <p style={{ color: '#8A7561', fontSize: 13.5, margin: '0 0 12px' }}>Live gevonden via Google Maps.</p>
-      {echteLaden ? (
-        <p style={{ color: '#8A7561', fontSize: 14 }}>Zoeken...</p>
-      ) : echteFout ? (
-        <p style={{ color: '#8A7561', fontSize: 14 }}>{echteFout}</p>
-      ) : echteTrainers.length === 0 ? (
-        <p style={{ color: '#8A7561', fontSize: 14 }}>Geen trainers gevonden in de buurt.</p>
-      ) : (
-        <EchteLijst items={echteTrainers} />
-      )}
 
       <p style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#8A7561', margin: '32px 0 6px' }}>
-        Echte voedingsdeskundigen bij jou in de buurt{woonplaats ? ` · ${woonplaats}` : ''}
+        Ook gevonden bij jou in de buurt{woonplaats ? ` · ${woonplaats}` : ''}
       </p>
-      <p style={{ color: '#8A7561', fontSize: 13.5, margin: '0 0 12px' }}>Live gevonden via Google Maps.</p>
+      <p style={{ color: '#8A7561', fontSize: 13.5, margin: '0 0 12px' }}>
+        Live gevonden via Google Maps. Vraag een introductie — wij leggen het contact, jij hoeft niet zelf te bellen.
+      </p>
       {echteLaden ? (
         <p style={{ color: '#8A7561', fontSize: 14 }}>Zoeken...</p>
       ) : echteFout ? (
         <p style={{ color: '#8A7561', fontSize: 14 }}>{echteFout}</p>
-      ) : echteVoeding.length === 0 ? (
-        <p style={{ color: '#8A7561', fontSize: 14 }}>Geen voedingsdeskundigen gevonden in de buurt.</p>
+      ) : echteItems.length === 0 ? (
+        <p style={{ color: '#8A7561', fontSize: 14 }}>{echteLeegTekst}</p>
       ) : (
-        <EchteLijst items={echteVoeding} />
+        <EchteLijst items={echteItems} type={tab} userId={userId} />
       )}
     </div>
   );
 }
 
-function EchteLijst({ items }: { items: EchteTrainer[] }) {
+function EchteLijst({ items, type, userId }: { items: EchteTrainer[]; type: string; userId: string | null }) {
+  const [aangevraagd, setAangevraagd] = useState<Record<string, boolean>>({});
+  const [bezigSleutel, setBezigSleutel] = useState<string | null>(null);
+
+  const vraagIntroductie = async (item: EchteTrainer, sleutel: string) => {
+    if (!userId || bezigSleutel) return;
+    setBezigSleutel(sleutel);
+    await supabase.from('interesse_aanvragen').insert({
+      user_id: userId,
+      type,
+      naam: item.naam,
+      adres: item.adres,
+      google_place_id: item.id,
+    });
+    setAangevraagd((huidig) => ({ ...huidig, [sleutel]: true }));
+    setBezigSleutel(null);
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-      {items.map((item, i) => (
-        <div
-          key={item.id || i}
-          style={{ borderRadius: 24, border: '2px solid #F3E4C8', background: '#FFFFFF', padding: 18 }}
-        >
-          <div style={{ fontWeight: 700, fontSize: 17 }}>{item.naam}</div>
-          {item.adres && <div style={{ color: '#8A7561', fontSize: 14, marginTop: 4 }}>{item.adres}</div>}
-          {item.rating !== null && (
-            <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, fontWeight: 700, color: '#E85D00' }}>
-              {sterIcon} {item.rating.toFixed(1).replace('.', ',')} ({item.aantalReviews} Google-reviews)
-            </div>
-          )}
-          <div style={{ display: 'flex', gap: 10, marginTop: 14, flexWrap: 'wrap' }}>
-            {item.telefoon && (
-              <a href={`tel:${item.telefoon}`} style={pilLink}>
-                Bel
-              </a>
+      {items.map((item, i) => {
+        const sleutel = item.id || `${item.naam}-${i}`;
+        const isAangevraagd = !!aangevraagd[sleutel];
+        const isBezig = bezigSleutel === sleutel;
+        return (
+          <div
+            key={sleutel}
+            style={{ borderRadius: 24, border: '2px solid #F3E4C8', background: '#FFFFFF', padding: 18 }}
+          >
+            <div style={{ fontWeight: 700, fontSize: 17 }}>{item.naam}</div>
+            {item.adres && <div style={{ color: '#8A7561', fontSize: 14, marginTop: 4 }}>{item.adres}</div>}
+            {item.rating !== null && (
+              <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, fontWeight: 700, color: '#E85D00' }}>
+                {sterIcon} {item.rating.toFixed(1).replace('.', ',')} ({item.aantalReviews} Google-reviews)
+              </div>
             )}
-            {item.website && (
-              <a href={item.website} target="_blank" rel="noopener noreferrer" style={pilLink}>
-                Website
-              </a>
-            )}
-            {item.mapsLink && (
-              <a href={item.mapsLink} target="_blank" rel="noopener noreferrer" style={pilLinkSecundair}>
-                Bekijk op Google Maps
-              </a>
-            )}
+            <button
+              onClick={() => vraagIntroductie(item, sleutel)}
+              disabled={isAangevraagd || isBezig}
+              style={{
+                fontFamily: 'inherit', fontWeight: 700, fontSize: 15, borderRadius: 999,
+                cursor: isAangevraagd ? 'default' : 'pointer', border: 'none', minHeight: 44, width: '100%', marginTop: 14,
+                background: isAangevraagd ? '#2B1B0E' : 'linear-gradient(135deg,#FFBE0A,#FF8601)',
+                color: isAangevraagd ? '#FFFFFF' : '#3A1E00',
+                opacity: isBezig ? 0.7 : 1,
+              }}
+            >
+              {isAangevraagd ? 'Aanvraag verstuurd' : isBezig ? 'Bezig...' : 'Vraag een introductie'}
+            </button>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
