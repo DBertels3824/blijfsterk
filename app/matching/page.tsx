@@ -1,8 +1,41 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import type { CSSProperties } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+
+type EchteTrainer = {
+  id: string | null;
+  naam: string;
+  adres: string;
+  rating: number | null;
+  aantalReviews: number;
+  telefoon: string | null;
+  website: string | null;
+  mapsLink: string | null;
+};
+
+const pilLink: CSSProperties = {
+  fontSize: 13,
+  fontWeight: 700,
+  borderRadius: 999,
+  padding: '8px 16px',
+  background: 'linear-gradient(135deg,#FFBE0A,#FF8601)',
+  color: '#3A1E00',
+  textDecoration: 'none',
+};
+
+const pilLinkSecundair: CSSProperties = {
+  fontSize: 13,
+  fontWeight: 700,
+  borderRadius: 999,
+  padding: '8px 16px',
+  background: '#FFFFFF',
+  color: '#E85D00',
+  border: '2px solid #F3E4C8',
+  textDecoration: 'none',
+};
 
 type Trainer = {
   id: string;
@@ -48,6 +81,11 @@ export default function MatchingPagina() {
   const [gekozenVoedingId, setGekozenVoedingId] = useState<string | null>(null);
   const [aanbeveling, setAanbeveling] = useState<Aanbeveling | null>(null);
   const [laden, setLaden] = useState(true);
+  const [woonplaats, setWoonplaats] = useState('');
+  const [echteTrainers, setEchteTrainers] = useState<EchteTrainer[]>([]);
+  const [echteVoeding, setEchteVoeding] = useState<EchteTrainer[]>([]);
+  const [echteLaden, setEchteLaden] = useState(true);
+  const [echteFout, setEchteFout] = useState<string | null>(null);
 
   useEffect(() => {
     const laadAlles = async () => {
@@ -85,6 +123,29 @@ export default function MatchingPagina() {
       setReviews(alleReviews || []);
 
       setLaden(false);
+      setWoonplaats(profielData?.woonplaats || '');
+
+      const zoekEchteTrainers = async (soort: string) => {
+        try {
+          const res = await fetch('/api/echte-trainers', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ plaats: profielData?.woonplaats, type: soort }),
+          });
+          return await res.json();
+        } catch {
+          return { resultaten: [], fout: 'Zoeken bij Google is mislukt.' };
+        }
+      };
+
+      const [trainerResultaat, voedingResultaat] = await Promise.all([
+        zoekEchteTrainers('trainer'),
+        zoekEchteTrainers('voedingsdeskundige'),
+      ]);
+      setEchteTrainers(trainerResultaat.resultaten || []);
+      setEchteVoeding(voedingResultaat.resultaten || []);
+      setEchteFout(trainerResultaat.fout || voedingResultaat.fout || null);
+      setEchteLaden(false);
 
       const metGemiddelde = (lijst: Trainer[]) =>
         lijst.map((t) => {
@@ -163,6 +224,72 @@ export default function MatchingPagina() {
         aanbevolenId={aanbeveling?.voeding_id || null}
         aanbevolenReden={aanbeveling?.voeding_reden || null}
       />
+
+      <p style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#8A7561', margin: '36px 0 6px' }}>
+        Echte trainers bij jou in de buurt{woonplaats ? ` · ${woonplaats}` : ''}
+      </p>
+      <p style={{ color: '#8A7561', fontSize: 13.5, margin: '0 0 12px' }}>Live gevonden via Google Maps.</p>
+      {echteLaden ? (
+        <p style={{ color: '#8A7561', fontSize: 14 }}>Zoeken...</p>
+      ) : echteFout ? (
+        <p style={{ color: '#8A7561', fontSize: 14 }}>{echteFout}</p>
+      ) : echteTrainers.length === 0 ? (
+        <p style={{ color: '#8A7561', fontSize: 14 }}>Geen trainers gevonden in de buurt.</p>
+      ) : (
+        <EchteLijst items={echteTrainers} />
+      )}
+
+      <p style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#8A7561', margin: '32px 0 6px' }}>
+        Echte voedingsdeskundigen bij jou in de buurt{woonplaats ? ` · ${woonplaats}` : ''}
+      </p>
+      <p style={{ color: '#8A7561', fontSize: 13.5, margin: '0 0 12px' }}>Live gevonden via Google Maps.</p>
+      {echteLaden ? (
+        <p style={{ color: '#8A7561', fontSize: 14 }}>Zoeken...</p>
+      ) : echteFout ? (
+        <p style={{ color: '#8A7561', fontSize: 14 }}>{echteFout}</p>
+      ) : echteVoeding.length === 0 ? (
+        <p style={{ color: '#8A7561', fontSize: 14 }}>Geen voedingsdeskundigen gevonden in de buurt.</p>
+      ) : (
+        <EchteLijst items={echteVoeding} />
+      )}
+    </div>
+  );
+}
+
+function EchteLijst({ items }: { items: EchteTrainer[] }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+      {items.map((item, i) => (
+        <div
+          key={item.id || i}
+          style={{ borderRadius: 24, border: '2px solid #F3E4C8', background: '#FFFFFF', padding: 18 }}
+        >
+          <div style={{ fontWeight: 700, fontSize: 17 }}>{item.naam}</div>
+          {item.adres && <div style={{ color: '#8A7561', fontSize: 14, marginTop: 4 }}>{item.adres}</div>}
+          {item.rating !== null && (
+            <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, fontWeight: 700, color: '#E85D00' }}>
+              {sterIcon} {item.rating.toFixed(1).replace('.', ',')} ({item.aantalReviews} Google-reviews)
+            </div>
+          )}
+          <div style={{ display: 'flex', gap: 10, marginTop: 14, flexWrap: 'wrap' }}>
+            {item.telefoon && (
+              <a href={`tel:${item.telefoon}`} style={pilLink}>
+                Bel
+              </a>
+            )}
+            {item.website && (
+              <a href={item.website} target="_blank" rel="noopener noreferrer" style={pilLink}>
+                Website
+              </a>
+            )}
+            {item.mapsLink && (
+              <a href={item.mapsLink} target="_blank" rel="noopener noreferrer" style={pilLinkSecundair}>
+                Bekijk op Google Maps
+              </a>
+            )}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
