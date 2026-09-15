@@ -35,6 +35,7 @@ Blijf verder binnen praktische, algemene voeding: geen advies bij eetstoornissen
 };
 
 export async function POST(req: Request) {
+  try {
   const { profiel, berichten } = await req.json();
 
   const profielTekst = `
@@ -89,4 +90,12 @@ Antwoord met alleen dat ene woord, niets anders.`,
   const tekst = ruweTekst.replace(/\*\*/g, '').replace(/^#+\s*/gm, '');
 
   return NextResponse.json({ tekst, agent: specialist.naam });
+  } catch (fout: any) {
+    // Tijdelijk: laat de echte foutmelding zien in de chat, zodat we de oorzaak kunnen vinden.
+    console.error('Fout in /api/coach:', fout);
+    return NextResponse.json({
+      tekst: `[Tijdelijke foutmelding voor Dirk] ${fout?.status || ''} ${fout?.message || fout?.error?.message || 'onbekende fout'}`,
+      agent: 'Systeem (debug)',
+    });
+  }
 }
