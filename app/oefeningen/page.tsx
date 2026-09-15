@@ -105,14 +105,15 @@ function OefeningKaart({ oefening }: { oefening: Oefening }) {
 
   return (
     <div style={card}>
-      {animatie && (
-        <div style={{ display: 'flex', justifyContent: 'center', padding: '4px 0 14px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+        {animatie && (
           <OefeningAnimatie start={animatie.start} eind={animatie.eind} statisch={animatie.statisch} />
+        )}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontWeight: 700, fontSize: 17 }}>{oefening.naam}</div>
+          <p style={{ color: '#8A7561', fontSize: 14, margin: '4px 0 0' }}>{oefening.uitleg}</p>
         </div>
-      )}
-
-      <div style={{ fontWeight: 700, fontSize: 17 }}>{oefening.naam}</div>
-      <p style={{ color: '#8A7561', fontSize: 14, margin: '4px 0 0' }}>{oefening.uitleg}</p>
+      </div>
 
       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 12 }}>
         {oefening.benodigdheden.map((b) => (

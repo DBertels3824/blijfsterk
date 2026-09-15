@@ -44,15 +44,15 @@ h1, h2, h3 {
 }
 
 /* Schematische oefening-illustraties (zie app/components/OefeningAnimatie.tsx) */
-@keyframes bs-pijl {
-  0%, 100% { transform: translateX(0); opacity: 0.6; }
-  50% { transform: translateX(3px); opacity: 1; }
+@keyframes bs-badge-puls {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.12); }
 }
 @keyframes bs-adem {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.03); }
 }
 @media (prefers-reduced-motion: reduce) {
-  svg[style*="bs-pijl"] { animation: none !important; opacity: 1 !important; }
+  div[style*="bs-badge-puls"] { animation: none !important; }
   g[style*="bs-adem"] { animation: none !important; }
 }
