@@ -28,6 +28,8 @@ type Aanbeveling = {
   voeding_reden: string | null;
 };
 
+type Tab = 'trainer' | 'voedingsdeskundige' | 'sportschool';
+
 function initialen(naam: string) {
   return naam.split(' ').map((d) => d[0]).join('').slice(0, 2).toUpperCase();
 }
@@ -43,12 +45,14 @@ export default function MatchingPagina() {
   const [userId, setUserId] = useState<string | null>(null);
   const [trainers, setTrainers] = useState<Trainer[]>([]);
   const [voeding, setVoeding] = useState<Trainer[]>([]);
+  const [sportscholen, setSportscholen] = useState<Trainer[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [gekozenTrainerId, setGekozenTrainerId] = useState<string | null>(null);
   const [gekozenVoedingId, setGekozenVoedingId] = useState<string | null>(null);
+  const [gekozenSportschoolId, setGekozenSportschoolId] = useState<string | null>(null);
   const [aanbeveling, setAanbeveling] = useState<Aanbeveling | null>(null);
   const [laden, setLaden] = useState(true);
-  const [tab, setTab] = useState<'trainer' | 'voedingsdeskundige'>('trainer');
+  const [tab, setTab] = useState<Tab>('trainer');
 
   useEffect(() => {
     const laadAlles = async () => {
@@ -68,8 +72,10 @@ export default function MatchingPagina() {
       const { data: alleTrainers } = await supabase.from('trainers').select('*');
       const trainersLijst = alleTrainers ? alleTrainers.filter((t) => t.type === 'trainer') : [];
       const voedingLijst = alleTrainers ? alleTrainers.filter((t) => t.type === 'voedingsdeskundige') : [];
+      const sportschoolLijst = alleTrainers ? alleTrainers.filter((t) => t.type === 'sportschool') : [];
       setTrainers(trainersLijst);
       setVoeding(voedingLijst);
+      setSportscholen(sportschoolLijst);
 
       const { data: matches } = await supabase
         .from('matches')
@@ -78,8 +84,10 @@ export default function MatchingPagina() {
       if (matches) {
         const trainerMatch = matches.find((m) => m.type === 'trainer');
         const voedingMatch = matches.find((m) => m.type === 'voedingsdeskundige');
+        const sportschoolMatch = matches.find((m) => m.type === 'sportschool');
         setGekozenTrainerId(trainerMatch ? trainerMatch.trainer_id : null);
         setGekozenVoedingId(voedingMatch ? voedingMatch.trainer_id : null);
+        setGekozenSportschoolId(sportschoolMatch ? sportschoolMatch.trainer_id : null);
       }
 
       const { data: alleReviews } = await supabase.from('reviews').select('*');
@@ -125,24 +133,24 @@ export default function MatchingPagina() {
     await supabase.from('matches').delete().eq('user_id', userId).eq('type', type);
     await supabase.from('matches').insert({ user_id: userId, trainer_id: trainerId, type });
     if (type === 'trainer') setGekozenTrainerId(trainerId);
-    else setGekozenVoedingId(trainerId);
+    else if (type === 'voedingsdeskundige') setGekozenVoedingId(trainerId);
+    else setGekozenSportschoolId(trainerId);
   };
 
   if (laden) return <p style={{ padding: 24 }}>Laden...</p>;
 
-  const isTrainerTab = tab === 'trainer';
-  const partnerItems = isTrainerTab ? trainers : voeding;
-  const gekozenId = isTrainerTab ? gekozenTrainerId : gekozenVoedingId;
-  const aanbevolenId = isTrainerTab ? aanbeveling?.trainer_id || null : aanbeveling?.voeding_id || null;
-  const aanbevolenReden = isTrainerTab ? aanbeveling?.trainer_reden || null : aanbeveling?.voeding_reden || null;
+  const partnerItems = tab === 'trainer' ? trainers : tab === 'voedingsdeskundige' ? voeding : sportscholen;
+  const gekozenId = tab === 'trainer' ? gekozenTrainerId : tab === 'voedingsdeskundige' ? gekozenVoedingId : gekozenSportschoolId;
+  const aanbevolenId = tab === 'trainer' ? aanbeveling?.trainer_id || null : tab === 'voedingsdeskundige' ? aanbeveling?.voeding_id || null : null;
+  const aanbevolenReden = tab === 'trainer' ? aanbeveling?.trainer_reden || null : tab === 'voedingsdeskundige' ? aanbeveling?.voeding_reden || null : null;
 
   return (
     <div style={{ maxWidth: 480, margin: '0 auto', padding: '24px 20px 60px' }}>
       <h1 style={{ fontSize: 26, margin: '0 0 6px' }}>Kies wie bij je past</h1>
       <p style={{ color: '#8A7561', margin: '0 0 20px' }}>Op basis van je doelen en woonplaats.</p>
 
-      <div style={{ display: 'flex', gap: 8, background: '#FFFFFF', border: '2px solid #F3E4C8', borderRadius: 999, padding: 4, marginBottom: 26 }}>
-        {(['trainer', 'voedingsdeskundige'] as const).map((t) => (
+      <div style={{ display: 'flex', gap: 6, background: '#FFFFFF', border: '2px solid #F3E4C8', borderRadius: 999, padding: 4, marginBottom: 26 }}>
+        {(['trainer', 'voedingsdeskundige', 'sportschool'] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
@@ -150,7 +158,7 @@ export default function MatchingPagina() {
               flex: 1,
               fontFamily: 'inherit',
               fontWeight: 700,
-              fontSize: 14.5,
+              fontSize: 13,
               padding: '11px 0',
               borderRadius: 999,
               border: 'none',
@@ -159,7 +167,7 @@ export default function MatchingPagina() {
               color: tab === t ? '#3A1E00' : '#8A7561',
             }}
           >
-            {t === 'trainer' ? 'Trainers' : 'Voedingsdeskundigen'}
+            {t === 'trainer' ? 'Trainers' : t === 'voedingsdeskundige' ? 'Voeding' : 'Sportscholen'}
           </button>
         ))}
       </div>
@@ -167,17 +175,25 @@ export default function MatchingPagina() {
       <p style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#8A7561', marginBottom: 12 }}>
         Onze partners
       </p>
-      <Lijst
-        items={partnerItems}
-        type={tab}
-        gekozenId={gekozenId}
-        reviews={reviews}
-        userId={userId}
-        onKies={kies}
-        onReviewOpgeslagen={verversReviews}
-        aanbevolenId={aanbevolenId}
-        aanbevolenReden={aanbevolenReden}
-      />
+      <p style={{ fontSize: 12.5, color: '#8A7561', lineHeight: 1.6, margin: '0 0 16px', background: '#FFF8EE', borderRadius: 14, padding: '10px 14px' }}>
+        Blijf Sterk brengt je in contact met een trainer, voedingsdeskundige of sportschool, maar is geen partij in
+        en niet aansprakelijk voor de samenwerking of begeleiding zelf.
+      </p>
+      {partnerItems.length === 0 ? (
+        <p style={{ color: '#8A7561', fontSize: 14.5 }}>Hier staan binnenkort partners bij jou in de buurt.</p>
+      ) : (
+        <Lijst
+          items={partnerItems}
+          type={tab}
+          gekozenId={gekozenId}
+          reviews={reviews}
+          userId={userId}
+          onKies={kies}
+          onReviewOpgeslagen={verversReviews}
+          aanbevolenId={aanbevolenId}
+          aanbevolenReden={aanbevolenReden}
+        />
+      )}
     </div>
   );
 }

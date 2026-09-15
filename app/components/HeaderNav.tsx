@@ -17,25 +17,41 @@ const LINKS = [
 const ADMIN_LINKS = [
   { href: '/admin/trainers-zoeken', label: 'Trainers zoeken' },
   { href: '/admin/product-interesse', label: 'Interesse' },
+  { href: '/admin/aanmeldingen', label: 'Aanmeldingen' },
 ];
+
+const PARTNER_LINKS: Record<string, { href: string; label: string }> = {
+  trainer: { href: '/trainer-dashboard', label: 'Mijn dashboard' },
+  sportschool: { href: '/sportschool-dashboard', label: 'Mijn dashboard' },
+};
 
 export default function HeaderNav() {
   const pathname = usePathname();
   const router = useRouter();
   const [ingelogd, setIngelogd] = useState<boolean | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [rol, setRol] = useState('gebruiker');
 
   useEffect(() => {
     let mounted = true;
+
+    const laadRol = async (userId: string) => {
+      const { data } = await supabase.from('profiles').select('rol').eq('id', userId).single();
+      if (mounted) setRol(data?.rol || 'gebruiker');
+    };
+
     supabase.auth.getUser().then(({ data }) => {
       if (mounted) {
         setIngelogd(!!data.user);
         setIsAdmin(data.user?.email === ADMIN_EMAIL);
       }
+      if (data.user) laadRol(data.user.id);
     });
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setIngelogd(!!session?.user);
       setIsAdmin(session?.user?.email === ADMIN_EMAIL);
+      if (session?.user) laadRol(session.user.id);
+      else setRol('gebruiker');
     });
     return () => {
       mounted = false;
@@ -48,11 +64,21 @@ export default function HeaderNav() {
     router.push('/');
   }
 
+  const partnerLink = PARTNER_LINKS[rol];
+  const navLinks = partnerLink
+    ? [partnerLink]
+    : [
+        ...LINKS,
+        { href: '/winkel', label: 'Winkel' },
+        { href: '/word-partner', label: 'Word partner' },
+        ...(isAdmin ? ADMIN_LINKS : []),
+      ];
+
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
       {ingelogd && (
         <nav style={{ display: 'flex', gap: 20 }}>
-          {[...LINKS, { href: '/winkel', label: 'Winkel' }, ...(isAdmin ? ADMIN_LINKS : [])].map((l) => (
+          {navLinks.map((l) => (
             <Link
               key={l.href}
               href={l.href}
@@ -73,6 +99,9 @@ export default function HeaderNav() {
         <>
           <Link href="/winkel" style={{ fontSize: 15, fontWeight: 500, color: '#2B1B0E', textDecoration: 'none' }}>
             Winkel
+          </Link>
+          <Link href="/word-partner" style={{ fontSize: 15, fontWeight: 500, color: '#2B1B0E', textDecoration: 'none' }}>
+            Word partner
           </Link>
           <Link href="/login" style={{ fontSize: 15, fontWeight: 500, color: '#2B1B0E', textDecoration: 'none' }}>
             Inloggen

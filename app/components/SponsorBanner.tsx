@@ -2,10 +2,18 @@
 
 import { SPONSORS } from '@/lib/sponsors';
 
+const MIN_HERHALING = 6; // zorgt dat de balk altijd breed genoeg is om echt door het beeld te lopen, ook met weinig sponsors
+
 export default function SponsorBanner() {
   if (SPONSORS.length === 0) return null;
 
-  const logos = [...SPONSORS, ...SPONSORS]; // dubbel voor een naadloze, doorlopende loop
+  // vul aan tot minimaal MIN_HERHALING logo's, en verdubbel dat dan voor een naadloze loop
+  const basisSet = Array.from(
+    { length: Math.max(MIN_HERHALING, SPONSORS.length) },
+    (_, i) => SPONSORS[i % SPONSORS.length]
+  );
+  const logos = [...basisSet, ...basisSet];
+  const duurInSeconden = basisSet.length * 4; // vaste snelheid per logo, ongeacht aantal sponsors
 
   return (
     <div
@@ -37,7 +45,7 @@ export default function SponsorBanner() {
             alignItems: 'center',
             gap: 56,
             width: 'max-content',
-            animation: 'blijfsterk-sponsor-scroll 28s linear infinite',
+            animation: `blijfsterk-sponsor-scroll ${duurInSeconden}s linear infinite`,
           }}
         >
           {logos.map((sponsor, i) =>
