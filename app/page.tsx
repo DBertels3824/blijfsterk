@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
+import SponsorBanner from "./components/SponsorBanner";
 
 const btnPrimary: CSSProperties = {
   display: "inline-flex",
@@ -107,6 +108,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <SponsorBanner />
 
       {/* VIDEO */}
       <section style={{ maxWidth: 1140, margin: "0 auto", padding: "0 24px 64px" }}>
