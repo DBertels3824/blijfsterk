@@ -104,9 +104,6 @@ export default function HeaderNav() {
           <Link href="/word-partner" style={{ fontSize: 15, fontWeight: 500, color: '#2B1B0E', textDecoration: 'none' }}>
             Word partner
           </Link>
-          <Link href="/oefeningen" style={{ fontSize: 15, fontWeight: 500, color: '#2B1B0E', textDecoration: 'none' }}>
-            Oefeningen
-          </Link>
           <Link href="/login" style={{ fontSize: 15, fontWeight: 500, color: '#2B1B0E', textDecoration: 'none' }}>
             Inloggen
           </Link>

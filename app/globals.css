@@ -42,3 +42,24 @@ h1, h2, h3 {
     grid-template-columns: 1fr !important;
   }
 }
+
+/* Schematische oefening-animaties (zie app/components/OefeningAnimatie.tsx) */
+@keyframes bs-pose-a {
+  0%, 30% { opacity: 1; }
+  50%, 80% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes bs-pose-b {
+  0%, 30% { opacity: 0; }
+  50%, 80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes bs-adem {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+@media (prefers-reduced-motion: reduce) {
+  g[style*="bs-pose-a"] { animation: none !important; opacity: 1 !important; }
+  g[style*="bs-pose-b"] { animation: none !important; opacity: 0 !important; }
+  g[style*="bs-adem"] { animation: none !important; }
+}

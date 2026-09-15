@@ -1,7 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
 import { OEFENINGEN, CATEGORIEEN, BENODIGDHEDEN, type Oefening } from '@/lib/oefeningen';
+import { OEFENING_POSES } from '@/lib/oefening-poses';
+import OefeningAnimatie from '@/app/components/OefeningAnimatie';
 
 const card: React.CSSProperties = {
   borderRadius: 24,
@@ -11,7 +16,21 @@ const card: React.CSSProperties = {
 };
 
 export default function OefeningenPagina() {
+  const router = useRouter();
+  const [laden, setLaden] = useState(true);
   const [filter, setFilter] = useState<(typeof BENODIGDHEDEN)[number]>('Alles');
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (!data.user) {
+        router.push('/login');
+        return;
+      }
+      setLaden(false);
+    });
+  }, [router]);
+
+  if (laden) return <p style={{ padding: 24 }}>Laden...</p>;
 
   const zichtbaar: Oefening[] = OEFENINGEN.filter(
     (o) => filter === 'Alles' || o.benodigdheden.includes(filter)
@@ -25,11 +44,23 @@ export default function OefeningenPagina() {
         als vervanger voor gewichten.
       </p>
 
-      <div style={{ fontSize: 13, color: '#8A7561', lineHeight: 1.6, background: '#FFF8EE', borderRadius: 14, padding: '12px 16px', marginBottom: 22 }}>
+      <div style={{ fontSize: 13, color: '#8A7561', lineHeight: 1.6, background: '#FFF8EE', borderRadius: 14, padding: '12px 16px', marginBottom: 16 }}>
         Stop meteen bij pijn, duizeligheid of kortademigheid. Twijfel je of een oefening geschikt is voor jou? Overleg
         eerst met je huisarts of fysiotherapeut. Deze bibliotheek is een eerste, voorzichtige versie en nog niet
-        beoordeeld door een fysiotherapeut of sportarts.
+        beoordeeld door een fysiotherapeut of sportarts. De animaties zijn een eenvoudige schematische ondersteuning
+        — volg voor de precieze uitvoering altijd de geschreven stappen.
       </div>
+
+      <Link
+        href="/oefeningen/schema"
+        style={{
+          display: 'block', textAlign: 'center', fontFamily: 'inherit', fontWeight: 700, fontSize: 14.5,
+          borderRadius: 999, padding: '12px 16px', marginBottom: 24, textDecoration: 'none',
+          background: 'linear-gradient(135deg,#FFBE0A,#FF8601)', color: '#3A1E00',
+        }}
+      >
+        Bekijk je weekschema →
+      </Link>
 
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 24 }}>
         {BENODIGDHEDEN.map((b) => (
@@ -70,11 +101,17 @@ export default function OefeningenPagina() {
 
 function OefeningKaart({ oefening }: { oefening: Oefening }) {
   const [open, setOpen] = useState(false);
+  const animatie = OEFENING_POSES[oefening.id];
 
   return (
     <div style={card}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
-        <div>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
+        {animatie && (
+          <div style={{ flexShrink: 0, width: 88 }}>
+            <OefeningAnimatie start={animatie.start} eind={animatie.eind} statisch={animatie.statisch} />
+          </div>
+        )}
+        <div style={{ flex: 1 }}>
           <div style={{ fontWeight: 700, fontSize: 17 }}>{oefening.naam}</div>
           <p style={{ color: '#8A7561', fontSize: 14, margin: '4px 0 0' }}>{oefening.uitleg}</p>
         </div>
