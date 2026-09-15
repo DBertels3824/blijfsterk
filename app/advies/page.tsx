@@ -58,13 +58,22 @@ export default function AdviesPagina() {
   }, [berichten]);
 
   const vraagCoach = async (nieuweBerichten: Bericht[]) => {
-    const res = await fetch('/api/coach', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ profiel: profielRef.current, berichten: nieuweBerichten }),
-    });
-    const data = await res.json();
-    setBerichten((huidig) => [...huidig, { role: 'assistant', content: data.tekst, agent: data.agent }]);
+    try {
+      const res = await fetch('/api/coach', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profiel: profielRef.current, berichten: nieuweBerichten }),
+      });
+      if (!res.ok) throw new Error('coach-fout');
+      const data = await res.json();
+      if (!data.tekst) throw new Error('coach-leeg');
+      setBerichten((huidig) => [...huidig, { role: 'assistant', content: data.tekst, agent: data.agent }]);
+    } catch {
+      setBerichten((huidig) => [
+        ...huidig,
+        { role: 'assistant', content: 'Sorry, er ging iets mis. Probeer het nog eens.' },
+      ]);
+    }
   };
 
   const versturenHandler = async () => {
