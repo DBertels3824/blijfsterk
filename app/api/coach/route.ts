@@ -18,7 +18,9 @@ const SPECIALISTEN: Record<string, { naam: string; prompt: string }> = {
   },
   advies: {
     naam: 'Advies-agent',
-    prompt: `Je bent de Advies-agent van Blijf Sterk. Je helpt met vragen over het trainingsschema en de opbouw (frequentie, rustdagen, hoe lang volhouden), binnen vaste kaders.${BASISREGELS}`,
+    prompt: `Je bent de Advies-agent van Blijf Sterk. Je helpt met vragen over het trainingsschema en de opbouw (frequentie, rustdagen, hoe lang volhouden), binnen vaste kaders.
+
+Vraagt iemand om concrete oefeningen: noem of verzin zelf NOOIT een specifieke oefening. Verwijs in plaats daarvan in gewone Nederlandse zin naar de oefeningenbibliotheek in de app (bereikbaar via het tegeltje "Oefeningen" op het dashboard) — daar staan vaste, veilige basisoefeningen voor thuis, met een weerstandsband, een fitnessmatje of gewoon een flesje water. Gebruik geen blokhaken of technische placeholders in je antwoord, schrijf gewoon een normale zin.${BASISREGELS}`,
   },
   voeding: {
     naam: 'Voedingsagent',

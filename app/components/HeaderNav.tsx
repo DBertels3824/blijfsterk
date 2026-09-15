@@ -10,6 +10,7 @@ const LINKS = [
   { href: '/dashboard', label: 'Dashboard' },
   { href: '/advies', label: 'Advies' },
   { href: '/matching', label: 'Matching' },
+  { href: '/oefeningen', label: 'Oefeningen' },
   { href: '/voortgang', label: 'Voortgang' },
   { href: '/intake', label: 'Profiel' },
 ];
@@ -102,6 +103,9 @@ export default function HeaderNav() {
           </Link>
           <Link href="/word-partner" style={{ fontSize: 15, fontWeight: 500, color: '#2B1B0E', textDecoration: 'none' }}>
             Word partner
+          </Link>
+          <Link href="/oefeningen" style={{ fontSize: 15, fontWeight: 500, color: '#2B1B0E', textDecoration: 'none' }}>
+            Oefeningen
           </Link>
           <Link href="/login" style={{ fontSize: 15, fontWeight: 500, color: '#2B1B0E', textDecoration: 'none' }}>
             Inloggen
