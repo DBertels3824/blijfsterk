@@ -91,7 +91,12 @@ Antwoord met alleen dat ene woord, niets anders.`,
   const ruweTekst = laatsteBlok.type === 'text' ? laatsteBlok.text : '';
   const tekst = ruweTekst.replace(/\*\*/g, '').replace(/^#+\s*/gm, '');
 
-  return NextResponse.json({ tekst, agent: specialist.naam });
+  // De advies-agent verwijst in woorden naar de oefeningenbibliotheek (zie zijn prompt
+  // hierboven) — als dat woord voorkomt, laat de chat er ook een echte knop bij zien
+  // in plaats van dat de gebruiker het zelf moet opzoeken.
+  const naarOefeningen = /oefeningenbibliotheek/i.test(tekst);
+
+  return NextResponse.json({ tekst, agent: specialist.naam, naarOefeningen });
   } catch (fout: any) {
     console.error('Fout in /api/coach:', fout);
     return NextResponse.json({

@@ -2,12 +2,14 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 
 type Bericht = {
   role: 'user' | 'assistant';
   content: string;
   agent?: string;
+  naarOefeningen?: boolean;
 };
 
 export default function AdviesPagina() {
@@ -67,7 +69,10 @@ export default function AdviesPagina() {
       if (!res.ok) throw new Error('coach-fout');
       const data = await res.json();
       if (!data.tekst) throw new Error('coach-leeg');
-      setBerichten((huidig) => [...huidig, { role: 'assistant', content: data.tekst, agent: data.agent }]);
+      setBerichten((huidig) => [
+        ...huidig,
+        { role: 'assistant', content: data.tekst, agent: data.agent, naarOefeningen: !!data.naarOefeningen },
+      ]);
     } catch {
       setBerichten((huidig) => [
         ...huidig,
@@ -120,8 +125,21 @@ export default function AdviesPagina() {
               </div>
             )}
             {bericht.role === 'assistant' ? (
-              <div style={{ background: '#FFFFFF', border: '1px solid #F3E4C8', borderRadius: '20px 20px 20px 6px', padding: '16px 18px', whiteSpace: 'pre-line', lineHeight: 1.6, fontSize: 15 }}>
-                {bericht.content}
+              <div style={{ background: '#FFFFFF', border: '1px solid #F3E4C8', borderRadius: '20px 20px 20px 6px', padding: '16px 18px' }}>
+                <p style={{ margin: 0, whiteSpace: 'pre-line', lineHeight: 1.6, fontSize: 15 }}>{bericht.content}</p>
+                {bericht.naarOefeningen && (
+                  <Link
+                    href="/oefeningen"
+                    style={{
+                      display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 12,
+                      fontFamily: 'inherit', fontWeight: 700, fontSize: 13.5, color: '#3A1E00',
+                      background: 'linear-gradient(135deg,#FFBE0A,#FF8601)', borderRadius: 999,
+                      padding: '9px 16px', textDecoration: 'none',
+                    }}
+                  >
+                    Bekijk de oefeningenbibliotheek →
+                  </Link>
+                )}
               </div>
             ) : (
               <div style={{ background: '#E85D00', color: '#FFFFFF', borderRadius: '20px 20px 6px 20px', padding: '14px 18px', fontWeight: 500, whiteSpace: 'pre-line', lineHeight: 1.6, fontSize: 15 }}>
