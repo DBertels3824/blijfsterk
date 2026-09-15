@@ -51,6 +51,17 @@ export default function DashboardPagina() {
         router.push('/login');
         return;
       }
+
+      const { data: rolData } = await supabase.from('profiles').select('rol').eq('id', user.id).single();
+      if (rolData?.rol === 'trainer') {
+        router.push('/trainer-dashboard');
+        return;
+      }
+      if (rolData?.rol === 'sportschool') {
+        router.push('/sportschool-dashboard');
+        return;
+      }
+
       setNaam(user.email ? user.email.split('@')[0] : '');
 
       const { data: profielData } = await supabase
