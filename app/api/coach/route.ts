@@ -91,11 +91,10 @@ Antwoord met alleen dat ene woord, niets anders.`,
 
   return NextResponse.json({ tekst, agent: specialist.naam });
   } catch (fout: any) {
-    // Tijdelijk: laat de echte foutmelding zien in de chat, zodat we de oorzaak kunnen vinden.
     console.error('Fout in /api/coach:', fout);
     return NextResponse.json({
-      tekst: `[Tijdelijke foutmelding voor Dirk] ${fout?.status || ''} ${fout?.message || fout?.error?.message || 'onbekende fout'}`,
-      agent: 'Systeem (debug)',
+      tekst: 'Sorry, er ging iets mis. Probeer het over even nog eens.',
+      agent: 'Blijf Sterk Coach',
     });
   }
 }
