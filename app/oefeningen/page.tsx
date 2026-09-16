@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { OEFENINGEN, CATEGORIEEN, BENODIGDHEDEN, type Oefening } from '@/lib/oefeningen';
 import { OEFENING_POSES } from '@/lib/oefening-poses';
+import { OEFENING_VIDEOS } from '@/lib/oefening-videos';
 import OefeningAnimatie from '@/app/components/OefeningAnimatie';
 
 const card: React.CSSProperties = {
@@ -47,8 +48,8 @@ export default function OefeningenPagina() {
       <div style={{ fontSize: 13, color: '#8A7561', lineHeight: 1.6, background: '#FFF8EE', borderRadius: 14, padding: '12px 16px', marginBottom: 16 }}>
         Stop meteen bij pijn, duizeligheid of kortademigheid. Twijfel je of een oefening geschikt is voor jou? Overleg
         eerst met je huisarts of fysiotherapeut. Deze bibliotheek is een eerste, voorzichtige versie en nog niet
-        beoordeeld door een fysiotherapeut of sportarts. De animaties zijn een eenvoudige schematische ondersteuning
-        — volg voor de precieze uitvoering altijd de geschreven stappen.
+        beoordeeld door een fysiotherapeut of sportarts. De video's en illustraties zijn een ondersteuning bij de
+        uitleg — volg voor de precieze uitvoering altijd de geschreven stappen.
       </div>
 
       <Link
@@ -102,11 +103,23 @@ export default function OefeningenPagina() {
 function OefeningKaart({ oefening }: { oefening: Oefening }) {
   const [open, setOpen] = useState(false);
   const animatie = OEFENING_POSES[oefening.id];
+  const video = OEFENING_VIDEOS[oefening.id];
 
   return (
     <div style={card}>
+      {video && (
+        <video
+          src={video}
+          autoPlay
+          loop
+          muted
+          playsInline
+          style={{ width: '100%', borderRadius: 16, display: 'block', marginBottom: 14, background: '#FFF1DC' }}
+        />
+      )}
+
       <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-        {animatie && (
+        {!video && animatie && (
           <OefeningAnimatie start={animatie.start} eind={animatie.eind} statisch={animatie.statisch} />
         )}
         <div style={{ flex: 1, minWidth: 0 }}>
