@@ -7,4 +7,11 @@ export const OEFENING_VIDEOS: Record<string, string> = {
   kuitheffingen: '/oefeningen-video/kuitheffingen.mp4',
   'zijwaartse-beenheffing-band': '/oefeningen-video/zijwaartse-beenheffing-band.mp4',
   bekkenlift: '/oefeningen-video/bekkenlift.mp4',
+  'vogel-hond': '/oefeningen-video/vogel-hond.mp4',
+};
+
+// Korte waarschuwing/opmerking die direct onder de video getoond wordt, voor
+// video's die niet de volledige beweging laten zien (bijv. maar één kant).
+export const VIDEO_OPMERKINGEN: Record<string, string> = {
+  'vogel-hond': 'De video laat één kant zien — wissel bij het echt uitvoeren af tussen links en rechts.',
 };

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { OEFENINGEN, CATEGORIEEN, BENODIGDHEDEN, type Oefening } from '@/lib/oefeningen';
 import { OEFENING_POSES } from '@/lib/oefening-poses';
-import { OEFENING_VIDEOS } from '@/lib/oefening-videos';
+import { OEFENING_VIDEOS, VIDEO_OPMERKINGEN } from '@/lib/oefening-videos';
 import OefeningAnimatie from '@/app/components/OefeningAnimatie';
 
 const card: React.CSSProperties = {
@@ -104,32 +104,40 @@ function OefeningKaart({ oefening }: { oefening: Oefening }) {
   const [open, setOpen] = useState(false);
   const animatie = OEFENING_POSES[oefening.id];
   const video = OEFENING_VIDEOS[oefening.id];
+  const videoOpmerking = VIDEO_OPMERKINGEN[oefening.id];
 
   return (
     <div style={card}>
       {video && (
-        <div
-          style={{
-            width: '100%',
-            aspectRatio: '4 / 3',
-            borderRadius: 16,
-            marginBottom: 14,
-            background: '#FFF1DC',
-            overflow: 'hidden',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <video
-            src={video}
-            autoPlay
-            loop
-            muted
-            playsInline
-            style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
-          />
-        </div>
+        <>
+          <div
+            style={{
+              width: '100%',
+              aspectRatio: '4 / 3',
+              borderRadius: 16,
+              marginBottom: videoOpmerking ? 8 : 14,
+              background: '#FFF1DC',
+              overflow: 'hidden',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <video
+              src={video}
+              autoPlay
+              loop
+              muted
+              playsInline
+              style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
+            />
+          </div>
+          {videoOpmerking && (
+            <p style={{ fontSize: 12.5, color: '#B9601A', fontWeight: 700, margin: '0 0 14px' }}>
+              {videoOpmerking}
+            </p>
+          )}
+        </>
       )}
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
