@@ -9,11 +9,14 @@ import { ADMIN_EMAIL } from '@/lib/admin';
 const LINKS = [
   { href: '/dashboard', label: 'Dashboard' },
   { href: '/advies', label: 'Advies' },
-  { href: '/matching', label: 'Matching' },
   { href: '/oefeningen', label: 'Oefeningen' },
   { href: '/voortgang', label: 'Voortgang' },
   { href: '/intake', label: 'Profiel' },
 ];
+
+// Matching (trainers/sportscholen) zit voorlopig in het afgeschermde deel — nog niet
+// zichtbaar voor gewone gebruikers, alleen voor de admin (om het intern te bekijken).
+const MATCHING_LINK = { href: '/matching', label: 'Matching' };
 
 const ADMIN_LINKS = [
   { href: '/admin/trainers-zoeken', label: 'Trainers zoeken' },
@@ -70,6 +73,7 @@ export default function HeaderNav() {
     ? [partnerLink]
     : [
         ...LINKS,
+        ...(isAdmin ? [MATCHING_LINK] : []),
         { href: '/winkel', label: 'Winkel' },
         { href: '/word-partner', label: 'Word partner' },
         ...(isAdmin ? ADMIN_LINKS : []),

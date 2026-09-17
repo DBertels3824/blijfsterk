@@ -11,16 +11,6 @@ type Profiel = {
   ervaring: string | null;
 };
 
-type GekozenPersoon = {
-  naam: string;
-  plaats: string;
-  specialisatie: string;
-};
-
-function initialen(naam: string) {
-  return naam.split(' ').map((d) => d[0]).join('').slice(0, 2).toUpperCase();
-}
-
 function groet() {
   const uur = new Date().getHours();
   if (uur < 12) return 'Goedemorgen';
@@ -40,8 +30,6 @@ export default function DashboardPagina() {
   const [naam, setNaam] = useState('');
   const [profiel, setProfiel] = useState<Profiel | null>(null);
   const [aantalTrainingen, setAantalTrainingen] = useState(0);
-  const [trainer, setTrainer] = useState<GekozenPersoon | null>(null);
-  const [voedingsdeskundige, setVoedingsdeskundige] = useState<GekozenPersoon | null>(null);
   const [laden, setLaden] = useState(true);
 
   useEffect(() => {
@@ -76,18 +64,6 @@ export default function DashboardPagina() {
         .select('*', { count: 'exact', head: true })
         .eq('user_id', user.id);
       setAantalTrainingen(count || 0);
-
-      const { data: matches } = await supabase
-        .from('matches')
-        .select('type, trainers(naam, plaats, specialisatie)')
-        .eq('user_id', user.id);
-
-      if (matches) {
-        const trainerMatch = matches.find((m: any) => m.type === 'trainer');
-        const voedingMatch = matches.find((m: any) => m.type === 'voedingsdeskundige');
-        if (trainerMatch?.trainers) setTrainer(trainerMatch.trainers as any);
-        if (voedingMatch?.trainers) setVoedingsdeskundige(voedingMatch.trainers as any);
-      }
 
       setLaden(false);
     };
@@ -140,72 +116,6 @@ export default function DashboardPagina() {
         </div>
       </div>
 
-      {/* Team */}
-      <p style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#8A7561', marginBottom: 12 }}>
-        Jouw team
-      </p>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 24 }}>
-
-        <div style={{ ...card, padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 14 }}>
-          <div
-            style={{
-              width: 52, height: 52, borderRadius: 16, flexShrink: 0,
-              background: trainer ? 'linear-gradient(135deg,#FFBE0A,#FF8601)' : '#FFF1DC',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontWeight: 700, fontSize: 15, color: trainer ? '#3A1E00' : '#B9601A',
-            }}
-          >
-            {trainer ? initialen(trainer.naam) : '?'}
-          </div>
-          <div style={{ flex: 1 }}>
-            <p style={{ margin: 0, fontWeight: 700 }}>{trainer ? trainer.naam : 'Nog geen trainer'}</p>
-            <p style={{ margin: '2px 0 0', color: '#8A7561', fontSize: 13 }}>
-              {trainer ? `${trainer.plaats} · ${trainer.specialisatie}` : 'Jouw trainer'}
-            </p>
-          </div>
-          <Link
-            href="/matching"
-            style={{
-              fontFamily: 'inherit', fontWeight: 700, fontSize: 13, borderRadius: 999,
-              border: '2px solid #F3E4C8', background: '#FFFFFF', minHeight: 36,
-              padding: '0 14px', display: 'inline-flex', alignItems: 'center', color: '#2B1B0E',
-            }}
-          >
-            {trainer ? 'Bekijk' : 'Kies'}
-          </Link>
-        </div>
-
-        <div style={{ ...card, padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 14 }}>
-          <div
-            style={{
-              width: 52, height: 52, borderRadius: 16, flexShrink: 0,
-              background: voedingsdeskundige ? 'linear-gradient(135deg,#FFBE0A,#FF8601)' : '#FFF1DC',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontWeight: 700, fontSize: 15, color: voedingsdeskundige ? '#3A1E00' : '#B9601A',
-            }}
-          >
-            {voedingsdeskundige ? initialen(voedingsdeskundige.naam) : '?'}
-          </div>
-          <div style={{ flex: 1 }}>
-            <p style={{ margin: 0, fontWeight: 700 }}>{voedingsdeskundige ? voedingsdeskundige.naam : 'Nog geen voedingsdeskundige'}</p>
-            <p style={{ margin: '2px 0 0', color: '#8A7561', fontSize: 13 }}>
-              {voedingsdeskundige ? `${voedingsdeskundige.plaats} · ${voedingsdeskundige.specialisatie}` : 'Jouw voedingsdeskundige'}
-            </p>
-          </div>
-          <Link
-            href="/matching"
-            style={{
-              fontFamily: 'inherit', fontWeight: 700, fontSize: 13, borderRadius: 999,
-              border: '2px solid #F3E4C8', background: '#FFFFFF', minHeight: 36,
-              padding: '0 14px', display: 'inline-flex', alignItems: 'center', color: '#2B1B0E',
-            }}
-          >
-            {voedingsdeskundige ? 'Bekijk' : 'Kies'}
-          </Link>
-        </div>
-
-      </div>
-
       {/* Snelle acties */}
       <p style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#8A7561', marginBottom: 12 }}>
         Snelle acties
@@ -214,12 +124,10 @@ export default function DashboardPagina() {
         <Tegel href="/advies" label="Advies" icon={
           <path d="M4 4h16v12H8l-4 4V4z" stroke="#E85D00" strokeWidth="2" strokeLinejoin="round" />
         } />
-        <Tegel href="/matching" label="Matching" icon={
+        <Tegel href="/winkel" label="Winkel" icon={
           <>
-            <circle cx="9" cy="9" r="3" stroke="#E85D00" strokeWidth="2" />
-            <circle cx="17" cy="10" r="2.4" stroke="#E85D00" strokeWidth="2" />
-            <path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#E85D00" strokeWidth="2" strokeLinecap="round" />
-            <path d="M15.5 14.2c2.3.3 4.2 2.3 4.5 4.8" stroke="#E85D00" strokeWidth="2" strokeLinecap="round" />
+            <path d="M4 8h16l-1.4 11.2a1 1 0 01-1 .8H6.4a1 1 0 01-1-.8L4 8z" stroke="#E85D00" strokeWidth="2" strokeLinejoin="round" />
+            <path d="M8 8V6a4 4 0 018 0v2" stroke="#E85D00" strokeWidth="2" strokeLinecap="round" />
           </>
         } />
         <Tegel href="/oefeningen" label="Oefeningen" icon={

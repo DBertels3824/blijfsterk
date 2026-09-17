@@ -3,13 +3,40 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 
-const ONDERDELEN = [
-  'Bidon',
-  'Handdoek',
-  'Fitnessmatje',
-  'Weerstandsband',
-  'Lichte gewichten',
-  'Blijf Sterk-poster met oefeningen',
+type Product = {
+  key: string;
+  naam: string;
+  ondertitel: string;
+  onderdelen: string[];
+  prijs: string;
+};
+
+const PRODUCTEN: Product[] = [
+  {
+    key: 'bandjes-poster',
+    naam: 'Weerstandsbandjes + posterpakket',
+    ondertitel: 'Klein, licht en simpel te versturen — alles om vandaag te starten.',
+    onderdelen: [
+      '3 weerstandsbanden (licht, gemiddeld, stevig)',
+      'Blijf Sterk-poster met oefeningen',
+      'Handig opbergtasje',
+    ],
+    prijs: '€14,95',
+  },
+  {
+    key: 'startpakket',
+    naam: 'Blijf Sterk Startpakket',
+    ondertitel: 'Alles om vandaag te beginnen met trainen, in één pakket bij je thuisbezorgd.',
+    onderdelen: [
+      'Bidon',
+      'Handdoek',
+      'Fitnessmatje',
+      'Weerstandsband',
+      'Lichte gewichten',
+      'Blijf Sterk-poster met oefeningen',
+    ],
+    prijs: '€39,95',
+  },
 ];
 
 const vinkIcoon = (
@@ -19,6 +46,7 @@ const vinkIcoon = (
 );
 
 export default function WinkelPagina() {
+  const [gekozen, setGekozen] = useState<string>(PRODUCTEN[0].key);
   const [naam, setNaam] = useState('');
   const [email, setEmail] = useState('');
   const [verstuurd, setVerstuurd] = useState(false);
@@ -31,6 +59,8 @@ export default function WinkelPagina() {
     });
   }, []);
 
+  const product = PRODUCTEN.find((p) => p.key === gekozen)!;
+
   const versturen = async () => {
     if (!naam.trim() || !email.trim()) {
       setFout('Vul je naam en e-mailadres in.');
@@ -41,7 +71,7 @@ export default function WinkelPagina() {
     const { error } = await supabase.from('product_interesse').insert({
       naam,
       email,
-      product: 'Startpakket',
+      product: product.naam,
     });
     setBezig(false);
     if (error) {
@@ -69,34 +99,70 @@ export default function WinkelPagina() {
         Binnenkort beschikbaar
       </span>
 
-      <h1 style={{ fontSize: 28, margin: '16px 0 6px' }}>Blijf Sterk Startpakket</h1>
+      <h1 style={{ fontSize: 28, margin: '16px 0 6px' }}>Winkel</h1>
       <p style={{ color: '#8A7561', fontSize: 16, lineHeight: 1.6, margin: 0 }}>
-        Alles om vandaag te beginnen met trainen, in één pakket bij je thuisbezorgd.
+        Kies een pakket. Nog niet te bestellen — laat je gegevens achter, dan laten we je als eerste weten
+        wanneer het kan.
       </p>
 
-      <div
-        style={{
-          marginTop: 26,
-          borderRadius: 24,
-          border: '1px solid #F3E4C8',
-          background: '#FFFFFF',
-          padding: 24,
-        }}
-      >
-        <p style={{ fontWeight: 700, fontSize: 15, margin: '0 0 14px' }}>Wat zit erin</p>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {ONDERDELEN.map((item) => (
-            <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 15.5 }}>
-              {vinkIcoon}
-              {item}
-            </div>
-          ))}
-        </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 26 }}>
+        {PRODUCTEN.map((p) => {
+          const actief = gekozen === p.key;
+          return (
+            <button
+              key={p.key}
+              onClick={() => {
+                setGekozen(p.key);
+                setVerstuurd(false);
+              }}
+              style={{
+                textAlign: 'left',
+                fontFamily: 'inherit',
+                cursor: 'pointer',
+                borderRadius: 24,
+                border: actief ? '2px solid #E85D00' : '1px solid #F3E4C8',
+                background: '#FFFFFF',
+                padding: 24,
+                boxShadow: actief ? '0 6px 16px rgba(232,93,0,0.12)' : 'none',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
+                <div>
+                  <p style={{ fontWeight: 800, fontSize: 17, margin: '0 0 4px' }}>{p.naam}</p>
+                  <p style={{ color: '#8A7561', fontSize: 14, margin: 0 }}>{p.ondertitel}</p>
+                </div>
+                <div
+                  style={{
+                    width: 24, height: 24, borderRadius: 999, flexShrink: 0,
+                    border: actief ? 'none' : '2px solid #F3E4C8',
+                    background: actief ? 'linear-gradient(135deg,#FFBE0A,#FF8601)' : 'transparent',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}
+                >
+                  {actief && (
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                      <path d="M4 12.5l5 5L20 6.5" stroke="#3A1E00" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  )}
+                </div>
+              </div>
 
-        <div style={{ marginTop: 20, paddingTop: 20, borderTop: '1px solid #F3E4C8', display: 'flex', alignItems: 'baseline', gap: 8 }}>
-          <span style={{ fontSize: 30, fontWeight: 800, color: '#E85D00' }}>€39,95</span>
-          <span style={{ color: '#8A7561', fontSize: 13.5 }}>richtprijs, kan nog wijzigen</span>
-        </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 16 }}>
+                {p.onderdelen.map((item) => (
+                  <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14.5, color: '#2B1B0E' }}>
+                    {vinkIcoon}
+                    {item}
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ marginTop: 18, paddingTop: 16, borderTop: '1px solid #F3E4C8', display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                <span style={{ fontSize: 26, fontWeight: 800, color: '#E85D00' }}>{p.prijs}</span>
+                <span style={{ color: '#8A7561', fontSize: 13 }}>richtprijs, kan nog wijzigen</span>
+              </div>
+            </button>
+          );
+        })}
       </div>
 
       <div
@@ -110,7 +176,7 @@ export default function WinkelPagina() {
       >
         {!verstuurd ? (
           <>
-            <p style={{ fontWeight: 700, fontSize: 15, margin: '0 0 4px' }}>Ik wil dit</p>
+            <p style={{ fontWeight: 700, fontSize: 15, margin: '0 0 4px' }}>Ik wil: {product.naam}</p>
             <p style={{ color: '#8A7561', fontSize: 14, margin: '0 0 16px' }}>
               Nog niet te bestellen — laat je gegevens achter, dan laten we je als eerste weten wanneer het kan.
             </p>
@@ -182,7 +248,7 @@ export default function WinkelPagina() {
           </>
         ) : (
           <p style={{ fontSize: 15.5, fontWeight: 600, color: '#2B1B0E', margin: 0 }}>
-            Bedankt! We laten je weten zodra je het Startpakket echt kunt bestellen.
+            Bedankt! We laten je weten zodra je "{product.naam}" echt kunt bestellen.
           </p>
         )}
       </div>

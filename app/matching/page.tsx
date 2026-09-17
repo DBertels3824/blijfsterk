@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import { ADMIN_EMAIL } from '@/lib/admin';
 
 type Trainer = {
   id: string;
@@ -59,6 +60,12 @@ export default function MatchingPagina() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         router.push('/login');
+        return;
+      }
+      // Matching zit voorlopig in het afgeschermde deel — nog niet beschikbaar voor
+      // gewone gebruikers, alleen voor de admin (om het intern te bekijken/testen).
+      if (user.email !== ADMIN_EMAIL) {
+        router.push('/dashboard');
         return;
       }
       setUserId(user.id);
