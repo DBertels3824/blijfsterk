@@ -3,4 +3,5 @@
 // oefeningenbibliotheek terug op het schematische poppetje uit lib/oefening-poses.ts.
 export const OEFENING_VIDEOS: Record<string, string> = {
   marcheren: '/oefeningen-video/marcheren.mp4',
+  'stoel-squat': '/oefeningen-video/stoel-squat.mp4',
 };

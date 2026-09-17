@@ -108,14 +108,28 @@ function OefeningKaart({ oefening }: { oefening: Oefening }) {
   return (
     <div style={card}>
       {video && (
-        <video
-          src={video}
-          autoPlay
-          loop
-          muted
-          playsInline
-          style={{ width: '100%', borderRadius: 16, display: 'block', marginBottom: 14, background: '#FFF1DC' }}
-        />
+        <div
+          style={{
+            width: '100%',
+            aspectRatio: '4 / 3',
+            borderRadius: 16,
+            marginBottom: 14,
+            background: '#FFF1DC',
+            overflow: 'hidden',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <video
+            src={video}
+            autoPlay
+            loop
+            muted
+            playsInline
+            style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
+          />
+        </div>
       )}
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
