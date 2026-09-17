@@ -6,4 +6,5 @@ export const OEFENING_VIDEOS: Record<string, string> = {
   'stoel-squat': '/oefeningen-video/stoel-squat.mp4',
   kuitheffingen: '/oefeningen-video/kuitheffingen.mp4',
   'zijwaartse-beenheffing-band': '/oefeningen-video/zijwaartse-beenheffing-band.mp4',
+  bekkenlift: '/oefeningen-video/bekkenlift.mp4',
 };
