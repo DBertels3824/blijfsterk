@@ -59,6 +59,7 @@ export default function DashboardPagina() {
   const [weekOefeningen, setWeekOefeningen] = useState<string[]>([]);
   const [weekstatus, setWeekstatus] = useState<Weekstatus | null>(null);
   const [laden, setLaden] = useState(true);
+  const [debugInfo, setDebugInfo] = useState('');
 
   useEffect(() => {
     const laadDashboard = async () => {
@@ -94,11 +95,25 @@ export default function DashboardPagina() {
       setAantalTrainingen(count || 0);
 
       const maandag = startVanDeWeek();
-      const { data: weekData } = await supabase
+      const { data: weekData, error: weekFout } = await supabase
         .from('voortgang')
         .select('created_at, oefening_id')
         .eq('user_id', user.id)
         .gte('created_at', maandag.toISOString());
+
+      // TIJDELIJK voor debuggen — hierna weer weghalen zodra bekend is wat er misgaat.
+      setDebugInfo(
+        JSON.stringify(
+          {
+            maandagGrens: maandag.toISOString(),
+            fout: weekFout?.message || null,
+            aantalRijen: weekData?.length ?? null,
+            rijen: weekData ?? null,
+          },
+          null,
+          2
+        )
+      );
 
       if (weekData) {
         const dagen = [false, false, false, false, false, false, false];
@@ -240,6 +255,12 @@ export default function DashboardPagina() {
           </div>
         )}
       </div>
+
+      {debugInfo && (
+        <pre style={{ fontSize: 11, background: '#2B1B0E', color: '#FFF1DC', borderRadius: 12, padding: 14, marginBottom: 20, overflowX: 'auto', whiteSpace: 'pre-wrap' }}>
+          {debugInfo}
+        </pre>
+      )}
 
       {/* Snelle acties */}
       <p style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#8A7561', marginBottom: 12 }}>
