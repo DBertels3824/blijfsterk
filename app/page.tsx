@@ -49,9 +49,8 @@ export default function Home() {
             Sterk blijven begint vandaag.
           </h1>
           <p style={{ fontSize: 18, color: "#4A3624", margin: "20px auto 0", maxWidth: 540, lineHeight: 1.6 }}>
-            Persoonlijk advies over kracht en voeding van je eigen virtuele coach, met oefeningen op maat en je
-            voortgang in beeld. Ontstaan uit de overtuiging dat je op elke leeftijd sterker kunt worden — vandaag,
-            niet morgen.
+            Persoonlijk advies over kracht en voeding — voor krachttraining vanaf je 55e, of wanneer je op kracht
+            wilt blijven of komen tijdens of na een medische behandeling.
           </p>
           <div style={{ display: "flex", gap: 16, marginTop: 30, flexWrap: "wrap", justifyContent: "center" }}>
             <Link href="/login" style={btnPrimary}>Deelnemen is gratis</Link>
