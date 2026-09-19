@@ -8,6 +8,7 @@ export const OEFENING_VIDEOS: Record<string, string> = {
   'zijwaartse-beenheffing-band': '/oefeningen-video/zijwaartse-beenheffing-band.mp4',
   bekkenlift: '/oefeningen-video/bekkenlift.mp4',
   'vogel-hond': '/oefeningen-video/vogel-hond.mp4',
+  'knie-plank': '/oefeningen-video/knie-plank.mp4',
 };
 
 // Korte waarschuwing/opmerking die direct onder de video getoond wordt, voor
