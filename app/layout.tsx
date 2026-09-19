@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
 import HeaderNav from "./components/HeaderNav";
+import ServiceWorkerRegistratie from "./components/ServiceWorkerRegistratie";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,6 +18,20 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Blijf Sterk",
   description: "Kracht opbouwen na je 55e — persoonlijke coaching, trainers en voedingsadvies.",
+  manifest: "/manifest.json",
+  icons: {
+    icon: "/icons/favicon-32.png",
+    apple: "/icons/apple-touch-icon.png",
+  },
+  appleWebApp: {
+    capable: true,
+    title: "Blijf Sterk",
+    statusBarStyle: "default",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#FF8601",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -26,6 +41,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <ServiceWorkerRegistratie />
         <header style={{ background: "#FFFFFF" }}>
           <div
             style={{

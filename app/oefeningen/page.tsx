@@ -129,6 +129,7 @@ function OefeningKaart({ oefening }: { oefening: Oefening }) {
   const [open, setOpen] = useState(false);
   const [bezig, setBezig] = useState(false);
   const [motivatie, setMotivatie] = useState('');
+  const [foutmelding, setFoutmelding] = useState('');
   const animatie = OEFENING_POSES[oefening.id];
   const video = OEFENING_VIDEOS[oefening.id];
   const videoOpmerking = VIDEO_OPMERKINGEN[oefening.id];
@@ -136,6 +137,7 @@ function OefeningKaart({ oefening }: { oefening: Oefening }) {
   async function markeerGedaan() {
     if (bezig) return;
     setBezig(true);
+    setFoutmelding('');
     const { data } = await supabase.auth.getUser();
     const user = data.user;
     if (!user) {
@@ -147,6 +149,9 @@ function OefeningKaart({ oefening }: { oefening: Oefening }) {
     if (!error) {
       setMotivatie(willekeurigeMotivatie());
       setTimeout(() => setMotivatie(''), 5000);
+    } else {
+      // TIJDELIJK voor debuggen — hierna weer weghalen zodra bekend is wat er misgaat.
+      setFoutmelding(error.message);
     }
   }
 
@@ -220,6 +225,12 @@ function OefeningKaart({ oefening }: { oefening: Oefening }) {
         </svg>
         {bezig ? 'Bezig...' : 'Ik heb dit gedaan'}
       </button>
+
+      {foutmelding && (
+        <p style={{ color: '#B3261E', marginTop: 12, fontSize: 13, fontWeight: 600 }}>
+          Fout: {foutmelding}
+        </p>
+      )}
 
       {motivatie && (
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 12 }}>

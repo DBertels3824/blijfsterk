@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { OEFENINGEN } from '@/lib/oefeningen';
+import { berekenWeekstatus, type Weekstatus } from '@/lib/weekschema';
+import PushMeldingenKnop from '@/app/components/PushMeldingenKnop';
 
 type Profiel = {
   doel: string | null;
@@ -42,6 +44,12 @@ const card: CSSProperties = {
   padding: 20,
 };
 
+const statusKleur: Record<Weekstatus['soort'], { achtergrond: string; rand: string; tekst: string }> = {
+  gehaald: { achtergrond: '#EAF6E9', rand: '#BFE3BC', tekst: '#2E7D32' },
+  op_schema: { achtergrond: '#FFF8EE', rand: '#F3E4C8', tekst: '#8A7561' },
+  risico: { achtergrond: '#FDEDEA', rand: '#F4C2B8', tekst: '#B3261E' },
+};
+
 export default function DashboardPagina() {
   const router = useRouter();
   const [naam, setNaam] = useState('');
@@ -49,6 +57,7 @@ export default function DashboardPagina() {
   const [aantalTrainingen, setAantalTrainingen] = useState(0);
   const [weekDagen, setWeekDagen] = useState<boolean[]>([false, false, false, false, false, false, false]);
   const [weekOefeningen, setWeekOefeningen] = useState<string[]>([]);
+  const [weekstatus, setWeekstatus] = useState<Weekstatus | null>(null);
   const [laden, setLaden] = useState(true);
 
   useEffect(() => {
@@ -102,6 +111,7 @@ export default function DashboardPagina() {
         });
         setWeekDagen(dagen);
         setWeekOefeningen(namen);
+        setWeekstatus(berekenWeekstatus(dagen.filter(Boolean).length));
       }
 
       setLaden(false);
@@ -130,6 +140,33 @@ export default function DashboardPagina() {
           {naam ? naam[0].toUpperCase() : '?'}
         </div>
       </div>
+
+      <Link
+        href="/telefoon"
+        style={{
+          display: 'flex', alignItems: 'center', gap: 14, textDecoration: 'none',
+          background: '#FFFFFF', border: '2px solid #F3E4C8', borderRadius: 20,
+          padding: '14px 16px', marginBottom: 16,
+        }}
+      >
+        <div
+          style={{
+            width: 44, height: 44, borderRadius: 14, flexShrink: 0,
+            background: '#FFF8EE', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <rect x="7" y="2" width="10" height="20" rx="2" stroke="#E85D00" strokeWidth="2" />
+            <path d="M11 18h2" stroke="#E85D00" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontWeight: 700, fontSize: 15, color: '#2B1B0E' }}>Zet Blijf Sterk op je telefoon</div>
+          <div style={{ fontSize: 13.5, color: '#8A7561', marginTop: 2 }}>Snellere toegang, geen browser nodig →</div>
+        </div>
+      </Link>
+
+      <PushMeldingenKnop />
 
       {/* Voortgang */}
       <div style={{ ...card, marginBottom: 20 }}>
@@ -188,6 +225,19 @@ export default function DashboardPagina() {
           <p style={{ color: '#8A7561', fontSize: 13.5, marginTop: 16, marginBottom: 0 }}>
             Nog niets gelogd deze week. Zet vandaag de eerste stap.
           </p>
+        )}
+
+        {weekstatus && (
+          <div
+            style={{
+              fontSize: 13, fontWeight: 700, lineHeight: 1.5, borderRadius: 12, padding: '10px 14px', marginTop: 14,
+              background: statusKleur[weekstatus.soort].achtergrond,
+              border: `2px solid ${statusKleur[weekstatus.soort].rand}`,
+              color: statusKleur[weekstatus.soort].tekst,
+            }}
+          >
+            {weekstatus.bericht}
+          </div>
         )}
       </div>
 
