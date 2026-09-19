@@ -127,7 +127,7 @@ export default function HeaderNav() {
               boxShadow: '0 6px 16px rgba(232,93,0,0.25)',
             }}
           >
-            Start gratis
+            Deelnemen is gratis
           </Link>
         </>
       )}

@@ -125,7 +125,7 @@ export default function WaaromKrachttrainingPagina() {
             Begin vandaag nog met een gratis intake — geen verplichtingen.
           </p>
           <Link href="/login" style={{ ...btnPrimary, marginTop: 22, background: "#2B1B0E", color: "#FFFFFF", boxShadow: "none" }}>
-            Start gratis
+            Deelnemen is gratis
           </Link>
         </div>
       </section>

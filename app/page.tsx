@@ -53,7 +53,7 @@ export default function Home() {
             passen. Zodat je blijft doen wat je wilt: zelfstandig bewegen, wonen en leven.
           </p>
           <div style={{ display: "flex", gap: 16, marginTop: 30, flexWrap: "wrap", justifyContent: "center" }}>
-            <Link href="/login" style={btnPrimary}>Start gratis</Link>
+            <Link href="/login" style={btnPrimary}>Deelnemen is gratis</Link>
             <a href="#hoe-het-werkt" style={btnSecondary}>Bekijk hoe het werkt</a>
           </div>
           <p style={{ marginTop: 18, fontSize: 13.5, color: "#8A7561", fontWeight: 600 }}>
@@ -261,7 +261,7 @@ export default function Home() {
           <h2 style={{ fontSize: 28, color: "#3A1E00", margin: 0 }}>Klaar om te beginnen?</h2>
           <p style={{ marginTop: 10, fontSize: 16.5, color: "#4A2C00" }}>Start vandaag nog — het kost je niets om te proberen.</p>
           <Link href="/login" style={{ ...btnPrimary, marginTop: 22, background: "#2B1B0E", color: "#FFFFFF", boxShadow: "none" }}>
-            Start gratis
+            Deelnemen is gratis
           </Link>
         </div>
       </section>
