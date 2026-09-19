@@ -58,7 +58,7 @@ export const OEFENINGEN: Oefening[] = [
       'Zet je voet weer rustig neer en wissel na de herhalingen van been.',
     ],
     setsHerhalingen: '2 sets van 8 tot 12 keer per been',
-    veiligheid: 'Til je been niet hoger dan comfortabel. Blijf altijd met één hand steunen als je onzeker staat.',
+    veiligheid: 'Til je been niet hoger dan comfortabel. Blijf altijd met één hand steunen als je onzeker staat. Controleer voor je begint dat de band goed vastzit, zodat hij niet plotseling losschiet.',
   },
   {
     id: 'kuitheffingen',
@@ -132,7 +132,7 @@ export const OEFENINGEN: Oefening[] = [
       'Laat de band langzaam weer terug komen.',
     ],
     setsHerhalingen: '2 sets van 10 tot 12 keer',
-    veiligheid: 'Trek rustig, niet met een ruk. Controleer dat de band goed vastzit voordat je begint.',
+    veiligheid: 'Trek rustig, niet met een ruk. Controleer voor je begint dat de band goed vastzit, zodat hij niet plotseling losschiet.',
   },
   {
     id: 'band-chest-pull',
@@ -146,7 +146,7 @@ export const OEFENINGEN: Oefening[] = [
       'Breng je armen langzaam weer terug naar het midden.',
     ],
     setsHerhalingen: '2 sets van 10 tot 12 keer',
-    veiligheid: 'Kies een band met lichte weerstand als dit nieuw voor je is.',
+    veiligheid: 'Kies een band met lichte weerstand als dit nieuw voor je is. Controleer voor je begint dat de band goed vastzit, zodat hij niet plotseling losschiet.',
   },
   {
     id: 'band-bicepscurl',
@@ -161,7 +161,7 @@ export const OEFENINGEN: Oefening[] = [
       'Laat ze weer langzaam zakken.',
     ],
     setsHerhalingen: '2 sets van 10 tot 12 keer',
-    veiligheid: 'Beweeg rustig, ook bij het laten zakken — dat deel telt ook mee.',
+    veiligheid: 'Beweeg rustig, ook bij het laten zakken — dat deel telt ook mee. Controleer voor je begint dat de band goed vastzit, zodat hij niet plotseling losschiet.',
   },
   {
     id: 'fles-overhead-press',
