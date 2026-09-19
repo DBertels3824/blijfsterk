@@ -67,7 +67,7 @@ export default function OefeningenPagina() {
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontWeight: 700, fontSize: 15, color: '#2B1B0E' }}>Niet zeker waar je moet beginnen?</div>
-          <div style={{ fontSize: 13.5, color: '#8A7561', marginTop: 2 }}>Vraag het Dirk, je AI-coach, voor persoonlijk advies →</div>
+          <div style={{ fontSize: 13.5, color: '#8A7561', marginTop: 2 }}>Vraag het Dirk, je virtuele coach, voor persoonlijk advies →</div>
         </div>
       </button>
 

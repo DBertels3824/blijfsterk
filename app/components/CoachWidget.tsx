@@ -340,7 +340,7 @@ export default function CoachWidget() {
       {/* zwevende knop */}
       <button
         onClick={() => setOpen((v) => !v)}
-        title="Chat met je AI-coach"
+        title="Chat met je virtuele coach"
         style={{
           position: 'fixed', zIndex: 60, right: 16, bottom: 20,
           height: 60, minWidth: open ? 60 : undefined, padding: open ? 0 : '0 22px 0 18px',
