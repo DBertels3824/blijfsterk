@@ -54,6 +54,7 @@ export default function Home() {
           </p>
           <div style={{ display: "flex", gap: 16, marginTop: 30, flexWrap: "wrap", justifyContent: "center" }}>
             <Link href="/login" style={btnPrimary}>Deelnemen is gratis</Link>
+            <Link href="/waarom-krachttraining" style={btnSecondary}>Waarom krachttraining?</Link>
             <a href="#hoe-het-werkt" style={btnSecondary}>Bekijk hoe het werkt</a>
           </div>
           <p style={{ marginTop: 18, fontSize: 13.5, color: "#8A7561", fontWeight: 600 }}>
