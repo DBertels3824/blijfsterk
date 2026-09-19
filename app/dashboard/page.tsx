@@ -195,7 +195,7 @@ export default function DashboardPagina() {
       <p style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#8A7561', marginBottom: 12 }}>
         Snelle acties
       </p>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0,1fr))', gap: 12 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0,1fr))', gap: 12 }}>
         <Tegel href="/advies" label="Advies" icon={
           <path d="M4 4h16v12H8l-4 4V4z" stroke="#E85D00" strokeWidth="2" strokeLinejoin="round" />
         } />
@@ -210,9 +210,6 @@ export default function DashboardPagina() {
             <circle cx="12" cy="6" r="2.4" stroke="#E85D00" strokeWidth="2" />
             <path d="M12 8.4V15M12 15l-4 5M12 15l4 5M7 11h10" stroke="#E85D00" strokeWidth="2" strokeLinecap="round" />
           </>
-        } />
-        <Tegel href="/voortgang" label="Loggen" icon={
-          <path d="M4 12l5 5L20 6" stroke="#E85D00" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
         } />
       </div>
 

@@ -10,7 +10,6 @@ const LINKS = [
   { href: '/dashboard', label: 'Dashboard' },
   { href: '/advies', label: 'Advies' },
   { href: '/oefeningen', label: 'Oefeningen' },
-  { href: '/voortgang', label: 'Voortgang' },
   { href: '/intake', label: 'Profiel' },
 ];
 
