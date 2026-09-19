@@ -8,6 +8,7 @@ const BASISREGELS = `
 - Geen jargon, geen jeugdige fitnesstaal.
 - Noem NOOIT specifieke oefeningen of bewegingsinstructies (zoals squats, lunges, planken, gewichten) — dat komt altijd uit een aparte, gecontroleerde bibliotheek, nooit los van jou verzonnen. Praat wel over frequentie, opbouw en volhouden in algemene termen.
 - Bij twijfel over gezondheid: verwijs naar huisarts of fysiotherapeut.
+- Als de naam van de gebruiker bekend is (zie profiel), gebruik die dan af en toe om het persoonlijk te maken — zeker in de begroeting. Is de naam onbekend, verzin er dan geen.
 - Geef platte tekst. Gebruik GEEN markdown: geen sterretjes, geen vetgedrukte tekst, geen opsommingstekens, geen kopjes.
 - Houd antwoorden kort: maximaal een paar zinnen, of bij een dagindeling maximaal een paar korte regels per maaltijd.`;
 
@@ -42,6 +43,7 @@ export async function POST(req: Request) {
   const isOpeningsbericht = !berichten || berichten.length === 0;
 
   const profielTekst = `
+Naam: ${profiel?.naam || 'onbekend'}
 Doelen: ${(profiel?.doelen && profiel.doelen.length ? profiel.doelen.join(', ') : profiel?.doel) || 'onbekend'}
 Huidige situatie: ${profiel?.huidige_staat || 'onbekend'}
 Ervaring: ${profiel?.ervaring || 'onbekend'}

@@ -8,6 +8,7 @@ import { OEFENINGEN, CATEGORIEEN, BENODIGDHEDEN, type Oefening } from '@/lib/oef
 import { OEFENING_POSES } from '@/lib/oefening-poses';
 import { OEFENING_VIDEOS, VIDEO_OPMERKINGEN } from '@/lib/oefening-videos';
 import { willekeurigeMotivatie } from '@/lib/motivatie';
+import { relatieveDatum } from '@/lib/datum';
 import OefeningAnimatie from '@/app/components/OefeningAnimatie';
 
 const card: React.CSSProperties = {
@@ -21,13 +22,31 @@ export default function OefeningenPagina() {
   const router = useRouter();
   const [laden, setLaden] = useState(true);
   const [filter, setFilter] = useState<(typeof BENODIGDHEDEN)[number]>('Alles');
+  const [laatstGedaan, setLaatstGedaan] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
+    supabase.auth.getUser().then(async ({ data }) => {
       if (!data.user) {
         router.push('/login');
         return;
       }
+
+      // Per oefening de meest recente keer dat 'ie gelogd is, zodat je op elke
+      // kaart meteen ziet wanneer je 'm voor het laatst gedaan hebt.
+      const { data: rijen } = await supabase
+        .from('voortgang')
+        .select('oefening_id, created_at')
+        .eq('user_id', data.user.id)
+        .order('created_at', { ascending: false });
+
+      if (rijen) {
+        const laatste: Record<string, string> = {};
+        for (const rij of rijen as { oefening_id: string; created_at: string }[]) {
+          if (!laatste[rij.oefening_id]) laatste[rij.oefening_id] = rij.created_at;
+        }
+        setLaatstGedaan(laatste);
+      }
+
       setLaden(false);
     });
   }, [router]);
@@ -116,7 +135,12 @@ export default function OefeningenPagina() {
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               {inCategorie.map((oefening) => (
-                <OefeningKaart key={oefening.id} oefening={oefening} />
+                <OefeningKaart
+                  key={oefening.id}
+                  oefening={oefening}
+                  laatstGedaan={laatstGedaan[oefening.id]}
+                  onGedaan={(iso) => setLaatstGedaan((v) => ({ ...v, [oefening.id]: iso }))}
+                />
               ))}
             </div>
           </div>
@@ -126,7 +150,15 @@ export default function OefeningenPagina() {
   );
 }
 
-function OefeningKaart({ oefening }: { oefening: Oefening }) {
+function OefeningKaart({
+  oefening,
+  laatstGedaan,
+  onGedaan,
+}: {
+  oefening: Oefening;
+  laatstGedaan?: string;
+  onGedaan: (iso: string) => void;
+}) {
   const [open, setOpen] = useState(false);
   const [bezig, setBezig] = useState(false);
   const [motivatie, setMotivatie] = useState('');
@@ -145,9 +177,11 @@ function OefeningKaart({ oefening }: { oefening: Oefening }) {
       setBezig(false);
       return;
     }
+    const nu = new Date().toISOString();
     const { error } = await supabase.from('voortgang').insert({ user_id: user.id, oefening_id: oefening.id });
     setBezig(false);
     if (!error) {
+      onGedaan(nu);
       setMotivatie(willekeurigeMotivatie());
       setTimeout(() => setMotivatie(''), 5000);
     } else {
@@ -197,6 +231,9 @@ function OefeningKaart({ oefening }: { oefening: Oefening }) {
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontWeight: 700, fontSize: 17 }}>{oefening.naam}</div>
           <p style={{ color: '#8A7561', fontSize: 14, margin: '4px 0 0' }}>{oefening.uitleg}</p>
+          <p style={{ fontSize: 12.5, fontWeight: 700, margin: '6px 0 0', color: laatstGedaan ? '#2E7D32' : '#B9601A' }}>
+            {laatstGedaan ? `Laatst gedaan: ${relatieveDatum(laatstGedaan)}` : 'Nog niet gedaan'}
+          </p>
         </div>
       </div>
 

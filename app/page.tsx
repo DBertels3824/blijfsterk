@@ -177,13 +177,6 @@ export default function Home() {
               Je merkt dat kracht en balans er echt toe doen om te blijven doen wat je wilt — nu en over tien jaar.
             </p>
           </div>
-          <div style={{ ...card, padding: "26px 22px" }}>
-            <h3 style={{ fontSize: 17, margin: 0 }}>Je wilt op kracht blijven tijdens een behandeling</h3>
-            <p style={{ color: "#8A7561", marginTop: 10, fontSize: 14.5, lineHeight: 1.6 }}>
-              Je ondergaat een medische behandeling en wilt, in overleg met je arts, zo veel mogelijk kracht en
-              conditie behouden.
-            </p>
-          </div>
         </div>
       </section>
 

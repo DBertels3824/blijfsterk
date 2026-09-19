@@ -10,6 +10,7 @@ type Modus = 'inloggen' | 'registreren';
 export default function LoginPage() {
   const router = useRouter();
   const [modus, setModus] = useState<Modus>('inloggen');
+  const [naam, setNaam] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [toonWachtwoord, setToonWachtwoord] = useState(false);
@@ -21,6 +22,7 @@ export default function LoginPage() {
     // ongeluk een opgeslagen e-mail/wachtwoord invult die bij de andere modus hoort
     // (leidde eerder tot een verwarrende "User already registered"-foutmelding).
     setModus(nieuweModus);
+    setNaam('');
     setEmail('');
     setPassword('');
     setBericht('');
@@ -28,9 +30,17 @@ export default function LoginPage() {
 
   async function handleSignUp() {
     if (bezig) return;
+    if (!naam.trim()) {
+      setBericht('Vul je naam in.');
+      return;
+    }
     setBezig(true);
     setBericht('');
-    const { data, error } = await supabase.auth.signUp({ email, password });
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { naam: naam.trim() } },
+    });
     setBezig(false);
     if (error) {
       setBericht(error.message);
@@ -113,6 +123,24 @@ export default function LoginPage() {
         </div>
 
         <div style={{ marginTop: 22, display: 'flex', flexDirection: 'column', gap: 18 }}>
+          {isRegistreren && (
+            <div>
+              <label style={{ fontWeight: 700, fontSize: 13.5, display: 'block', marginBottom: 8 }}>Jouw naam</label>
+              <input
+                type="text"
+                autoComplete="given-name"
+                placeholder="Bijv. Marijke"
+                value={naam}
+                onChange={(e) => setNaam(e.target.value)}
+                style={{
+                  fontFamily: 'inherit', fontSize: 16, width: '100%', minHeight: 52,
+                  borderRadius: 14, border: '2px solid #F3E4C8', background: '#FFFFFF',
+                  padding: '0 16px', boxSizing: 'border-box', color: '#2B1B0E',
+                }}
+              />
+            </div>
+          )}
+
           <div>
             <label style={{ fontWeight: 700, fontSize: 13.5, display: 'block', marginBottom: 8 }}>E-mailadres</label>
             <input

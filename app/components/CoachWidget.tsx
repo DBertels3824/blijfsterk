@@ -84,7 +84,7 @@ export default function CoachWidget() {
         profielData?.risico_zwangerschap
       );
 
-      profielRef.current = { ...profielData, risicoGesignaleerd };
+      profielRef.current = { ...profielData, risicoGesignaleerd, naam: user.user_metadata?.naam };
 
       await vraagCoach([]);
       setLaden(false);

@@ -5,6 +5,7 @@ import "./globals.css";
 import HeaderNav from "./components/HeaderNav";
 import ServiceWorkerRegistratie from "./components/ServiceWorkerRegistratie";
 import CoachWidget from "./components/CoachWidget";
+import TekstgrootteWrapper from "./components/TekstgrootteWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <ServiceWorkerRegistratie />
+        <TekstgrootteWrapper>
         <header style={{ background: "#FFFFFF" }}>
           <div
             style={{
@@ -104,6 +106,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </footer>
 
         <CoachWidget />
+        </TekstgrootteWrapper>
       </body>
     </html>
   );

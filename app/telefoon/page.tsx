@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import PushMeldingenKnop from '@/app/components/PushMeldingenKnop';
 
 const card: React.CSSProperties = {
   borderRadius: 24,
@@ -67,11 +68,11 @@ export default function TelefoonPagina() {
         </div>
       </div>
 
-      <p style={{ fontSize: 13, color: '#8A7561', marginTop: 20, lineHeight: 1.6 }}>
-        Zie je op je{' '}
-        <Link href="/dashboard" style={{ color: '#E85D00', fontWeight: 700 }}>dashboard</Link>{' '}
-        het kaartje "Wil je een seintje als je een dag mist?" — zet dat ook aan. Dan sturen we je een
-        herinnering als je een tijdje niet getraind hebt.
+      <div style={{ marginTop: 24 }}>
+        <PushMeldingenKnop />
+      </div>
+      <p style={{ fontSize: 13, color: '#8A7561', marginTop: 12, lineHeight: 1.6 }}>
+        Zet meldingen aan en we sturen je een seintje als je een tijdje niet getraind hebt.
       </p>
     </div>
   );
