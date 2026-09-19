@@ -95,37 +95,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* WAAROM KRACHTTRAINING */}
-      <section style={{ maxWidth: 1140, margin: "0 auto", padding: "0 24px 64px" }}>
-        <div style={{ ...card, padding: "36px 32px" }}>
-          <div style={{ display: "flex", gap: 24, flexWrap: "wrap", alignItems: "center", justifyContent: "space-between" }}>
-            <div style={{ maxWidth: 480 }}>
-              <h2 style={{ fontSize: 24, margin: 0 }}>Waarom krachttraining zo goed voor je is</h2>
-              <p style={{ color: "#8A7561", marginTop: 10, fontSize: 15, lineHeight: 1.6 }}>
-                Sterkere spieren, minder kans op vallen, langer zelfstandig — wetenschappelijk onderzoek laat het
-                keer op keer zien. Lees op een rij wat krachttraining voor jou kan doen.
-              </p>
-              <Link
-                href="/waarom-krachttraining"
-                style={{ display: "inline-block", marginTop: 18, fontWeight: 700, fontSize: 14.5, color: "#E85D00", textDecoration: "none" }}
-              >
-                Bekijk de voordelen &rarr;
-              </Link>
-            </div>
-            <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
-              <div style={{ background: "#FFF8EE", border: "1px solid #F3E4C8", borderRadius: 18, padding: "16px 20px", minWidth: 140 }}>
-                <div style={{ fontSize: 22, fontWeight: 800, color: "#E85D00" }}>1 op 3</div>
-                <div style={{ fontSize: 13, color: "#8A7561", marginTop: 4 }}>valt jaarlijks na je 65e — sterkere spieren helpen dat te voorkomen</div>
-              </div>
-              <div style={{ background: "#FFF8EE", border: "1px solid #F3E4C8", borderRadius: 18, padding: "16px 20px", minWidth: 140 }}>
-                <div style={{ fontSize: 22, fontWeight: 800, color: "#E85D00" }}>2x/week</div>
-                <div style={{ fontSize: 13, color: "#8A7561", marginTop: 4 }}>is al genoeg om resultaat te merken</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* VIDEO */}
       <section style={{ maxWidth: 1140, margin: "0 auto", padding: "0 24px 64px" }}>
         <div style={{ ...card, padding: "40px 32px", textAlign: "center" }}>
