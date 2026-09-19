@@ -365,7 +365,7 @@ export default function CoachWidget() {
             >
               D
             </div>
-            Chat met Dirk
+            Dirk, je virtuele coach
           </>
         )}
       </button>
