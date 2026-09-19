@@ -109,8 +109,6 @@ export default function Home() {
         </div>
       </section>
 
-      <SponsorBanner />
-
       {/* VIDEO */}
       <section style={{ maxWidth: 1140, margin: "0 auto", padding: "0 24px 64px" }}>
         <div style={{ ...card, padding: "40px 32px", textAlign: "center" }}>
@@ -252,6 +250,8 @@ export default function Home() {
           </Link>
         </div>
       </section>
+
+      <SponsorBanner />
     </div>
   );
 }
