@@ -150,8 +150,8 @@ function OefeningKaart({ oefening }: { oefening: Oefening }) {
       setMotivatie(willekeurigeMotivatie());
       setTimeout(() => setMotivatie(''), 5000);
     } else {
-      // TIJDELIJK voor debuggen — hierna weer weghalen zodra bekend is wat er misgaat.
-      setFoutmelding(error.message);
+      console.error('Kon voortgang niet opslaan:', error.message);
+      setFoutmelding('Kon dit niet opslaan. Probeer het nog eens.');
     }
   }
 
