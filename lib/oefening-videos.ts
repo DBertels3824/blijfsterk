@@ -12,6 +12,8 @@ export const OEFENING_VIDEOS: Record<string, string> = {
   'band-chest-pull': '/oefeningen-video/band-chest-pull.mp4',
   'band-roeien': '/oefeningen-video/band-roeien.mp4',
   'band-bicepscurl': '/oefeningen-video/band-bicepscurl.mp4',
+  'fles-zijheffing': '/oefeningen-video/fles-zijheffing.mp4',
+  'fles-overhead-press': '/oefeningen-video/fles-overhead-press.mp4',
 };
 
 // Korte waarschuwing/opmerking die direct onder de video getoond wordt, voor
