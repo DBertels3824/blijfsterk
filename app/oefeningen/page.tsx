@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase';
 import { OEFENINGEN, CATEGORIEEN, BENODIGDHEDEN, type Oefening } from '@/lib/oefeningen';
 import { OEFENING_POSES } from '@/lib/oefening-poses';
 import { OEFENING_VIDEOS, VIDEO_OPMERKINGEN } from '@/lib/oefening-videos';
+import { willekeurigeMotivatie } from '@/lib/motivatie';
 import OefeningAnimatie from '@/app/components/OefeningAnimatie';
 
 const card: React.CSSProperties = {
@@ -44,6 +45,30 @@ export default function OefeningenPagina() {
         Rustige basisoefeningen om thuis te doen — met je weerstandsband, fitnessmatje, of gewoon een flesje water
         als vervanger voor gewichten.
       </p>
+
+      <Link
+        href="/advies"
+        style={{
+          display: 'flex', alignItems: 'center', gap: 14, textDecoration: 'none',
+          background: '#FFFFFF', border: '2px solid #F3E4C8', borderRadius: 20,
+          padding: '14px 16px', marginBottom: 16,
+        }}
+      >
+        <div
+          style={{
+            width: 44, height: 44, borderRadius: 999, flexShrink: 0,
+            background: 'linear-gradient(135deg,#FFBE0A,#FF8601)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontWeight: 800, color: '#3A1E00',
+          }}
+        >
+          D
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontWeight: 700, fontSize: 15, color: '#2B1B0E' }}>Niet zeker waar je moet beginnen?</div>
+          <div style={{ fontSize: 13.5, color: '#8A7561', marginTop: 2 }}>Vraag het Dirk, je AI-coach, voor persoonlijk advies →</div>
+        </div>
+      </Link>
 
       <div style={{ fontSize: 13, color: '#8A7561', lineHeight: 1.6, background: '#FFF8EE', borderRadius: 14, padding: '12px 16px', marginBottom: 16 }}>
         Stop meteen bij pijn, duizeligheid of kortademigheid. Twijfel je of een oefening geschikt is voor jou? Overleg
@@ -102,9 +127,28 @@ export default function OefeningenPagina() {
 
 function OefeningKaart({ oefening }: { oefening: Oefening }) {
   const [open, setOpen] = useState(false);
+  const [bezig, setBezig] = useState(false);
+  const [motivatie, setMotivatie] = useState('');
   const animatie = OEFENING_POSES[oefening.id];
   const video = OEFENING_VIDEOS[oefening.id];
   const videoOpmerking = VIDEO_OPMERKINGEN[oefening.id];
+
+  async function markeerGedaan() {
+    if (bezig) return;
+    setBezig(true);
+    const { data } = await supabase.auth.getUser();
+    const user = data.user;
+    if (!user) {
+      setBezig(false);
+      return;
+    }
+    const { error } = await supabase.from('voortgang').insert({ user_id: user.id, oefening_id: oefening.id });
+    setBezig(false);
+    if (!error) {
+      setMotivatie(willekeurigeMotivatie());
+      setTimeout(() => setMotivatie(''), 5000);
+    }
+  }
 
   return (
     <div style={card}>
@@ -160,6 +204,38 @@ function OefeningKaart({ oefening }: { oefening: Oefening }) {
           </span>
         ))}
       </div>
+
+      <button
+        onClick={markeerGedaan}
+        disabled={bezig}
+        style={{
+          marginTop: 14, width: '100%', fontFamily: 'inherit', fontWeight: 700, fontSize: 14.5,
+          borderRadius: 999, minHeight: 46, border: '2px solid #F3E4C8', background: '#FFF8EE',
+          color: '#2B1B0E', cursor: bezig ? 'default' : 'pointer', opacity: bezig ? 0.7 : 1,
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+        }}
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M4 12.5l5 5L20 6.5" stroke="#E85D00" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        {bezig ? 'Bezig...' : 'Ik heb dit gedaan'}
+      </button>
+
+      {motivatie && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 12 }}>
+          <div
+            style={{
+              width: 32, height: 32, borderRadius: 999, flexShrink: 0,
+              background: 'linear-gradient(135deg,#FFBE0A,#FF8601)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontWeight: 800, fontSize: 13, color: '#3A1E00',
+            }}
+          >
+            D
+          </div>
+          <p style={{ margin: 0, fontSize: 13.5, fontWeight: 600, color: '#2B1B0E' }}>{motivatie}</p>
+        </div>
+      )}
 
       <button
         onClick={() => setOpen((v) => !v)}

@@ -105,10 +105,10 @@ export default function AdviesPagina() {
             fontWeight: 800, color: '#3A1E00',
           }}
         >
-          S
+          D
         </div>
         <div>
-          <div style={{ fontWeight: 700, fontSize: 16 }}>Sam, jouw AI-coach</div>
+          <div style={{ fontWeight: 700, fontSize: 16 }}>Dirk, jouw AI-coach</div>
           <div style={{ fontSize: 13, color: '#8A7561' }}>Training &amp; voeding</div>
         </div>
       </div>

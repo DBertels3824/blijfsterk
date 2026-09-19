@@ -39,6 +39,7 @@ Blijf verder binnen praktische, algemene voeding: geen advies bij eetstoornissen
 export async function POST(req: Request) {
   try {
   const { profiel, berichten } = await req.json();
+  const isOpeningsbericht = !berichten || berichten.length === 0;
 
   const profielTekst = `
 Doelen: ${(profiel?.doelen && profiel.doelen.length ? profiel.doelen.join(', ') : profiel?.doel) || 'onbekend'}
@@ -56,7 +57,7 @@ Risicosignalen: ${profiel?.risicoGesignaleerd ? 'ja, wees extra voorzichtig' : '
 
   const ruweBerichten = berichten && berichten.length > 0
     ? berichten
-    : [{ role: 'user', content: 'Geef me een kort, bemoedigend eerste advies om te beginnen, gebaseerd op mijn profiel.' }];
+    : [{ role: 'user', content: 'Geef me een kort, bemoedigend welkom en verwijs me meteen naar de oefeningenbibliotheek om vandaag te beginnen, gebaseerd op mijn profiel.' }];
 
   // Alleen role en content doorsturen naar de Anthropic API — extra velden zoals "agent"
   // (dat we zelf toevoegen voor het label in de chat) mag de API niet zien.
@@ -93,8 +94,10 @@ Antwoord met alleen dat ene woord, niets anders.`,
 
   // De advies-agent verwijst in woorden naar de oefeningenbibliotheek (zie zijn prompt
   // hierboven) — als dat woord voorkomt, laat de chat er ook een echte knop bij zien
-  // in plaats van dat de gebruiker het zelf moet opzoeken.
-  const naarOefeningen = /oefeningenbibliotheek/i.test(tekst);
+  // in plaats van dat de gebruiker het zelf moet opzoeken. Het allereerste (automatische)
+  // welkomstbericht laat de knop sowieso zien, ook als het model het woord zelf niet gebruikt —
+  // de coach moet iemand meteen naar de oefeningen kunnen leiden, niet pas na een vraag.
+  const naarOefeningen = isOpeningsbericht || /oefeningenbibliotheek/i.test(tekst);
 
   return NextResponse.json({ tekst, agent: specialist.naam, naarOefeningen });
   } catch (fout: any) {

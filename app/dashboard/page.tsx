@@ -5,11 +5,28 @@ import type { CSSProperties, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import { OEFENINGEN } from '@/lib/oefeningen';
 
 type Profiel = {
   doel: string | null;
   ervaring: string | null;
 };
+
+const DAGEN = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'];
+
+function startVanDeWeek(): Date {
+  const nu = new Date();
+  const dagIndex = (nu.getDay() + 6) % 7; // 0 = maandag
+  const maandag = new Date(nu);
+  maandag.setDate(nu.getDate() - dagIndex);
+  maandag.setHours(0, 0, 0, 0);
+  return maandag;
+}
+
+function naamVoorOefening(id: string | null): string {
+  if (!id) return 'Training';
+  return OEFENINGEN.find((o) => o.id === id)?.naam || 'Training';
+}
 
 function groet() {
   const uur = new Date().getHours();
@@ -30,6 +47,8 @@ export default function DashboardPagina() {
   const [naam, setNaam] = useState('');
   const [profiel, setProfiel] = useState<Profiel | null>(null);
   const [aantalTrainingen, setAantalTrainingen] = useState(0);
+  const [weekDagen, setWeekDagen] = useState<boolean[]>([false, false, false, false, false, false, false]);
+  const [weekOefeningen, setWeekOefeningen] = useState<string[]>([]);
   const [laden, setLaden] = useState(true);
 
   useEffect(() => {
@@ -64,6 +83,26 @@ export default function DashboardPagina() {
         .select('*', { count: 'exact', head: true })
         .eq('user_id', user.id);
       setAantalTrainingen(count || 0);
+
+      const maandag = startVanDeWeek();
+      const { data: weekData } = await supabase
+        .from('voortgang')
+        .select('created_at, oefening_id')
+        .eq('user_id', user.id)
+        .gte('created_at', maandag.toISOString());
+
+      if (weekData) {
+        const dagen = [false, false, false, false, false, false, false];
+        const namen: string[] = [];
+        weekData.forEach((rij: any) => {
+          const dagIndex = (new Date(rij.created_at).getDay() + 6) % 7;
+          dagen[dagIndex] = true;
+          const naam = naamVoorOefening(rij.oefening_id);
+          if (!namen.includes(naam)) namen.push(naam);
+        });
+        setWeekDagen(dagen);
+        setWeekOefeningen(namen);
+      }
 
       setLaden(false);
     };
@@ -114,6 +153,42 @@ export default function DashboardPagina() {
             </p>
           </div>
         </div>
+      </div>
+
+      {/* Deze week */}
+      <div style={{ ...card, marginBottom: 20 }}>
+        <p style={{ fontWeight: 700, fontSize: 15, margin: '0 0 14px' }}>Deze week</p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 6 }}>
+          {DAGEN.map((dag, i) => (
+            <div key={dag} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, flex: 1 }}>
+              <div
+                style={{
+                  width: 32, height: 32, borderRadius: 999,
+                  background: weekDagen[i] ? 'linear-gradient(135deg,#FFBE0A,#FF8601)' : '#FFF1DC',
+                  border: weekDagen[i] ? 'none' : '2px solid #F3E4C8',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}
+              >
+                {weekDagen[i] && (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path d="M4 12.5l5 5L20 6.5" stroke="#3A1E00" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+              </div>
+              <span style={{ fontSize: 11.5, fontWeight: 700, color: '#8A7561' }}>{dag}</span>
+            </div>
+          ))}
+        </div>
+
+        {weekOefeningen.length > 0 ? (
+          <p style={{ color: '#8A7561', fontSize: 13.5, marginTop: 16, marginBottom: 0, lineHeight: 1.6 }}>
+            Deze week gedaan: {weekOefeningen.join(', ')}.
+          </p>
+        ) : (
+          <p style={{ color: '#8A7561', fontSize: 13.5, marginTop: 16, marginBottom: 0 }}>
+            Nog niets gelogd deze week. Zet vandaag de eerste stap.
+          </p>
+        )}
       </div>
 
       {/* Snelle acties */}
