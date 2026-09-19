@@ -46,10 +46,11 @@ export default function OefeningenPagina() {
         als vervanger voor gewichten.
       </p>
 
-      <Link
-        href="/advies"
+      <button
+        onClick={() => window.dispatchEvent(new Event('blijfsterk:open-coach'))}
         style={{
-          display: 'flex', alignItems: 'center', gap: 14, textDecoration: 'none',
+          display: 'flex', alignItems: 'center', gap: 14, textAlign: 'left',
+          fontFamily: 'inherit', cursor: 'pointer', width: '100%',
           background: '#FFFFFF', border: '2px solid #F3E4C8', borderRadius: 20,
           padding: '14px 16px', marginBottom: 16,
         }}
@@ -68,7 +69,7 @@ export default function OefeningenPagina() {
           <div style={{ fontWeight: 700, fontSize: 15, color: '#2B1B0E' }}>Niet zeker waar je moet beginnen?</div>
           <div style={{ fontSize: 13.5, color: '#8A7561', marginTop: 2 }}>Vraag het Dirk, je AI-coach, voor persoonlijk advies →</div>
         </div>
-      </Link>
+      </button>
 
       <div style={{ fontSize: 13, color: '#8A7561', lineHeight: 1.6, background: '#FFF8EE', borderRadius: 14, padding: '12px 16px', marginBottom: 16 }}>
         Stop meteen bij pijn, duizeligheid of kortademigheid. Twijfel je of een oefening geschikt is voor jou? Overleg

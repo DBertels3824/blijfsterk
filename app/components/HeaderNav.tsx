@@ -8,7 +8,6 @@ import { ADMIN_EMAIL } from '@/lib/admin';
 
 const LINKS = [
   { href: '/dashboard', label: 'Dashboard' },
-  { href: '/advies', label: 'Advies' },
   { href: '/oefeningen', label: 'Oefeningen' },
   { href: '/intake', label: 'Profiel' },
 ];

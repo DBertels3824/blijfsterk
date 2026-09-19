@@ -246,7 +246,7 @@ export default function DashboardPagina() {
         Snelle acties
       </p>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0,1fr))', gap: 12 }}>
-        <Tegel href="/advies" label="Advies" icon={
+        <Tegel onClick={() => window.dispatchEvent(new Event('blijfsterk:open-coach'))} label="Advies" icon={
           <path d="M4 4h16v12H8l-4 4V4z" stroke="#E85D00" strokeWidth="2" strokeLinejoin="round" />
         } />
         <Tegel href="/winkel" label="Winkel" icon={
@@ -267,20 +267,32 @@ export default function DashboardPagina() {
   );
 }
 
-function Tegel({ href, label, icon }: { href: string; label: string; icon: ReactNode }) {
-  return (
-    <Link
-      href={href}
-      style={{
-        borderRadius: 20, border: '2px solid #F3E4C8', background: '#FFFFFF',
-        padding: '16px 10px', display: 'flex', flexDirection: 'column', alignItems: 'center',
-        gap: 8, textAlign: 'center', textDecoration: 'none',
-      }}
-    >
+function Tegel({ href, onClick, label, icon }: { href?: string; onClick?: () => void; label: string; icon: ReactNode }) {
+  const inhoud = (
+    <>
       <div style={{ width: 44, height: 44, borderRadius: 14, background: '#FFF8EE', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none">{icon}</svg>
       </div>
       <span style={{ fontWeight: 700, fontSize: 13, color: '#2B1B0E' }}>{label}</span>
+    </>
+  );
+  const stijl: CSSProperties = {
+    borderRadius: 20, border: '2px solid #F3E4C8', background: '#FFFFFF',
+    padding: '16px 10px', display: 'flex', flexDirection: 'column', alignItems: 'center',
+    gap: 8, textAlign: 'center', textDecoration: 'none',
+  };
+
+  if (onClick) {
+    return (
+      <button onClick={onClick} style={{ ...stijl, fontFamily: 'inherit', cursor: 'pointer' }}>
+        {inhoud}
+      </button>
+    );
+  }
+
+  return (
+    <Link href={href || '#'} style={stijl}>
+      {inhoud}
     </Link>
   );
 }

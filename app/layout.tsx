@@ -4,6 +4,7 @@ import Link from "next/link";
 import "./globals.css";
 import HeaderNav from "./components/HeaderNav";
 import ServiceWorkerRegistratie from "./components/ServiceWorkerRegistratie";
+import CoachWidget from "./components/CoachWidget";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -100,6 +101,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             </div>
           </div>
         </footer>
+
+        <CoachWidget />
       </body>
     </html>
   );
