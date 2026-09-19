@@ -144,9 +144,12 @@ export default function Home() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 20 }}>
             <Stap nummer={1} titel="Vertel iets over jezelf" tekst="Een paar vragen over je doelen, ervaring en voorkeuren. Geen ellenlange formulieren." />
             <Stap nummer={2} titel="Krijg persoonlijk advies" tekst="Dirk, je virtuele coach, geeft je concreet advies over kracht en voeding, afgestemd op jou." />
-            <Stap nummer={3} titel="Kies wie bij je past" tekst="We koppelen je aan een trainer en voedingsdeskundige bij jou in de buurt." />
+            <Stap nummer={3} titel="Ga direct aan de slag" tekst="Kies uit de oefeningenbibliotheek, met uitleg en video per oefening, en begin met trainen." />
             <Stap nummer={4} titel="Blijf sterk, stap voor stap" tekst="Log je voortgang, zie je reeks groeien en voel het verschil." />
           </div>
+          <p style={{ textAlign: "center", color: "#8A7561", fontSize: 13.5, marginTop: 32 }}>
+            Binnenkort: koppeling aan een echte trainer en voedingsdeskundige bij jou in de buurt.
+          </p>
         </div>
       </section>
 
