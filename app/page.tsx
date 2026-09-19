@@ -45,23 +45,7 @@ export default function Home() {
       {/* HERO */}
       <section style={{ maxWidth: 1140, margin: "0 auto", padding: "56px 24px 64px" }}>
         <div style={{ maxWidth: 720, margin: "0 auto 40px", textAlign: "center" }}>
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              background: "#FFFFFF",
-              border: "1px solid #F3E4C8",
-              borderRadius: 999,
-              padding: "7px 16px",
-              fontWeight: 600,
-              fontSize: 13.5,
-              color: "#E85D00",
-            }}
-          >
-            Voor volwassenen van 55+
-          </span>
-          <h1 style={{ fontSize: "clamp(30px, 5vw, 48px)", lineHeight: 1.1, margin: "20px 0 0", fontWeight: 800, letterSpacing: "-0.01em" }}>
+          <h1 style={{ fontSize: "clamp(30px, 5vw, 48px)", lineHeight: 1.1, margin: 0, fontWeight: 800, letterSpacing: "-0.01em" }}>
             Sterk blijven begint vandaag.
           </h1>
           <p style={{ fontSize: 18, color: "#4A3624", margin: "20px auto 0", maxWidth: 520, lineHeight: 1.6 }}>
@@ -105,6 +89,37 @@ export default function Home() {
             }}
           >
             In beweging, op elke leeftijd
+          </div>
+        </div>
+      </section>
+
+      {/* WAAROM KRACHTTRAINING */}
+      <section style={{ maxWidth: 1140, margin: "0 auto", padding: "0 24px 64px" }}>
+        <div style={{ ...card, padding: "36px 32px" }}>
+          <div style={{ display: "flex", gap: 24, flexWrap: "wrap", alignItems: "center", justifyContent: "space-between" }}>
+            <div style={{ maxWidth: 480 }}>
+              <h2 style={{ fontSize: 24, margin: 0 }}>Waarom krachttraining zo goed voor je is</h2>
+              <p style={{ color: "#8A7561", marginTop: 10, fontSize: 15, lineHeight: 1.6 }}>
+                Sterkere spieren, minder kans op vallen, langer zelfstandig — wetenschappelijk onderzoek laat het
+                keer op keer zien. Lees op een rij wat krachttraining voor jou kan doen.
+              </p>
+              <Link
+                href="/waarom-krachttraining"
+                style={{ display: "inline-block", marginTop: 18, fontWeight: 700, fontSize: 14.5, color: "#E85D00", textDecoration: "none" }}
+              >
+                Bekijk de voordelen &rarr;
+              </Link>
+            </div>
+            <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
+              <div style={{ background: "#FFF8EE", border: "1px solid #F3E4C8", borderRadius: 18, padding: "16px 20px", minWidth: 140 }}>
+                <div style={{ fontSize: 22, fontWeight: 800, color: "#E85D00" }}>1 op 3</div>
+                <div style={{ fontSize: 13, color: "#8A7561", marginTop: 4 }}>valt jaarlijks na je 65e — sterkere spieren helpen dat te voorkomen</div>
+              </div>
+              <div style={{ background: "#FFF8EE", border: "1px solid #F3E4C8", borderRadius: 18, padding: "16px 20px", minWidth: 140 }}>
+                <div style={{ fontSize: 22, fontWeight: 800, color: "#E85D00" }}>2x/week</div>
+                <div style={{ fontSize: 13, color: "#8A7561", marginTop: 4 }}>is al genoeg om resultaat te merken</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

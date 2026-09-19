@@ -100,6 +100,9 @@ export default function HeaderNav() {
 
       {ingelogd === false && (
         <>
+          <Link href="/waarom-krachttraining" style={{ fontSize: 15, fontWeight: 500, color: '#2B1B0E', textDecoration: 'none' }}>
+            Waarom krachttraining
+          </Link>
           <Link href="/winkel" style={{ fontSize: 15, fontWeight: 500, color: '#2B1B0E', textDecoration: 'none' }}>
             Winkel
           </Link>
