@@ -48,9 +48,10 @@ export default function Home() {
           <h1 style={{ fontSize: "clamp(30px, 5vw, 48px)", lineHeight: 1.1, margin: 0, fontWeight: 800, letterSpacing: "-0.01em" }}>
             Sterk blijven begint vandaag.
           </h1>
-          <p style={{ fontSize: 18, color: "#4A3624", margin: "20px auto 0", maxWidth: 520, lineHeight: 1.6 }}>
-            Persoonlijk advies over kracht en voeding, gekoppeld aan een trainer en voedingsdeskundige die bij je
-            passen. Zodat je blijft doen wat je wilt: zelfstandig bewegen, wonen en leven.
+          <p style={{ fontSize: 18, color: "#4A3624", margin: "20px auto 0", maxWidth: 540, lineHeight: 1.6 }}>
+            Persoonlijk advies over kracht en voeding van je eigen virtuele coach, met oefeningen op maat en je
+            voortgang in beeld. Ontstaan uit de overtuiging dat je op elke leeftijd sterker kunt worden — vandaag,
+            niet morgen.
           </p>
           <div style={{ display: "flex", gap: 16, marginTop: 30, flexWrap: "wrap", justifyContent: "center" }}>
             <Link href="/login" style={btnPrimary}>Deelnemen is gratis</Link>
@@ -58,9 +59,6 @@ export default function Home() {
             <a href="#voor-wie" style={btnSecondary}>Voor wie is dit?</a>
             <a href="#hoe-het-werkt" style={btnSecondary}>Bekijk hoe het werkt</a>
           </div>
-          <p style={{ marginTop: 18, fontSize: 13.5, color: "#8A7561", fontWeight: 600 }}>
-            Gratis intake &middot; Geen verplichtingen
-          </p>
         </div>
 
         <div style={{ position: "relative" }}>
@@ -132,52 +130,6 @@ export default function Home() {
             <span style={{ position: "absolute", bottom: 14, left: 0, right: 0, textAlign: "center", fontSize: 14, color: "#8A7561", fontWeight: 500 }}>
               Introductievideo — wordt binnenkort toegevoegd
             </span>
-          </div>
-        </div>
-      </section>
-
-      {/* PERSOONLIJK VERHAAL */}
-      <section style={{ maxWidth: 1140, margin: "0 auto", padding: "0 24px 64px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: ".8fr 1.2fr", gap: 44, alignItems: "center" }} className="hero-grid">
-          <div
-            style={{
-              aspectRatio: "1 / 1",
-              borderRadius: 28,
-              background: "linear-gradient(160deg,#F5E6C8,#EFD9AE)",
-              border: "1px solid #F3E4C8",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#8A7561",
-              fontWeight: 600,
-              fontSize: 14,
-              textAlign: "center",
-              padding: 24,
-            }}
-          >
-            [ Foto van Dirk volgt ]
-          </div>
-          <div>
-            <span
-              style={{
-                display: "inline-flex",
-                background: "#FFFFFF",
-                border: "1px solid #F3E4C8",
-                borderRadius: 999,
-                padding: "7px 16px",
-                fontWeight: 600,
-                fontSize: 13.5,
-                color: "#E85D00",
-              }}
-            >
-              Waarom Blijf Sterk bestaat
-            </span>
-            <p style={{ fontSize: 21, lineHeight: 1.5, marginTop: 18, fontWeight: 600, color: "#2B1B0E" }}>
-              &ldquo;Ik train al mijn hele leven met gewichten. Ik zag mensen om me heen op hun 65e stoppen met
-              bewegen — niet omdat het moest, maar omdat niemand ze liet zien dat het anders kon. Blijf Sterk is het
-              bewijs dat je op elke leeftijd sterker kunt worden dan je nu bent. Niet morgen. Vandaag.&rdquo;
-            </p>
-            <p style={{ marginTop: 16, fontWeight: 700, color: "#E85D00" }}>&mdash; Dirk, oprichter van Blijf Sterk</p>
           </div>
         </div>
       </section>
