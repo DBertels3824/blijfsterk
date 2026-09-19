@@ -48,9 +48,9 @@ export default function Home() {
           <h1 style={{ fontSize: "clamp(30px, 5vw, 48px)", lineHeight: 1.1, margin: 0, fontWeight: 800, letterSpacing: "-0.01em" }}>
             Sterk blijven begint vandaag.
           </h1>
-          <p style={{ fontSize: 18, color: "#4A3624", margin: "20px auto 0", maxWidth: 540, lineHeight: 1.6 }}>
-            Persoonlijk advies over kracht en voeding — voor krachttraining vanaf je 55e, of wanneer je op kracht
-            wilt blijven of komen tijdens of na een medische behandeling.
+          <p style={{ fontSize: 18, color: "#4A3624", margin: "20px auto 0", maxWidth: 500, lineHeight: 1.6 }}>
+            Persoonlijk advies over kracht en voeding, afgestemd op jou. Meld je nu gratis aan en begin vandaag
+            nog met de oefeningen.
           </p>
           <div style={{ display: "flex", gap: 16, marginTop: 30, flexWrap: "wrap", justifyContent: "center" }}>
             <Link href="/login" style={btnPrimary}>Deelnemen is gratis</Link>
