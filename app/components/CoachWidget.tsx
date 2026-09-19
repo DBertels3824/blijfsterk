@@ -223,7 +223,7 @@ export default function CoachWidget() {
               D
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontWeight: 700, fontSize: 15 }}>Dirk, jouw AI-coach</div>
+              <div style={{ fontWeight: 700, fontSize: 15 }}>Dirk, je virtuele coach</div>
               <div style={{ fontSize: 12.5, color: '#8A7561' }}>Training &amp; voeding</div>
             </div>
             <button
