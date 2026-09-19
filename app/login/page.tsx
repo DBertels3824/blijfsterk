@@ -5,13 +5,26 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 
+type Modus = 'inloggen' | 'registreren';
+
 export default function LoginPage() {
   const router = useRouter();
+  const [modus, setModus] = useState<Modus>('inloggen');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [toonWachtwoord, setToonWachtwoord] = useState(false);
   const [bericht, setBericht] = useState('');
   const [bezig, setBezig] = useState(false);
+
+  function wisselModus(nieuweModus: Modus) {
+    // Bewust de velden leegmaken bij het wisselen — voorkomt dat de browser per
+    // ongeluk een opgeslagen e-mail/wachtwoord invult die bij de andere modus hoort
+    // (leidde eerder tot een verwarrende "User already registered"-foutmelding).
+    setModus(nieuweModus);
+    setEmail('');
+    setPassword('');
+    setBericht('');
+  }
 
   async function handleSignUp() {
     if (bezig) return;
@@ -49,27 +62,62 @@ export default function LoginPage() {
       return;
     }
     setBezig(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(email);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/wachtwoord-resetten`,
+    });
     setBezig(false);
     setBericht(
       error ? error.message : 'Check je e-mail — we hebben je een link gestuurd om je wachtwoord opnieuw in te stellen.'
     );
   }
 
+  const isRegistreren = modus === 'registreren';
+
   return (
     <div style={{ minHeight: '78vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '32px 24px' }}>
       <div style={{ width: '100%', maxWidth: 380, margin: '0 auto' }}>
 
-        <h1 style={{ fontSize: 27, textAlign: 'center', margin: 0 }}>Welkom terug</h1>
+        <h1 style={{ fontSize: 27, textAlign: 'center', margin: 0 }}>
+          {isRegistreren ? 'Account aanmaken' : 'Welkom terug'}
+        </h1>
         <p style={{ textAlign: 'center', color: '#8A7561', marginTop: 10, fontSize: 15 }}>
-          Log in om verder te gaan met je training.
+          {isRegistreren ? 'Maak een gratis account aan om te beginnen.' : 'Log in om verder te gaan met je training.'}
         </p>
 
-        <div style={{ marginTop: 28, display: 'flex', flexDirection: 'column', gap: 18 }}>
+        {/* duidelijke tabs — geen verwarring meer tussen inloggen en registreren */}
+        <div style={{ display: 'flex', gap: 8, marginTop: 22, background: '#FFF1DC', borderRadius: 999, padding: 4 }}>
+          <button
+            type="button"
+            onClick={() => wisselModus('inloggen')}
+            style={{
+              flex: 1, fontFamily: 'inherit', fontWeight: 700, fontSize: 14.5, minHeight: 42,
+              borderRadius: 999, border: 'none', cursor: 'pointer',
+              background: !isRegistreren ? '#FFFFFF' : 'transparent',
+              color: !isRegistreren ? '#2B1B0E' : '#8A7561',
+            }}
+          >
+            Inloggen
+          </button>
+          <button
+            type="button"
+            onClick={() => wisselModus('registreren')}
+            style={{
+              flex: 1, fontFamily: 'inherit', fontWeight: 700, fontSize: 14.5, minHeight: 42,
+              borderRadius: 999, border: 'none', cursor: 'pointer',
+              background: isRegistreren ? '#FFFFFF' : 'transparent',
+              color: isRegistreren ? '#2B1B0E' : '#8A7561',
+            }}
+          >
+            Account aanmaken
+          </button>
+        </div>
+
+        <div style={{ marginTop: 22, display: 'flex', flexDirection: 'column', gap: 18 }}>
           <div>
             <label style={{ fontWeight: 700, fontSize: 13.5, display: 'block', marginBottom: 8 }}>E-mailadres</label>
             <input
               type="email"
+              autoComplete="email"
               placeholder="naam@voorbeeld.nl"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -86,10 +134,11 @@ export default function LoginPage() {
             <div style={{ position: 'relative' }}>
               <input
                 type={toonWachtwoord ? 'text' : 'password'}
+                autoComplete={isRegistreren ? 'new-password' : 'current-password'}
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSignIn()}
+                onKeyDown={(e) => e.key === 'Enter' && (isRegistreren ? handleSignUp() : handleSignIn())}
                 style={{
                   fontFamily: 'inherit', fontSize: 16, width: '100%', minHeight: 52,
                   borderRadius: 14, border: '2px solid #F3E4C8', background: '#FFFFFF',
@@ -110,19 +159,21 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <div style={{ textAlign: 'right' }}>
-            <button
-              type="button"
-              onClick={handleWachtwoordVergeten}
-              disabled={bezig}
-              style={{ background: 'none', border: 'none', color: '#E85D00', fontWeight: 600, fontSize: 13.5, cursor: 'pointer', padding: 0 }}
-            >
-              Wachtwoord vergeten?
-            </button>
-          </div>
+          {!isRegistreren && (
+            <div style={{ textAlign: 'right' }}>
+              <button
+                type="button"
+                onClick={handleWachtwoordVergeten}
+                disabled={bezig}
+                style={{ background: 'none', border: 'none', color: '#E85D00', fontWeight: 600, fontSize: 13.5, cursor: 'pointer', padding: 0 }}
+              >
+                Wachtwoord vergeten?
+              </button>
+            </div>
+          )}
 
           <button
-            onClick={handleSignIn}
+            onClick={isRegistreren ? handleSignUp : handleSignIn}
             disabled={bezig}
             style={{
               fontFamily: 'inherit', fontWeight: 700, fontSize: 16.5, borderRadius: 999,
@@ -131,20 +182,9 @@ export default function LoginPage() {
               opacity: bezig ? 0.7 : 1,
             }}
           >
-            {bezig ? 'Bezig...' : 'Inloggen'}
+            {bezig ? 'Bezig...' : isRegistreren ? 'Account aanmaken' : 'Inloggen'}
           </button>
         </div>
-
-        <p style={{ textAlign: 'center', marginTop: 26, fontSize: 15, color: '#8A7561' }}>
-          Nog geen account?{' '}
-          <button
-            onClick={handleSignUp}
-            disabled={bezig}
-            style={{ background: 'none', border: 'none', color: '#E85D00', fontWeight: 700, fontSize: 15, cursor: bezig ? 'default' : 'pointer', padding: 0 }}
-          >
-            Registreer hier
-          </button>
-        </p>
 
         {bericht && (
           <p style={{ textAlign: 'center', fontSize: 13.5, color: '#B9601A', marginTop: 16 }}>{bericht}</p>

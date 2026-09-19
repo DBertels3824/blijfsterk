@@ -23,7 +23,7 @@ export default function CoachWidget() {
   const [laden, setLaden] = useState(false);
   const [versturen, setVersturen] = useState(false);
   const [luisteren, setLuisteren] = useState(false);
-  const [geluidAan, setGeluidAan] = useState(true);
+  const [geluidAan, setGeluidAan] = useState(false);
   const [spraakOndersteund, setSpraakOndersteund] = useState(false);
 
   const profielRef = useRef<any>(null);
@@ -247,28 +247,28 @@ export default function CoachWidget() {
           </div>
 
           {/* messages */}
-          <div style={{ flex: 1, overflowY: 'auto', padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {laden && berichten.length === 0 && <p style={{ color: '#8A7561', fontSize: 14 }}>Even denken...</p>}
+          <div style={{ flex: 1, overflowY: 'auto', padding: 16, display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {laden && berichten.length === 0 && <p style={{ color: '#8A7561', fontSize: 16 }}>Even denken...</p>}
 
             {berichten.map((bericht, i) => (
-              <div key={i} style={{ alignSelf: bericht.role === 'user' ? 'flex-end' : 'flex-start', maxWidth: '86%' }}>
+              <div key={i} style={{ alignSelf: bericht.role === 'user' ? 'flex-end' : 'flex-start', maxWidth: '90%' }}>
                 {bericht.role === 'assistant' && bericht.agent && (
-                  <div style={{ fontSize: 10.5, fontWeight: 700, color: '#E85D00', textTransform: 'uppercase', marginBottom: 3, letterSpacing: '.04em' }}>
+                  <div style={{ fontSize: 11.5, fontWeight: 700, color: '#E85D00', textTransform: 'uppercase', marginBottom: 4, letterSpacing: '.04em' }}>
                     {bericht.agent}
                   </div>
                 )}
                 {bericht.role === 'assistant' ? (
-                  <div style={{ background: '#FFF8EE', border: '1px solid #F3E4C8', borderRadius: '18px 18px 18px 5px', padding: '12px 14px' }}>
-                    <p style={{ margin: 0, whiteSpace: 'pre-line', lineHeight: 1.55, fontSize: 14 }}>{bericht.content}</p>
+                  <div style={{ background: '#FFF8EE', border: '1px solid #F3E4C8', borderRadius: '18px 18px 18px 5px', padding: '14px 16px' }}>
+                    <p style={{ margin: 0, whiteSpace: 'pre-line', lineHeight: 1.6, fontSize: 16.5 }}>{bericht.content}</p>
                     {bericht.naarOefeningen && (
                       <Link
                         href="/oefeningen"
                         onClick={() => setOpen(false)}
                         style={{
-                          display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 10,
-                          fontFamily: 'inherit', fontWeight: 700, fontSize: 12.5, color: '#3A1E00',
+                          display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 12,
+                          fontFamily: 'inherit', fontWeight: 700, fontSize: 14, color: '#3A1E00',
                           background: 'linear-gradient(135deg,#FFBE0A,#FF8601)', borderRadius: 999,
-                          padding: '8px 14px', textDecoration: 'none',
+                          padding: '9px 15px', textDecoration: 'none',
                         }}
                       >
                         Bekijk de oefeningenbibliotheek →
@@ -276,7 +276,7 @@ export default function CoachWidget() {
                     )}
                   </div>
                 ) : (
-                  <div style={{ background: '#E85D00', color: '#FFFFFF', borderRadius: '18px 18px 5px 18px', padding: '11px 15px', fontWeight: 500, whiteSpace: 'pre-line', lineHeight: 1.55, fontSize: 14 }}>
+                  <div style={{ background: '#E85D00', color: '#FFFFFF', borderRadius: '18px 18px 5px 18px', padding: '12px 16px', fontWeight: 500, whiteSpace: 'pre-line', lineHeight: 1.6, fontSize: 16.5 }}>
                     {bericht.content}
                   </div>
                 )}
@@ -286,47 +286,53 @@ export default function CoachWidget() {
           </div>
 
           {/* input */}
-          <div style={{ display: 'flex', gap: 8, padding: '12px', borderTop: '1px solid #F3E4C8', background: '#FFFFFF' }}>
-            <input
-              value={invoer}
-              onChange={(e) => setInvoer(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && versturenHandler()}
-              placeholder={luisteren ? 'Ik luister...' : 'Typ of spreek je vraag...'}
-              style={{
-                fontFamily: 'inherit', fontSize: 15, width: '100%', minHeight: 46,
-                borderRadius: 999, border: '2px solid #F3E4C8', background: '#FFF8EE',
-                padding: '0 16px', color: '#2B1B0E',
-              }}
-            />
-            {spraakOndersteund && (
-              <button
-                onClick={luisteren ? stopLuisteren : startLuisteren}
-                title={luisteren ? 'Stop met luisteren' : 'Spreek je vraag in'}
+          <div style={{ padding: '10px 12px 12px', borderTop: '1px solid #F3E4C8', background: '#FFFFFF' }}>
+            <p style={{ margin: '0 0 8px', fontSize: 12.5, color: '#8A7561', fontWeight: 600 }}>
+              {luisteren ? 'Ik luister... spreek rustig je vraag in.' : 'Typ hieronder, of tik op de microfoon om te praten.'}
+            </p>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <input
+                value={invoer}
+                onChange={(e) => setInvoer(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && versturenHandler()}
+                placeholder="Typ je vraag..."
                 style={{
-                  width: 46, height: 46, borderRadius: 999, border: 'none', flexShrink: 0,
-                  background: luisteren ? '#E85D00' : '#FFF1DC',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
-                  animation: luisteren ? 'bs-mic-puls 1.2s ease-in-out infinite' : 'none',
+                  fontFamily: 'inherit', fontSize: 16.5, width: '100%', minHeight: 50,
+                  borderRadius: 16, border: '2px solid #F3E4C8', background: '#FFF8EE',
+                  padding: '0 16px', color: '#2B1B0E',
+                }}
+              />
+              {spraakOndersteund && (
+                <button
+                  onClick={luisteren ? stopLuisteren : startLuisteren}
+                  title={luisteren ? 'Stop met luisteren' : 'Spreek je vraag in'}
+                  style={{
+                    width: 50, height: 50, borderRadius: 16, border: 'none', flexShrink: 0,
+                    background: luisteren ? '#E85D00' : '#FFF1DC',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+                    animation: luisteren ? 'bs-mic-puls 1.2s ease-in-out infinite' : 'none',
+                  }}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <rect x="9" y="3" width="6" height="11" rx="3" fill={luisteren ? '#FFFFFF' : '#E85D00'} />
+                    <path d="M5 11a7 7 0 0014 0M12 18v3" stroke={luisteren ? '#FFFFFF' : '#E85D00'} strokeWidth="2" strokeLinecap="round" />
+                  </svg>
+                </button>
+              )}
+              <button
+                onClick={() => versturenHandler()}
+                disabled={versturen}
+                title="Verstuur"
+                style={{
+                  width: 50, height: 50, borderRadius: 16, border: 'none', flexShrink: 0,
+                  background: 'linear-gradient(135deg,#FFBE0A,#FF8601)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  cursor: versturen ? 'default' : 'pointer', opacity: versturen ? 0.7 : 1,
                 }}
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <rect x="9" y="3" width="6" height="11" rx="3" fill={luisteren ? '#FFFFFF' : '#E85D00'} />
-                  <path d="M5 11a7 7 0 0014 0M12 18v3" stroke={luisteren ? '#FFFFFF' : '#E85D00'} strokeWidth="2" strokeLinecap="round" />
-                </svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 20l16-8L4 4v6l10 2-10 2v6z" fill="#3A1E00" /></svg>
               </button>
-            )}
-            <button
-              onClick={() => versturenHandler()}
-              disabled={versturen}
-              style={{
-                width: 46, height: 46, borderRadius: 999, border: 'none', flexShrink: 0,
-                background: 'linear-gradient(135deg,#FFBE0A,#FF8601)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                cursor: versturen ? 'default' : 'pointer', opacity: versturen ? 0.7 : 1,
-              }}
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 20l16-8L4 4v6l10 2-10 2v6z" fill="#3A1E00" /></svg>
-            </button>
+            </div>
           </div>
         </div>
       )}
@@ -337,17 +343,30 @@ export default function CoachWidget() {
         title="Chat met je AI-coach"
         style={{
           position: 'fixed', zIndex: 60, right: 16, bottom: 20,
-          width: 60, height: 60, borderRadius: 999, border: 'none',
+          height: 60, minWidth: open ? 60 : undefined, padding: open ? 0 : '0 22px 0 18px',
+          borderRadius: 999, border: 'none',
           background: 'linear-gradient(135deg,#FFBE0A,#FF8601)',
           boxShadow: '0 8px 24px rgba(232,93,0,0.35)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          cursor: 'pointer', fontWeight: 800, fontSize: 20, color: '#3A1E00',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+          cursor: 'pointer', fontFamily: 'inherit', fontWeight: 800, fontSize: 16, color: '#3A1E00',
         }}
       >
         {open ? (
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="#3A1E00" strokeWidth="2.6" strokeLinecap="round" /></svg>
         ) : (
-          'D'
+          <>
+            <div
+              style={{
+                width: 34, height: 34, borderRadius: 999, flexShrink: 0,
+                background: 'rgba(58,30,0,0.16)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontWeight: 800, fontSize: 15, color: '#3A1E00',
+              }}
+            >
+              D
+            </div>
+            Chat met Dirk
+          </>
         )}
       </button>
 
