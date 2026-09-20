@@ -45,7 +45,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         <ServiceWorkerRegistratie />
         <TekstgrootteWrapper>
-        <header style={{ background: "#FFFFFF" }}>
+        <header style={{ background: "#FFFFFF", position: "relative" }}>
           <div
             style={{
               padding: "14px 24px",

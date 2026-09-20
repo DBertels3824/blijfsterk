@@ -43,6 +43,21 @@ h1, h2, h3 {
   }
 }
 
+/* Navigatie: volledige balk op grotere schermen, hamburgermenu op mobiel —
+   voorkomt dat de navigatielinks van de balk af lopen en de pagina horizontaal
+   laten scrollen op een telefoon. */
+.bs-nav-toggle {
+  display: none;
+}
+@media (max-width: 780px) {
+  .bs-nav-desktop {
+    display: none !important;
+  }
+  .bs-nav-toggle {
+    display: inline-flex !important;
+  }
+}
+
 /* Schematische oefening-illustraties (zie app/components/OefeningAnimatie.tsx) */
 @keyframes bs-badge-puls {
   0%, 100% { transform: scale(1); }
