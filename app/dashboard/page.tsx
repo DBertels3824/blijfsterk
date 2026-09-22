@@ -133,12 +133,7 @@ export default function DashboardPagina() {
           href="/oefeningen"
           titel="Oefeningen"
           tekst="Start met trainen"
-          icon={
-            <>
-              <circle cx="12" cy="6" r="2.4" stroke="#E85D00" strokeWidth="2" />
-              <path d="M12 8.4V15M12 15l-4 5M12 15l4 5M7 11h10" stroke="#E85D00" strokeWidth="2" strokeLinecap="round" />
-            </>
-          }
+          beeld={<img src="/tegels/oefeningen.jpg" alt="" style={beeldStijl} />}
         />
 
         <GroteTegel
@@ -152,56 +147,106 @@ export default function DashboardPagina() {
               : `${aantalTrainingen} trainingen gelogd`
           }
           badgeKleur={weekstatus ? statusKleur[weekstatus.soort] : undefined}
-          icon={
-            <>
-              <path d="M4 19V10M10 19V5M16 19v-7M22 19H2" stroke="#E85D00" strokeWidth="2" strokeLinecap="round" />
-            </>
-          }
+          beeld={<img src="/tegels/voortgang.jpg" alt="" style={beeldStijl} />}
         />
 
         <GroteTegel
           onClick={() => window.dispatchEvent(new Event('blijfsterk:open-coach'))}
           titel="Jouw coach"
-          tekst="Stel een vraag"
-          icon={<path d="M4 4h16v12H8l-4 4V4z" stroke="#E85D00" strokeWidth="2" strokeLinejoin="round" />}
+          tekst="Stel Dirk een vraag"
+          beeld={<CoachBeeld />}
         />
 
         <GroteTegel
           href="/intake"
           titel="Mijn gegevens"
           tekst="Over jou, voor je coach"
-          icon={
-            <>
-              <circle cx="12" cy="8" r="3.6" stroke="#E85D00" strokeWidth="2" />
-              <path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7" stroke="#E85D00" strokeWidth="2" strokeLinecap="round" />
-            </>
-          }
+          beeld={<GegevensBeeld />}
         />
 
         <GroteTegel
           href="/telefoon"
           titel="Op je telefoon"
           tekst="Installeer & meldingen"
-          icon={
-            <>
-              <rect x="7" y="2" width="10" height="20" rx="2" stroke="#E85D00" strokeWidth="2" />
-              <path d="M11 18h2" stroke="#E85D00" strokeWidth="2" strokeLinecap="round" />
-            </>
-          }
+          beeld={<TelefoonBeeld />}
         />
 
         <GroteTegel
           href="/winkel"
           titel="Winkel"
           tekst="Materialen bestellen"
-          icon={
-            <>
-              <path d="M4 8h16l-1.4 11.2a1 1 0 01-1 .8H6.4a1 1 0 01-1-.8L4 8z" stroke="#E85D00" strokeWidth="2" strokeLinejoin="round" />
-              <path d="M8 8V6a4 4 0 018 0v2" stroke="#E85D00" strokeWidth="2" strokeLinecap="round" />
-            </>
-          }
+          beeld={<img src="/tegels/winkel.jpg" alt="" style={beeldStijl} />}
         />
       </div>
+    </div>
+  );
+}
+
+// Foto's in de tegels: staan in public/tegels/. Wil je een andere foto? Vervang het
+// bestand met dezelfde naam (liefst 640x480, liggend) en de tegel pakt 'm vanzelf.
+const beeldStijl: CSSProperties = {
+  width: '100%',
+  height: '100%',
+  objectFit: 'cover',
+  display: 'block',
+};
+
+// Tegels zonder foto krijgen een grote, simpele tekening in de huisstijl.
+const beeldVlak: CSSProperties = {
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  background: 'linear-gradient(160deg,#FFF1DC,#FFE2B8)',
+};
+
+function CoachBeeld() {
+  return (
+    <div style={beeldVlak}>
+      <svg width="76%" viewBox="0 0 160 120" fill="none">
+        <defs>
+          <linearGradient id="bs-coach-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#FFBE0A" />
+            <stop offset="1" stopColor="#FF8601" />
+          </linearGradient>
+        </defs>
+        <circle cx="62" cy="62" r="42" fill="url(#bs-coach-grad)" />
+        <text x="62" y="80" textAnchor="middle" fontFamily="inherit" fontWeight="800" fontSize="50" fill="#3A1E00">D</text>
+        <path d="M108 22h40a8 8 0 018 8v22a8 8 0 01-8 8h-24l-12 10V60h-4a8 8 0 01-8-8V30a8 8 0 018-8z" fill="#FFFFFF" stroke="#F3E4C8" strokeWidth="2" />
+        <circle cx="120" cy="41" r="3.5" fill="#E85D00" />
+        <circle cx="132" cy="41" r="3.5" fill="#E85D00" />
+        <circle cx="144" cy="41" r="3.5" fill="#E85D00" />
+      </svg>
+    </div>
+  );
+}
+
+function GegevensBeeld() {
+  return (
+    <div style={beeldVlak}>
+      <svg width="70%" viewBox="0 0 160 120" fill="none">
+        <rect x="14" y="16" width="132" height="88" rx="14" fill="#FFFFFF" stroke="#F3E4C8" strokeWidth="2" />
+        <circle cx="48" cy="52" r="15" fill="#FF8601" />
+        <path d="M24 88c0-13 11-22 24-22s24 9 24 22" fill="#FFBE0A" />
+        <rect x="84" y="40" width="46" height="9" rx="4.5" fill="#F3E4C8" />
+        <rect x="84" y="57" width="36" height="9" rx="4.5" fill="#F3E4C8" />
+        <rect x="84" y="74" width="42" height="9" rx="4.5" fill="#FFBE0A" />
+      </svg>
+    </div>
+  );
+}
+
+function TelefoonBeeld() {
+  return (
+    <div style={beeldVlak}>
+      <svg width="52%" viewBox="0 0 90 120" fill="none">
+        <rect x="9" y="4" width="72" height="112" rx="14" fill="#2B1B0E" />
+        <rect x="15" y="12" width="60" height="96" rx="9" fill="#FFF8EE" />
+        <rect x="33" y="8" width="24" height="4" rx="2" fill="#5A4636" />
+        <image href="/icons/icon-192.png" x="29" y="40" width="32" height="32" />
+        <rect x="24" y="82" width="42" height="7" rx="3.5" fill="#F3E4C8" />
+      </svg>
     </div>
   );
 }
@@ -211,27 +256,27 @@ function GroteTegel({
   onClick,
   titel,
   tekst,
-  icon,
+  beeld,
   badgeKleur,
 }: {
   href?: string;
   onClick?: () => void;
   titel: string;
   tekst: string;
-  icon: ReactNode;
+  beeld: ReactNode;
   badgeKleur?: { achtergrond: string; rand: string; tekst: string };
 }) {
   const inhoud = (
     <>
-      <div style={{ width: 52, height: 52, borderRadius: 16, background: '#FFF8EE', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">{icon}</svg>
+      <div style={{ width: '100%', aspectRatio: '4 / 3', overflow: 'hidden', background: '#FFF1DC' }}>
+        {beeld}
       </div>
-      <div>
-        <div style={{ fontWeight: 800, fontSize: 17, color: '#2B1B0E' }}>{titel}</div>
+      <div style={{ padding: '14px 16px 18px' }}>
+        <div style={{ fontWeight: 800, fontSize: 18, color: '#2B1B0E' }}>{titel}</div>
         <div
           style={{
-            fontSize: 13, marginTop: 4, lineHeight: 1.4,
-            color: badgeKleur ? badgeKleur.tekst : '#8A7561',
+            fontSize: 14.5, marginTop: 4, lineHeight: 1.4,
+            color: badgeKleur ? badgeKleur.tekst : '#6F5A48',
             fontWeight: badgeKleur ? 700 : 500,
           }}
         >
@@ -245,14 +290,14 @@ function GroteTegel({
     borderRadius: 22,
     border: `2px solid ${badgeKleur ? badgeKleur.rand : '#F3E4C8'}`,
     background: badgeKleur ? badgeKleur.achtergrond : '#FFFFFF',
-    padding: '20px 16px',
+    padding: 0,
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'flex-start',
-    gap: 14,
+    alignItems: 'stretch',
     textAlign: 'left',
     textDecoration: 'none',
-    minHeight: 150,
+    overflow: 'hidden',
+    boxShadow: '0 6px 18px rgba(43,27,14,0.06)',
   };
 
   if (onClick) {
