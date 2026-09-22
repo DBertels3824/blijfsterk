@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 
@@ -228,19 +229,55 @@ export default function IntakePage() {
     });
 
     setOpslaan(false);
-    router.push(bestaandProfiel ? '/dashboard' : '/advies');
+    // Nieuwe gebruiker: naar het dashboard, waar Dirk even opent om welkom te heten.
+    router.push(bestaandProfiel ? '/dashboard' : '/dashboard?coach=1');
+  }
+
+  // "Later invullen": maakt alleen een leeg profiel aan, zodat het dashboard weet dat
+  // deze gebruiker de intake al gezien heeft en er niet steeds naar terugstuurt.
+  async function laterInvullen() {
+    if (opslaan) return;
+    setOpslaan(true);
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (user) {
+      await supabase.from('profiles').upsert({ id: user.id });
+    }
+    setOpslaan(false);
+    router.push('/dashboard?coach=1');
   }
 
   if (laden) return <p style={{ padding: 24 }}>Laden...</p>;
 
   return (
     <div style={{ padding: '32px 20px 60px', maxWidth: 640, margin: '0 auto' }}>
-      <h1 style={{ fontSize: 26 }}>{bestaandProfiel ? 'Jouw profiel' : 'Vertel iets over jezelf'}</h1>
+      {bestaandProfiel && (
+        <Link href="/dashboard" style={{ fontSize: 13.5, fontWeight: 700, color: '#E85D00', textDecoration: 'none' }}>
+          ← Terug naar dashboard
+        </Link>
+      )}
+      <h1 style={{ fontSize: 26, marginTop: bestaandProfiel ? 10 : 0 }}>{bestaandProfiel ? 'Mijn gegevens' : 'Vertel iets over jezelf'}</h1>
       <p style={{ color: '#8A7561', fontSize: 15.5, lineHeight: 1.6 }}>
         {bestaandProfiel
-          ? 'Werk je gegevens bij wanneer er iets verandert. Je coach en matching gebruiken dit voor advies op maat.'
-          : 'Deze vragen helpen je coach om gericht advies te geven — geen quiz, gewoon een goed beeld van jouw situatie. Tik gewoon aan wat past.'}
+          ? 'Werk je gegevens bij wanneer er iets verandert. Dirk gebruikt dit voor advies dat bij jou past.'
+          : 'Deze vragen helpen Dirk, je virtuele coach, om advies te geven dat bij jou past. Geen quiz — tik gewoon aan wat past. Je kunt het ook later doen.'}
       </p>
+
+      {!bestaandProfiel && (
+        <button
+          type="button"
+          onClick={laterInvullen}
+          disabled={opslaan}
+          style={{
+            fontFamily: 'inherit', fontWeight: 700, fontSize: 15, minHeight: 48, padding: '0 20px',
+            borderRadius: 999, border: '2px solid #F3E4C8', background: '#FFFFFF', color: '#E85D00',
+            cursor: opslaan ? 'default' : 'pointer', marginTop: 4,
+          }}
+        >
+          Liever later invullen → naar mijn dashboard
+        </button>
+      )}
 
       <Vraag label="In welke plaats woon je ongeveer?">
         <input

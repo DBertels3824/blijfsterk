@@ -9,7 +9,7 @@ import { ADMIN_EMAIL } from '@/lib/admin';
 const LINKS = [
   { href: '/dashboard', label: 'Dashboard' },
   { href: '/oefeningen', label: 'Oefeningen' },
-  { href: '/intake', label: 'Profiel' },
+  { href: '/intake', label: 'Mijn gegevens' },
 ];
 
 // Matching (trainers/sportscholen) zit voorlopig in het afgeschermde deel — nog niet

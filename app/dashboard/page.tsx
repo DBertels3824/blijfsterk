@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { berekenWeekstatus, type Weekstatus } from '@/lib/weekschema';
+import { ADMIN_EMAIL } from '@/lib/admin';
 import TekstgrootteKnop from '@/app/components/TekstgrootteKnop';
 
 function startVanDeWeek(): Date {
@@ -29,6 +30,7 @@ export default function DashboardPagina() {
   const [weekstatus, setWeekstatus] = useState<Weekstatus | null>(null);
   const [laden, setLaden] = useState(true);
   const [naam, setNaam] = useState('');
+  const [profielLeeg, setProfielLeeg] = useState(false);
 
   useEffect(() => {
     const laadDashboard = async () => {
@@ -39,15 +41,30 @@ export default function DashboardPagina() {
       }
       setNaam(user.user_metadata?.naam || '');
 
-      const { data: rolData } = await supabase.from('profiles').select('rol').eq('id', user.id).single();
-      if (rolData?.rol === 'trainer') {
+      const { data: profiel } = await supabase
+        .from('profiles')
+        .select('rol, huidige_staat, doelen, ervaring')
+        .eq('id', user.id)
+        .single();
+
+      // Nog helemaal geen profiel: dan is dit een nieuwe gebruiker die de intake nog
+      // niet gezien heeft — daar eerst even langs, zodat Dirk iets over je weet.
+      if (!profiel && user.email !== ADMIN_EMAIL) {
+        router.replace('/intake');
+        return;
+      }
+      if (profiel?.rol === 'trainer') {
         router.push('/trainer-dashboard');
         return;
       }
-      if (rolData?.rol === 'sportschool') {
+      if (profiel?.rol === 'sportschool') {
         router.push('/sportschool-dashboard');
         return;
       }
+      // Wel een profiel, maar (nog) niets ingevuld — bijv. na "later invullen" bij de intake.
+      setProfielLeeg(
+        !profiel?.huidige_staat && !profiel?.ervaring && !(profiel?.doelen && profiel.doelen.length)
+      );
 
       const { count } = await supabase
         .from('voortgang')
@@ -72,6 +89,13 @@ export default function DashboardPagina() {
       }
 
       setLaden(false);
+
+      // Direct na de intake (?coach=1): Dirk opent zichzelf even om welkom te heten,
+      // zodat de nieuwe gebruiker meteen een eerste stap krijgt aangereikt.
+      if (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('coach') === '1') {
+        window.history.replaceState(null, '', '/dashboard');
+        setTimeout(() => window.dispatchEvent(new Event('blijfsterk:open-coach')), 400);
+      }
     };
     laadDashboard();
   }, [router]);
@@ -79,11 +103,30 @@ export default function DashboardPagina() {
   if (laden) return <p style={{ padding: 24 }}>Laden...</p>;
 
   return (
-    <div style={{ maxWidth: 520, margin: '0 auto', padding: '20px 20px 60px' }}>
+    <div style={{ maxWidth: 520, margin: '0 auto', padding: '20px 20px 100px' }}>
       <div style={{ display: 'flex', justifyContent: naam ? 'space-between' : 'flex-end', alignItems: 'center', marginBottom: 20, gap: 12 }}>
         {naam && <h1 style={{ fontSize: 21, margin: 0 }}>Hoi, {naam}</h1>}
         <TekstgrootteKnop />
       </div>
+
+      {profielLeeg && (
+        <Link
+          href="/intake"
+          style={{
+            display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16,
+            background: '#FFF1DC', border: '2px solid #FFBE0A', borderRadius: 20,
+            padding: '16px 18px', textDecoration: 'none', color: '#2B1B0E',
+          }}
+        >
+          <div style={{ flex: 1 }}>
+            <div style={{ fontWeight: 800, fontSize: 16 }}>Vertel Dirk kort iets over jezelf</div>
+            <div style={{ fontSize: 14.5, color: '#5A4636', marginTop: 4, lineHeight: 1.5 }}>
+              Dan kan je coach advies geven dat echt bij jou past. Duurt een paar minuten.
+            </div>
+          </div>
+          <span style={{ fontWeight: 800, color: '#E85D00', fontSize: 22 }}>→</span>
+        </Link>
+      )}
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
         <GroteTegel
@@ -125,8 +168,8 @@ export default function DashboardPagina() {
 
         <GroteTegel
           href="/intake"
-          titel="Profiel"
-          tekst="Jouw gegevens"
+          titel="Mijn gegevens"
+          tekst="Over jou, voor je coach"
           icon={
             <>
               <circle cx="12" cy="8" r="3.6" stroke="#E85D00" strokeWidth="2" />

@@ -33,6 +33,7 @@ export default function WeekschemaPagina() {
   const router = useRouter();
   const [laden, setLaden] = useState(true);
   const [weekstatus, setWeekstatus] = useState<Weekstatus | null>(null);
+  const [totaal, setTotaal] = useState(0);
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
@@ -40,6 +41,12 @@ export default function WeekschemaPagina() {
         router.push('/login');
         return;
       }
+
+      const { count } = await supabase
+        .from('voortgang')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', data.user.id);
+      setTotaal(count || 0);
 
       const maandag = startVanDeWeek();
       const { data: weekData } = await supabase
@@ -63,13 +70,15 @@ export default function WeekschemaPagina() {
 
   return (
     <div style={{ maxWidth: 640, margin: '0 auto', padding: '24px 20px 60px' }}>
-      <Link href="/oefeningen" style={{ fontSize: 13.5, fontWeight: 700, color: '#E85D00', textDecoration: 'none' }}>
-        ← Naar de oefeningenbibliotheek
+      <Link href="/dashboard" style={{ fontSize: 13.5, fontWeight: 700, color: '#E85D00', textDecoration: 'none' }}>
+        ← Terug naar dashboard
       </Link>
 
-      <h1 style={{ fontSize: 26, margin: '10px 0 6px' }}>Jouw weekschema</h1>
+      <h1 style={{ fontSize: 26, margin: '10px 0 6px' }}>Jouw voortgang</h1>
       <p style={{ color: '#8A7561', margin: '0 0 16px' }}>
-        Een eenvoudig voorbeeldschema van 3 trainingsdagen per week, opgebouwd uit de oefeningenbibliotheek.
+        {totaal === 0
+          ? 'Nog geen oefening afgevinkt. Elke oefening die je doet, telt mee.'
+          : `In totaal ${totaal} ${totaal === 1 ? 'oefening' : 'oefeningen'} afgevinkt. Goed bezig.`}
       </p>
 
       {weekstatus && (
@@ -84,6 +93,11 @@ export default function WeekschemaPagina() {
           {weekstatus.bericht}
         </div>
       )}
+
+      <h2 style={{ fontSize: 20, margin: '28px 0 6px' }}>Voorbeeld-weekschema</h2>
+      <p style={{ color: '#8A7561', margin: '0 0 12px' }}>
+        Drie trainingsdagen per week, opgebouwd uit de oefeningen.
+      </p>
 
       <div style={{ fontSize: 13, color: '#8A7561', lineHeight: 1.6, background: '#FFF8EE', borderRadius: 14, padding: '12px 16px', marginBottom: 24 }}>
         Dit is een algemeen voorbeeld, geen persoonlijk schema. Pas de dagen zelf aan op je eigen ritme — bouw rustig

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
 import SponsorBanner from "./components/SponsorBanner";
+import IngelogdDoorsturen from "./components/IngelogdDoorsturen";
 
 const btnPrimary: CSSProperties = {
   display: "inline-flex",
@@ -42,6 +43,8 @@ const card: CSSProperties = {
 export default function Home() {
   return (
     <div>
+      <IngelogdDoorsturen />
+
       {/* HERO */}
       <section style={{ maxWidth: 1140, margin: "0 auto", padding: "56px 24px 64px" }}>
         <div style={{ maxWidth: 720, margin: "0 auto 40px", textAlign: "center" }}>

@@ -105,7 +105,7 @@ export default function OefeningenPagina() {
           background: 'linear-gradient(135deg,#FFBE0A,#FF8601)', color: '#3A1E00',
         }}
       >
-        Bekijk je weekschema →
+        Bekijk je voortgang en weekschema →
       </Link>
 
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 24 }}>

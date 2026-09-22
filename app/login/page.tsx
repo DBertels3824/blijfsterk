@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
@@ -16,6 +16,13 @@ export default function LoginPage() {
   const [toonWachtwoord, setToonWachtwoord] = useState(false);
   const [bericht, setBericht] = useState('');
   const [bezig, setBezig] = useState(false);
+
+  // Al ingelogd? Dan hoort iemand niet op dit scherm, maar in de app.
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) router.replace('/dashboard');
+    });
+  }, [router]);
 
   function wisselModus(nieuweModus: Modus) {
     // Bewust de velden leegmaken bij het wisselen — voorkomt dat de browser per
