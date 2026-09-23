@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Verzamelde trainerslijst (bedrijfsgegevens, niet in de openbare repo)
+trainers-nederland.csv
+trainers-voortgang.json

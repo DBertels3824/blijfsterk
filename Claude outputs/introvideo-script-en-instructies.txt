@@ -1,0 +1,133 @@
+BLIJF STERK — INTRODUCTIEVIDEO
+Script + instructies voor Runway
+================================================================
+
+DEEL 1 — HET SCRIPT (ongeveer 60 seconden)
+----------------------------------------------------------------
+
+Genereer in 6 losse stukken van elk 8–12 seconden. Eén alinea per stuk.
+Dat werkt in Runway veel betrouwbaarder dan één lange clip.
+
+
+[STUK 1 — welkom]
+
+Hallo, ik ben Dirk. Welkom bij Blijf Sterk.
+
+
+[STUK 2 — het probleem]
+
+Na je vijfenvijftigste verlies je elk jaar een beetje spierkracht.
+Dat merk je. Bij de trap. Bij de boodschappen. Bij opstaan uit een stoel.
+
+
+[STUK 3 — de oplossing]
+
+Het goede nieuws: dat kun je zelf keren. Met rustige krachttraining,
+gewoon thuis. Geen ingewikkelde toestellen. Een weerstandsband,
+een matje, of een flesje water is genoeg.
+
+
+[STUK 4 — wat Blijf Sterk is]
+
+Daarom heb ik Blijf Sterk gemaakt. Twaalf oefeningen, elk met een
+korte video. Ik ben er als je coach, voor elke vraag over kracht en
+voeding. En je ziet precies wat je gedaan hebt.
+
+
+[STUK 5 — de toekomst]
+
+En dit is nog maar het begin. Binnenkort koppelen we je aan een
+sportschool bij jou in de buurt, met een personal trainer die je
+begeleidt. Of aan een trainingsmaatje, om samen thuis te trainen.
+Want samen houd je het langer vol. En dat is helemaal aan jou.
+Wil je dat, dan geef je het heel eenvoudig aan.
+
+
+[STUK 6 — afsluiting]
+
+Meedoen is gratis. Meld je aan, en begin vandaag.
+Blijf sterk.
+
+
+================================================================
+DEEL 2 — INSTRUCTIES VOOR RUNWAY
+----------------------------------------------------------------
+
+STAP 1 — Maak eerst de stem (buiten Runway)
+
+Runway maakt zelf niet betrouwbaar een Nederlandse stem uit tekst.
+Maak de stem daarom apart, en zet die daarna in Runway.
+
+Optie A (makkelijkst en meest echt): spreek het script zelf in.
+  - Telefoon, memo-app, rustige kamer, telefoon op 30 cm van je mond.
+  - Neem elk stuk apart op. Praat iets langzamer dan normaal.
+  - Bewaar als 6 losse bestanden: stuk1.m4a, stuk2.m4a, enzovoort.
+
+Optie B (AI-stem): ElevenLabs (elevenlabs.io).
+  - Kies een Nederlandse mannenstem, leeftijd "middle aged".
+  - Plak per stuk de tekst, download als MP3.
+  - Zet "Stability" rond 60% voor een rustige, warme toon.
+
+
+STAP 2 — Maak het beeld van de persoon
+
+In Runway: kies "Text to Image" (of "Gen-4 Image"). Maak eerst één
+goede stilstaande foto van de persoon. Die gebruik je voor alle stukken,
+zodat het steeds dezelfde persoon is.
+
+Prompt (kopieer letterlijk):
+
+  Een vitale, vriendelijke Nederlandse man van rond de zestig, kort grijs
+  haar, warme glimlach, kijkt recht in de camera. Lichte, rustige
+  woonkamer met warm ochtendlicht. Op de tafel naast hem een
+  weerstandsband en een flesje water. Hij draagt een eenvoudig blauw
+  sportshirt. Fotorealistisch, zachte belichting, ondiepe scherptediepte.
+  Formaat 16:9.
+
+Genereer 3 of 4 varianten. Kies degene die het meest "echt" en warm
+oogt. Let op de handen en ogen — daar gaat AI het vaakst mis.
+
+
+STAP 3 — Laat de persoon praten (per stuk)
+
+In Runway: kies de app "Add Dialogue" (soms "Lip Sync" genoemd).
+  1. Upload de foto uit stap 2.
+  2. Upload het audiobestand van stuk 1.
+  3. Genereer. Runway laat de mond en het gezicht meebewegen.
+  4. Herhaal voor stuk 2 tot en met 6, steeds met dezelfde foto.
+
+Tip: als een stuk er raar uitziet (mond klopt niet, gezicht vervormt),
+genereer het gewoon nog een keer. Dat is normaal bij AI-video.
+
+Alternatief: "Act-Two". Dan neem je jezelf op met je telefoon terwijl
+je het script uitspreekt, en zet Runway jouw mimiek en stem over op de
+gegenereerde persoon. Geeft het meest natuurlijke resultaat, maar kost
+meer tijd.
+
+
+STAP 4 — Exporteren
+
+  - Download elk stuk als MP4, 1080p, 16:9.
+  - Zet ze in één map, in de goede volgorde genummerd.
+
+
+STAP 5 — Aanleveren
+
+Upload de 6 MP4-bestanden hier in de chat. Ik plak ze aan elkaar, zet
+het Blijf Sterk-logo erop, voeg ondertitels toe (fijn voor wie het
+geluid uit heeft), comprimeer het bestand, en zet de video op de
+homepage in het bestaande videoblok.
+
+
+================================================================
+DEEL 3 — ALS JE HEM LATER ZELF OPNEEMT
+----------------------------------------------------------------
+
+Dit script is geschreven om ook zelf uit te spreken.
+  - Zet je telefoon liggend (16:9), op ooghoogte, op een stabiele plek.
+  - Ga voor een raam zitten, met het licht op je gezicht, niet erachter.
+  - Rustige achtergrond. De weerstandsband en het flesje water op tafel
+    is een leuk detail dat ook in de video's terugkomt.
+  - Neem per alinea op. Fouten? Gewoon opnieuw, alleen dat stuk.
+  - Kijk in de lens, niet naar het scherm.
+  - Praat zoals je tegen een buurman praat. Rustig, warm, geen haast.
