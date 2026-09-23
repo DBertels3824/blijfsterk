@@ -12,6 +12,8 @@
 // - Schrijft naar trainers-nederland.csv (verse regels worden toegevoegd).
 // - Onthoudt welke gemeenten al klaar zijn in trainers-voortgang.json, dus als het
 //   script stopt, ga je met hetzelfde commando gewoon verder waar je was.
+// - Stoppen: Ctrl+C in het venster. Voortgang blijft bewaard.
+// - Fouten komen in trainers-fouten.log.
 // - Kosten: ongeveer 1.000 zoekopdrachten voor heel Nederland, ruwweg €30–50 aan
 //   Google-tegoed. Controleer je tegoed/limieten in de Google Cloud Console.
 
@@ -20,6 +22,7 @@ import path from 'node:path';
 
 const CSV = 'trainers-nederland.csv';
 const VOORTGANG = 'trainers-voortgang.json';
+const FOUTLOG = 'trainers-fouten.log';
 const MAX_PAGINAS = 3;
 const PAUZE_MS = 2200; // Google wil ±2 s wachten voor een volgende pagina
 
@@ -44,6 +47,22 @@ function csvVeld(waarde) {
 
 const slaap = (ms) => new Promise((r) => setTimeout(r, ms));
 
+// Schrijft een regel naar het CSV-bestand. Staat het bestand open in Excel, dan
+// blokkeert Windows het (EBUSY). Dan wachten we en proberen we opnieuw, met een
+// duidelijke melding — in plaats van de plaats als mislukt te markeren.
+async function schrijfRegel(regel) {
+  for (let poging = 1; ; poging++) {
+    try {
+      fs.appendFileSync(CSV, regel);
+      return;
+    } catch (fout) {
+      if (fout.code !== 'EBUSY' && fout.code !== 'EPERM') throw fout;
+      if (poging === 1) console.log(`\n>> Het bestand ${CSV} is geblokkeerd. Staat het open in Excel? Sluit het, dan ga ik vanzelf verder.`);
+      await slaap(5000);
+    }
+  }
+}
+
 async function zoekPagina(apiKey, textQuery, pageToken) {
   const body = { textQuery, languageCode: 'nl', regionCode: 'NL', pageSize: 20 };
   if (pageToken) body.pageToken = pageToken;
@@ -57,8 +76,33 @@ async function zoekPagina(apiKey, textQuery, pageToken) {
     },
     body: JSON.stringify(body),
   });
-  if (!res.ok) throw new Error(`Google gaf code ${res.status}: ${(await res.text()).slice(0, 300)}`);
+  if (!res.ok) {
+    const fout = new Error(`Google gaf code ${res.status}: ${(await res.text()).slice(0, 300)}`);
+    fout.status = res.status;
+    throw fout;
+  }
   return res.json();
+}
+
+// Probeert een zoekopdracht tot 4 keer. Bij "te veel vragen" (429) of een tijdelijke
+// netwerkfout wachten we steeds langer: 5 s, 15 s, 45 s. Google wil rustig aan.
+async function zoekPaginaMetGeduld(apiKey, textQuery, pageToken) {
+  const wachttijden = [5000, 15000, 45000];
+  for (let poging = 0; ; poging++) {
+    try {
+      return await zoekPagina(apiKey, textQuery, pageToken);
+    } catch (fout) {
+      const tijdelijk = fout.status === 429 || fout.status >= 500 || !fout.status;
+      if (!tijdelijk || poging >= wachttijden.length) throw fout;
+      process.stdout.write(`(even wachten, ${wachttijden[poging] / 1000} s) `);
+      await slaap(wachttijden[poging]);
+    }
+  }
+}
+
+function logFout(plaats, fout) {
+  const regel = `${new Date().toISOString()}  ${plaats}: ${fout.message}\n`;
+  fs.appendFileSync(FOUTLOG, regel);
 }
 
 async function main() {
@@ -91,13 +135,12 @@ async function main() {
     try {
       for (let pagina = 0; pagina < MAX_PAGINAS; pagina++) {
         if (pageToken) await slaap(PAUZE_MS);
-        const data = await zoekPagina(apiKey, `personal trainer in ${plaats}`, pageToken);
+        const data = await zoekPaginaMetGeduld(apiKey, `personal trainer in ${plaats}`, pageToken);
         for (const p of data.places || []) {
           if (!p.id || bekendeIds.has(p.id)) continue;
           bekendeIds.add(p.id);
           nieuw++;
-          fs.appendFileSync(
-            CSV,
+          await schrijfRegel(
             [
               p.displayName?.text || 'Onbekend',
               plaats,
@@ -119,7 +162,14 @@ async function main() {
         if (!pageToken) break;
       }
     } catch (fout) {
-      console.log(`MISLUKT (${fout.message}). Ga verder met de volgende; draai het script later opnieuw voor deze plaats.`);
+      logFout(plaats, fout);
+      console.log(`MISLUKT: ${fout.message.slice(0, 120)}`);
+      if (fout.status === 403 || fout.status === 401) {
+        console.log('\nDit lijkt een probleem met de Google-sleutel of het tegoed. Stop. Kijk in trainers-fouten.log voor de volledige melding.');
+        process.exit(1);
+      }
+      console.log('Ga verder met de volgende plaats; draai het script later opnieuw voor deze.');
+      await slaap(3000);
       continue;
     }
     voortgang.klaar.push(plaats);
@@ -127,12 +177,17 @@ async function main() {
     fs.writeFileSync(VOORTGANG, JSON.stringify(voortgang));
     totaalNieuw += nieuw;
     console.log(`${nieuw} nieuw (totaal ${bekendeIds.size})`);
-    await slaap(300);
+    await slaap(1200);
   }
 
   console.log(`\nKlaar. ${totaalNieuw} nieuwe trainers toegevoegd. Alles staat in ${path.resolve(CSV)}.`);
   console.log('Open het bestand in Excel. Kolom "status" kun je zelf bijhouden: nieuw / uitgenodigd / gesproken / aangemeld / nee.');
 }
+
+process.on('SIGINT', () => {
+  console.log('\nGestopt. Voortgang is bewaard — start hetzelfde commando om verder te gaan.');
+  process.exit(0);
+});
 
 main().catch((fout) => {
   console.error('Er ging iets mis:', fout.message);
