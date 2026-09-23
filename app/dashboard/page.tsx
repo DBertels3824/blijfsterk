@@ -103,9 +103,10 @@ export default function DashboardPagina() {
   if (laden) return <p style={{ padding: 24 }}>Laden...</p>;
 
   return (
-    <div style={{ maxWidth: 520, margin: '0 auto', padding: '20px 20px 100px' }}>
+    <div style={achtergrond}>
+      <div style={{ maxWidth: 520, margin: '0 auto', padding: '20px 20px 100px' }}>
       <div style={{ display: 'flex', justifyContent: naam ? 'space-between' : 'flex-end', alignItems: 'center', marginBottom: 20, gap: 12 }}>
-        {naam && <h1 style={{ fontSize: 21, margin: 0 }}>Hoi, {naam}</h1>}
+        {naam && <h1 style={{ fontSize: 24, margin: 0, color: '#2B1B0E' }}>Hoi, {naam}</h1>}
         <TekstgrootteKnop />
       </div>
 
@@ -133,7 +134,12 @@ export default function DashboardPagina() {
           href="/oefeningen"
           titel="Oefeningen"
           tekst="Start met trainen"
-          beeld={<img src="/tegels/oefeningen.jpg" alt="" style={beeldStijl} />}
+          icon={
+            <>
+              <circle cx="12" cy="5.5" r="2.6" fill="#E85D00" />
+              <path d="M12 8.5V15M12 15l-4.5 5.5M12 15l4.5 5.5M6.5 11h11" stroke="#E85D00" strokeWidth="2.4" strokeLinecap="round" />
+            </>
+          }
         />
 
         <GroteTegel
@@ -147,131 +153,95 @@ export default function DashboardPagina() {
               : `${aantalTrainingen} trainingen gelogd`
           }
           badgeKleur={weekstatus ? statusKleur[weekstatus.soort] : undefined}
-          beeld={<img src="/tegels/voortgang.jpg" alt="" style={beeldStijl} />}
+          icon={<path d="M4 19V11M10 19V5M16 19v-8M22 20H2" stroke="#E85D00" strokeWidth="2.4" strokeLinecap="round" />}
         />
 
         <GroteTegel
           onClick={() => window.dispatchEvent(new Event('blijfsterk:open-coach'))}
           titel="Jouw coach"
           tekst="Stel Dirk een vraag"
-          beeld={<CoachBeeld />}
+          icon={<path d="M4 4h16v12H8l-4 4V4z" stroke="#E85D00" strokeWidth="2.4" strokeLinejoin="round" />}
         />
 
         <GroteTegel
           href="/intake"
           titel="Mijn gegevens"
           tekst="Over jou, voor je coach"
-          beeld={<GegevensBeeld />}
+          icon={
+            <>
+              <circle cx="12" cy="8" r="3.8" stroke="#E85D00" strokeWidth="2.4" />
+              <path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7" stroke="#E85D00" strokeWidth="2.4" strokeLinecap="round" />
+            </>
+          }
         />
 
         <GroteTegel
           href="/telefoon"
           titel="Op je telefoon"
           tekst="Installeer & meldingen"
-          beeld={<TelefoonBeeld />}
+          icon={
+            <>
+              <rect x="7" y="2" width="10" height="20" rx="2.5" stroke="#E85D00" strokeWidth="2.4" />
+              <path d="M11 18h2" stroke="#E85D00" strokeWidth="2.4" strokeLinecap="round" />
+            </>
+          }
         />
 
         <GroteTegel
           href="/winkel"
           titel="Winkel"
           tekst="Materialen bestellen"
-          beeld={<img src="/tegels/winkel.jpg" alt="" style={beeldStijl} />}
+          icon={
+            <>
+              <path d="M4 8h16l-1.4 11.2a1 1 0 01-1 .8H6.4a1 1 0 01-1-.8L4 8z" stroke="#E85D00" strokeWidth="2.4" strokeLinejoin="round" />
+              <path d="M8 8V6a4 4 0 018 0v2" stroke="#E85D00" strokeWidth="2.4" strokeLinecap="round" />
+            </>
+          }
         />
+      </div>
       </div>
     </div>
   );
 }
 
-// Foto's in de tegels: staan in public/tegels/. Wil je een andere foto? Vervang het
-// bestand met dezelfde naam (liefst 640x480, liggend) en de tegel pakt 'm vanzelf.
-const beeldStijl: CSSProperties = {
-  width: '100%',
-  height: '100%',
-  objectFit: 'cover',
-  display: 'block',
+// De foto van de homepage als achtergrond, met een zachte crème-laag eroverheen
+// zodat de tegels en tekst goed leesbaar blijven.
+const achtergrond: CSSProperties = {
+  minHeight: '85vh',
+  backgroundImage:
+    'linear-gradient(180deg, rgba(255,248,238,0.78) 0%, rgba(255,248,238,0.86) 60%, rgba(255,248,238,0.96) 100%), url(/hero-photo.jpg)',
+  backgroundSize: 'cover',
+  backgroundPosition: 'center top',
+  backgroundAttachment: 'scroll',
 };
-
-// Tegels zonder foto krijgen een grote, simpele tekening in de huisstijl.
-const beeldVlak: CSSProperties = {
-  width: '100%',
-  height: '100%',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  background: 'linear-gradient(160deg,#FFF1DC,#FFE2B8)',
-};
-
-function CoachBeeld() {
-  return (
-    <div style={beeldVlak}>
-      <svg width="76%" viewBox="0 0 160 120" fill="none">
-        <defs>
-          <linearGradient id="bs-coach-grad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#FFBE0A" />
-            <stop offset="1" stopColor="#FF8601" />
-          </linearGradient>
-        </defs>
-        <circle cx="62" cy="62" r="42" fill="url(#bs-coach-grad)" />
-        <text x="62" y="80" textAnchor="middle" fontFamily="inherit" fontWeight="800" fontSize="50" fill="#3A1E00">D</text>
-        <path d="M108 22h40a8 8 0 018 8v22a8 8 0 01-8 8h-24l-12 10V60h-4a8 8 0 01-8-8V30a8 8 0 018-8z" fill="#FFFFFF" stroke="#F3E4C8" strokeWidth="2" />
-        <circle cx="120" cy="41" r="3.5" fill="#E85D00" />
-        <circle cx="132" cy="41" r="3.5" fill="#E85D00" />
-        <circle cx="144" cy="41" r="3.5" fill="#E85D00" />
-      </svg>
-    </div>
-  );
-}
-
-function GegevensBeeld() {
-  return (
-    <div style={beeldVlak}>
-      <svg width="70%" viewBox="0 0 160 120" fill="none">
-        <rect x="14" y="16" width="132" height="88" rx="14" fill="#FFFFFF" stroke="#F3E4C8" strokeWidth="2" />
-        <circle cx="48" cy="52" r="15" fill="#FF8601" />
-        <path d="M24 88c0-13 11-22 24-22s24 9 24 22" fill="#FFBE0A" />
-        <rect x="84" y="40" width="46" height="9" rx="4.5" fill="#F3E4C8" />
-        <rect x="84" y="57" width="36" height="9" rx="4.5" fill="#F3E4C8" />
-        <rect x="84" y="74" width="42" height="9" rx="4.5" fill="#FFBE0A" />
-      </svg>
-    </div>
-  );
-}
-
-function TelefoonBeeld() {
-  return (
-    <div style={beeldVlak}>
-      <svg width="52%" viewBox="0 0 90 120" fill="none">
-        <rect x="9" y="4" width="72" height="112" rx="14" fill="#2B1B0E" />
-        <rect x="15" y="12" width="60" height="96" rx="9" fill="#FFF8EE" />
-        <rect x="33" y="8" width="24" height="4" rx="2" fill="#5A4636" />
-        <image href="/icons/icon-192.png" x="29" y="40" width="32" height="32" />
-        <rect x="24" y="82" width="42" height="7" rx="3.5" fill="#F3E4C8" />
-      </svg>
-    </div>
-  );
-}
 
 function GroteTegel({
   href,
   onClick,
   titel,
   tekst,
-  beeld,
+  icon,
   badgeKleur,
 }: {
   href?: string;
   onClick?: () => void;
   titel: string;
   tekst: string;
-  beeld: ReactNode;
+  icon: ReactNode;
   badgeKleur?: { achtergrond: string; rand: string; tekst: string };
 }) {
   const inhoud = (
     <>
-      <div style={{ width: '100%', aspectRatio: '4 / 3', overflow: 'hidden', background: '#FFF1DC' }}>
-        {beeld}
+      <div
+        style={{
+          width: 64, height: 64, borderRadius: 20,
+          background: 'linear-gradient(160deg,#FFF1DC,#FFE2B8)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}
+      >
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">{icon}</svg>
       </div>
-      <div style={{ padding: '14px 16px 18px' }}>
+      <div>
         <div style={{ fontWeight: 800, fontSize: 18, color: '#2B1B0E' }}>{titel}</div>
         <div
           style={{
@@ -289,15 +259,16 @@ function GroteTegel({
   const stijl: CSSProperties = {
     borderRadius: 22,
     border: `2px solid ${badgeKleur ? badgeKleur.rand : '#F3E4C8'}`,
-    background: badgeKleur ? badgeKleur.achtergrond : '#FFFFFF',
-    padding: 0,
+    background: badgeKleur ? badgeKleur.achtergrond : 'rgba(255,255,255,0.94)',
+    padding: '20px 16px',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'stretch',
+    alignItems: 'flex-start',
+    gap: 14,
     textAlign: 'left',
     textDecoration: 'none',
-    overflow: 'hidden',
-    boxShadow: '0 6px 18px rgba(43,27,14,0.06)',
+    minHeight: 160,
+    boxShadow: '0 8px 24px rgba(43,27,14,0.10)',
   };
 
   if (onClick) {
