@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 
 type VeldType = 'text' | 'textarea' | 'ja-nee';
@@ -60,6 +60,27 @@ export default function WordPartner() {
   const [versturen, setVersturen] = useState(false);
   const [verstuurd, setVerstuurd] = useState(false);
   const [fout, setFout] = useState<string | null>(null);
+  const [uitgenodigd, setUitgenodigd] = useState(false);
+
+  // Uitnodigingslink uit een mailing: velden staan dan al ingevuld, de trainer hoeft
+  // alleen te controleren en de vragen te beantwoorden. Voorbeeld:
+  //   /word-partner?naam=Jan%20de%20Vries&plaats=Zwolle&telefoon=06...&website=https://...
+  // Deze parameters worden alleen in het formulier gezet, niet opgeslagen tot de
+  // trainer zelf op "versturen" klikt.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const q = new URLSearchParams(window.location.search);
+    if (!q.has('naam') && !q.has('email')) return;
+    const kort = (v: string | null) => (v || '').trim().slice(0, 200);
+    if (q.get('type') === 'sportschool') setType('sportschool');
+    setNaam(kort(q.get('naam')));
+    setEmail(kort(q.get('email')));
+    setTelefoon(kort(q.get('telefoon')));
+    setPlaats(kort(q.get('plaats')));
+    const website = kort(q.get('website'));
+    if (website) setAntwoorden((prev) => ({ ...prev, referenties: website }));
+    setUitgenodigd(true);
+  }, []);
 
   const vragen = type === 'trainer' ? VRAGEN_TRAINER : VRAGEN_SPORTSCHOOL;
 
@@ -110,10 +131,21 @@ export default function WordPartner() {
 
   return (
     <div style={{ maxWidth: 480, margin: '0 auto', padding: '24px 20px 60px' }}>
-      <h1 style={{ fontSize: 26, margin: '0 0 6px' }}>Word partner van Blijf Sterk</h1>
-      <p style={{ color: '#8A7561', margin: '0 0 24px' }}>
-        We werken alleen samen met trainers en sportscholen die goed passen bij onze doelgroep: volwassenen van 55+.
+      <h1 style={{ fontSize: 26, margin: '0 0 6px' }}>
+        {uitgenodigd ? `Welkom${naam ? `, ${naam.split(' ')[0]}` : ''}!` : 'Word partner van Blijf Sterk'}
+      </h1>
+      <p style={{ color: '#6F5A48', margin: '0 0 24px', lineHeight: 1.6 }}>
+        {uitgenodigd
+          ? 'We hebben je gegevens alvast ingevuld. Kijk of alles klopt, beantwoord de vragen hieronder, en klik op versturen. Dat is alles.'
+          : 'We werken alleen samen met trainers en sportscholen die goed passen bij onze doelgroep: volwassenen van 55+.'}
       </p>
+
+      {uitgenodigd && (
+        <div style={{ background: '#FFF1DC', border: '2px solid #FFBE0A', borderRadius: 16, padding: '14px 16px', marginBottom: 22, fontSize: 14.5, lineHeight: 1.6 }}>
+          <strong>Founding partner:</strong> als een van de eerste trainers betaal je de eerste zes maanden geen
+          abonnement, en zijn je eerste twee koppelingen gratis.
+        </div>
+      )}
 
       <div style={{ display: 'flex', gap: 8, background: '#FFFFFF', border: '2px solid #F3E4C8', borderRadius: 999, padding: 4, marginBottom: 26, maxWidth: 340 }}>
         {(['trainer', 'sportschool'] as const).map((t) => (

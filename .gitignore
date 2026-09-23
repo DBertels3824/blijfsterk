@@ -43,3 +43,5 @@ next-env.d.ts
 # Verzamelde trainerslijst (bedrijfsgegevens, niet in de openbare repo)
 trainers-nederland.csv
 trainers-voortgang.json
+trainers-mailing.csv
+trainers-nederland.xlsx
