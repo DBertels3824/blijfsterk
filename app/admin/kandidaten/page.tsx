@@ -16,6 +16,7 @@ type Kandidaat = {
   telefoon: string | null;
   website: string | null;
   email: string | null;
+  email_bron: string | null;
   google_score: number | null;
   aantal_reviews: number;
   maps_link: string | null;
@@ -71,7 +72,7 @@ export default function KandidatenAdmin() {
       for (let van = 0; ; van += 1000) {
         const { data } = await supabase
           .from('trainer_kandidaten')
-          .select('id,naam,gemeente,adres,telefoon,website,email,google_score,aantal_reviews,maps_link,status,notitie,uitgenodigd_op')
+          .select('id,naam,gemeente,adres,telefoon,website,email,email_bron,google_score,aantal_reviews,maps_link,status,notitie,uitgenodigd_op')
           .order('google_score', { ascending: false, nullsFirst: false })
           .order('aantal_reviews', { ascending: false })
           .range(van, van + 999);
@@ -210,8 +211,9 @@ export default function KandidatenAdmin() {
                 <input
                   defaultValue={k.email || ''}
                   placeholder="e-mailadres"
-                  onBlur={(e) => { if (e.target.value !== (k.email || '')) bewaar(k.id, { email: e.target.value || null }); }}
-                  style={{ ...veldStijl, width: '100%' }}
+                  title={k.email_bron === 'aangenomen' ? 'Aangenomen (info@domein), niet op de website gevonden' : k.email_bron === 'website' ? 'Gevonden op de website' : ''}
+                  onBlur={(e) => { if (e.target.value !== (k.email || '')) bewaar(k.id, { email: e.target.value || null, email_bron: 'handmatig' }); }}
+                  style={{ ...veldStijl, width: '100%', borderColor: k.email_bron === 'aangenomen' ? '#FFBE0A' : '#F3E4C8' }}
                 />
                 <input
                   defaultValue={k.notitie || ''}
