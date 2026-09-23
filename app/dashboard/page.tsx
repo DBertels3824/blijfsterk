@@ -103,8 +103,7 @@ export default function DashboardPagina() {
   if (laden) return <p style={{ padding: 24 }}>Laden...</p>;
 
   return (
-    <div style={achtergrond}>
-      <div style={{ maxWidth: 520, margin: '0 auto', padding: '20px 20px 100px' }}>
+    <div style={{ maxWidth: 520, margin: '0 auto', padding: '20px 20px 100px' }}>
       <div style={{ display: 'flex', justifyContent: naam ? 'space-between' : 'flex-end', alignItems: 'center', marginBottom: 20, gap: 12 }}>
         {naam && <h1 style={{ fontSize: 24, margin: 0, color: '#2B1B0E' }}>Hoi, {naam}</h1>}
         <TekstgrootteKnop />
@@ -199,21 +198,9 @@ export default function DashboardPagina() {
           }
         />
       </div>
-      </div>
     </div>
   );
 }
-
-// De foto van de homepage als achtergrond, met een zachte crème-laag eroverheen
-// zodat de tegels en tekst goed leesbaar blijven.
-const achtergrond: CSSProperties = {
-  minHeight: '85vh',
-  backgroundImage:
-    'linear-gradient(180deg, rgba(255,248,238,0.78) 0%, rgba(255,248,238,0.86) 60%, rgba(255,248,238,0.96) 100%), url(/hero-photo.jpg)',
-  backgroundSize: 'cover',
-  backgroundPosition: 'center top',
-  backgroundAttachment: 'scroll',
-};
 
 function GroteTegel({
   href,

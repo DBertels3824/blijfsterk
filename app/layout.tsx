@@ -6,6 +6,7 @@ import HeaderNav from "./components/HeaderNav";
 import ServiceWorkerRegistratie from "./components/ServiceWorkerRegistratie";
 import CoachWidget from "./components/CoachWidget";
 import TekstgrootteWrapper from "./components/TekstgrootteWrapper";
+import PaginaAchtergrond from "./components/PaginaAchtergrond";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -64,7 +65,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <div style={{ height: 4, background: "linear-gradient(90deg, #FFBE0A, #FF8601)" }}></div>
         </header>
 
-        <main style={{ flex: 1 }}>{children}</main>
+        <PaginaAchtergrond>{children}</PaginaAchtergrond>
 
         <footer style={{ borderTop: "1px solid #F3E4C8", background: "#FFFFFF", padding: "48px 24px 32px" }}>
           <div style={{ maxWidth: 1140, margin: "0 auto" }}>
