@@ -85,8 +85,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 8, fontSize: 14 }}>
                 <span style={{ fontWeight: 700, color: "#2B1B0E", marginBottom: 2 }}>Blijf Sterk</span>
-                <Link href="/#hoe-het-werkt" style={{ color: "#2B1B0E" }}>Hoe het werkt</Link>
-                <Link href="/#voor-wie" style={{ color: "#2B1B0E" }}>Voor wie</Link>
+                <Link href="/hoe-het-werkt" style={{ color: "#2B1B0E" }}>Hoe het werkt</Link>
+                <Link href="/voor-wie" style={{ color: "#2B1B0E" }}>Voor wie is dit</Link>
                 <Link href="/waarom-krachttraining" style={{ color: "#2B1B0E" }}>Waarom krachttraining</Link>
                 <Link href="/login" style={{ color: "#2B1B0E" }}>Inloggen</Link>
               </div>

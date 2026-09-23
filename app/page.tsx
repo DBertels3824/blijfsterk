@@ -58,8 +58,8 @@ export default function Home() {
           <div style={{ display: "flex", gap: 16, marginTop: 30, flexWrap: "wrap", justifyContent: "center" }}>
             <Link href="/login" style={btnPrimary}>Deelnemen is gratis</Link>
             <Link href="/waarom-krachttraining" style={btnSecondary}>Waarom krachttraining?</Link>
-            <a href="#voor-wie" style={btnSecondary}>Voor wie is dit?</a>
-            <a href="#hoe-het-werkt" style={btnSecondary}>Bekijk hoe het werkt</a>
+            <Link href="/voor-wie" style={btnSecondary}>Voor wie is dit?</Link>
+            <Link href="/hoe-het-werkt" style={btnSecondary}>Hoe het werkt</Link>
           </div>
         </div>
 
@@ -136,53 +136,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* HOE HET WERKT */}
-      <section id="hoe-het-werkt" style={{ background: "#FFFFFF", borderTop: "1px solid #F3E4C8", borderBottom: "1px solid #F3E4C8", padding: "64px 24px" }}>
-        <div style={{ maxWidth: 1140, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", maxWidth: 520, margin: "0 auto 40px" }}>
-            <h2 style={{ fontSize: 28, margin: 0 }}>Hoe het werkt</h2>
-            <p style={{ color: "#8A7561", marginTop: 10, fontSize: 16 }}>Vier stappen, geen gedoe.</p>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 20 }}>
-            <Stap nummer={1} titel="Vertel iets over jezelf" tekst="Een paar vragen over je doelen, ervaring en voorkeuren. Geen ellenlange formulieren." />
-            <Stap nummer={2} titel="Krijg persoonlijk advies" tekst="Dirk, je virtuele coach, geeft je concreet advies over kracht en voeding, afgestemd op jou." />
-            <Stap nummer={3} titel="Ga direct aan de slag" tekst="Kies uit de oefeningenbibliotheek, met uitleg en video per oefening, en begin met trainen." />
-            <Stap nummer={4} titel="Blijf sterk, stap voor stap" tekst="Log je voortgang, zie je reeks groeien en voel het verschil." />
-          </div>
-          <p style={{ textAlign: "center", color: "#8A7561", fontSize: 13.5, marginTop: 32 }}>
-            Binnenkort: koppeling aan een echte trainer en voedingsdeskundige bij jou in de buurt.
-          </p>
-        </div>
-      </section>
-
-      {/* VOOR WIE */}
-      <section id="voor-wie" style={{ maxWidth: 1140, margin: "0 auto", padding: "64px 24px" }}>
-        <div style={{ textAlign: "center", maxWidth: 520, margin: "0 auto 40px" }}>
-          <h2 style={{ fontSize: 28, margin: 0 }}>Voor wie is dit?</h2>
-          <p style={{ color: "#8A7561", marginTop: 10, fontSize: 16 }}>Herken je jezelf hierin?</p>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 20 }}>
-          <div style={{ ...card, padding: "26px 22px" }}>
-            <h3 style={{ fontSize: 17, margin: 0 }}>Je bent net begonnen</h3>
-            <p style={{ color: "#8A7561", marginTop: 10, fontSize: 14.5, lineHeight: 1.6 }}>
-              Je hebt weinig of geen ervaring met krachttraining en wilt een duidelijk startpunt, zonder je dom te voelen.
-            </p>
-          </div>
-          <div style={{ ...card, padding: "26px 22px" }}>
-            <h3 style={{ fontSize: 17, margin: 0 }}>Je bent even gestopt</h3>
-            <p style={{ color: "#8A7561", marginTop: 10, fontSize: 14.5, lineHeight: 1.6 }}>
-              Je hebt eerder getraind, maar door blessure, drukte of gemakzucht ben je gestopt. Tijd voor een herstart die past bij nu.
-            </p>
-          </div>
-          <div style={{ ...card, padding: "26px 22px" }}>
-            <h3 style={{ fontSize: 17, margin: 0 }}>Je wilt zelfstandig blijven</h3>
-            <p style={{ color: "#8A7561", marginTop: 10, fontSize: 14.5, lineHeight: 1.6 }}>
-              Je merkt dat kracht en balans er echt toe doen om te blijven doen wat je wilt — nu en over tien jaar.
-            </p>
-          </div>
-        </div>
-      </section>
-
       {/* CTA BAND */}
       <section style={{ background: "linear-gradient(120deg,#FFBE0A,#FF8601)", padding: "56px 24px" }}>
         <div style={{ maxWidth: 1140, margin: "0 auto", textAlign: "center" }}>
@@ -195,31 +148,6 @@ export default function Home() {
       </section>
 
       <SponsorBanner />
-    </div>
-  );
-}
-
-function Stap({ nummer, titel, tekst }: { nummer: number; titel: string; tekst: string }) {
-  return (
-    <div style={{ ...card, padding: "24px 20px" }}>
-      <div
-        style={{
-          width: 40,
-          height: 40,
-          borderRadius: 999,
-          background: "#FFF1DC",
-          border: "1px solid #F3E4C8",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontWeight: 800,
-          color: "#E85D00",
-        }}
-      >
-        {nummer}
-      </div>
-      <h3 style={{ fontSize: 17, marginTop: 16 }}>{titel}</h3>
-      <p style={{ color: "#8A7561", marginTop: 8, fontSize: 14 }}>{tekst}</p>
     </div>
   );
 }
