@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import PartnerBetalingen from '@/app/components/PartnerBetalingen';
 
 type Klant = { user_id: string; woonplaats: string | null };
 type Review = { id: string; rating: number; tekst: string | null };
@@ -20,6 +21,7 @@ export default function TrainerDashboard() {
   const [eigenNaam, setEigenNaam] = useState('');
   const [klanten, setKlanten] = useState<Klant[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [trainerIds, setTrainerIds] = useState<string[]>([]);
   const [laden, setLaden] = useState(true);
 
   useEffect(() => {
@@ -39,6 +41,7 @@ export default function TrainerDashboard() {
 
       const { data: eigenTrainers } = await supabase.from('trainers').select('id, naam').eq('user_id', user.id);
       const trainerIds = (eigenTrainers || []).map((t) => t.id);
+      setTrainerIds(trainerIds);
       setEigenNaam(eigenTrainers?.[0]?.naam || '');
 
       if (trainerIds.length > 0) {
@@ -83,6 +86,8 @@ export default function TrainerDashboard() {
           <div style={{ color: '#8A7561', fontSize: 13, marginTop: 4 }}>{reviews.length} {reviews.length === 1 ? 'review' : 'reviews'}</div>
         </div>
       </div>
+
+      <PartnerBetalingen trainerIds={trainerIds} />
 
       <p style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#8A7561', marginBottom: 12 }}>
         Klanten die jou gekozen hebben

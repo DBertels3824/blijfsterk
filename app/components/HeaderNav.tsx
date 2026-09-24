@@ -21,6 +21,7 @@ const ADMIN_LINKS = [
   { href: '/admin/product-interesse', label: 'Interesse' },
   { href: '/admin/aanmeldingen', label: 'Aanmeldingen' },
   { href: '/admin/kandidaten', label: 'Trainers uitnodigen' },
+  { href: '/admin/betalingen', label: 'Betalingen' },
 ];
 
 const PARTNER_LINKS: Record<string, { href: string; label: string }> = {
