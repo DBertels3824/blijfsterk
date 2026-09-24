@@ -10,6 +10,7 @@ import { ADMIN_EMAIL } from '@/lib/admin';
 
 type Kandidaat = {
   id: number;
+  partnernummer: string | null;
   naam: string;
   gemeente: string | null;
   adres: string | null;
@@ -39,6 +40,7 @@ const PAGINA = 50;
 
 function uitnodigingslink(k: Kandidaat) {
   const q = new URLSearchParams();
+  if (k.partnernummer) q.set('pn', k.partnernummer);
   q.set('naam', k.naam);
   if (k.gemeente) q.set('plaats', k.gemeente);
   if (k.telefoon) q.set('telefoon', k.telefoon);
@@ -72,7 +74,7 @@ export default function KandidatenAdmin() {
       for (let van = 0; ; van += 1000) {
         const { data } = await supabase
           .from('trainer_kandidaten')
-          .select('id,naam,gemeente,adres,telefoon,website,email,email_bron,google_score,aantal_reviews,maps_link,status,notitie,uitgenodigd_op')
+          .select('id,partnernummer,naam,gemeente,adres,telefoon,website,email,email_bron,google_score,aantal_reviews,maps_link,status,notitie,uitgenodigd_op')
           .order('google_score', { ascending: false, nullsFirst: false })
           .order('aantal_reviews', { ascending: false })
           .range(van, van + 999);
@@ -99,7 +101,7 @@ export default function KandidatenAdmin() {
         (!status || k.status === status) &&
         (k.google_score ?? 0) >= minScore &&
         k.aantal_reviews >= minReviews &&
-        (!z || k.naam.toLowerCase().includes(z) || (k.website || '').toLowerCase().includes(z))
+        (!z || k.naam.toLowerCase().includes(z) || (k.website || '').toLowerCase().includes(z) || (k.partnernummer || '').toLowerCase().includes(z))
     );
   }, [lijst, zoek, gemeente, status, minScore, minReviews]);
 
@@ -144,7 +146,7 @@ export default function KandidatenAdmin() {
         <input
           value={zoek}
           onChange={(e) => { setZoek(e.target.value); setPagina(0); }}
-          placeholder="Zoek op naam of website"
+          placeholder="Zoek op naam, website of nummer"
           style={veldStijl}
         />
         <select value={gemeente} onChange={(e) => { setGemeente(e.target.value); setPagina(0); }} style={veldStijl}>
@@ -178,6 +180,11 @@ export default function KandidatenAdmin() {
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, alignItems: 'flex-start' }}>
               <div style={{ flex: '1 1 320px', minWidth: 0 }}>
                 <div style={{ fontWeight: 700, fontSize: 16 }}>
+                  {k.partnernummer && (
+                    <span style={{ fontFamily: 'monospace', fontWeight: 600, fontSize: 12.5, color: '#8A7561', background: '#FFF8EE', border: '1px solid #F3E4C8', borderRadius: 6, padding: '2px 6px', marginRight: 8 }}>
+                      {k.partnernummer}
+                    </span>
+                  )}
                   {k.naam}
                   {k.google_score != null && (
                     <span style={{ fontWeight: 600, fontSize: 13, color: '#B9601A', marginLeft: 8 }}>

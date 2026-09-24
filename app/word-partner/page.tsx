@@ -61,6 +61,7 @@ export default function WordPartner() {
   const [verstuurd, setVerstuurd] = useState(false);
   const [fout, setFout] = useState<string | null>(null);
   const [uitgenodigd, setUitgenodigd] = useState(false);
+  const [partnernummer, setPartnernummer] = useState('');
 
   // Uitnodigingslink uit een mailing: velden staan dan al ingevuld, de trainer hoeft
   // alleen te controleren en de vragen te beantwoorden. Voorbeeld:
@@ -73,6 +74,7 @@ export default function WordPartner() {
     if (!q.has('naam') && !q.has('email')) return;
     const kort = (v: string | null) => (v || '').trim().slice(0, 200);
     if (q.get('type') === 'sportschool') setType('sportschool');
+    setPartnernummer(kort(q.get('pn')).replace(/[^A-Z0-9-]/gi, '').toUpperCase());
     setNaam(kort(q.get('naam')));
     setEmail(kort(q.get('email')));
     setTelefoon(kort(q.get('telefoon')));
@@ -108,6 +110,7 @@ export default function WordPartner() {
       telefoon: telefoon || null,
       plaats: plaats || null,
       antwoorden,
+      partnernummer: partnernummer || null,
     });
     setVersturen(false);
 
@@ -144,6 +147,11 @@ export default function WordPartner() {
         <div style={{ background: '#FFF1DC', border: '2px solid #FFBE0A', borderRadius: 16, padding: '14px 16px', marginBottom: 22, fontSize: 14.5, lineHeight: 1.6 }}>
           <strong>Founding partner:</strong> als een van de eerste trainers betaal je de eerste zes maanden geen
           abonnement, en zijn je eerste twee koppelingen gratis.
+          {partnernummer && (
+            <div style={{ marginTop: 8, fontSize: 13.5, color: '#6F5A48' }}>
+              Je partnernummer is <strong style={{ fontFamily: 'monospace' }}>{partnernummer}</strong>. Bewaar dit — het staat straks op elke afrekening.
+            </div>
+          )}
         </div>
       )}
 
