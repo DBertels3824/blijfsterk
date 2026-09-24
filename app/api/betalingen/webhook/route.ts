@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { haalBetaling, naarOnzeStatus, isMollieIngesteld } from '@/lib/mollie';
+import { openGesprek } from '@/lib/gesprekken';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,14 +26,21 @@ export async function POST(req: Request) {
     const status = naarOnzeStatus(betaling.status);
 
     const service = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
-    await service
+    const { data: rij } = await service
       .from('betalingen')
       .update({
         status,
         betaald_op: status === 'betaald' ? betaling.paidAt || new Date().toISOString() : null,
         bijgewerkt_op: new Date().toISOString(),
       })
-      .eq('mollie_id', mollieId);
+      .eq('mollie_id', mollieId)
+      .select('gesprek_id')
+      .maybeSingle();
+
+    // Matchvergoeding betaald → het gesprek tussen gebruiker en trainer gaat open.
+    if (status === 'betaald' && rij?.gesprek_id) {
+      await openGesprek(service, rij.gesprek_id);
+    }
 
     return NextResponse.json({ ok: true });
   } catch (fout: unknown) {

@@ -24,6 +24,37 @@ export default function LoginPage() {
     });
   }, [router]);
 
+  // Via de "Account aanmaken"-knop na een partneraanmelding: registratiemodus,
+  // e-mailadres alvast ingevuld.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const q = new URLSearchParams(window.location.search);
+    if (q.get('partner') === '1') {
+      setModus('registreren');
+      if (q.get('email')) setEmail(q.get('email') || '');
+    }
+  }, []);
+
+  // Is dit e-mailadres een geaccepteerde partner zonder account? Dan koppelen we
+  // het account aan de partner-rij en gaat de gebruiker naar het partnerdashboard.
+  async function koppelPartnerEnGaVerder(standaard: string) {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch('/api/partner/koppel', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${session?.access_token || ''}` },
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.gekoppeld) {
+        router.push(data.rol === 'sportschool' ? '/sportschool-dashboard' : '/trainer-dashboard');
+        return;
+      }
+    } catch {
+      // Geen partner of koppelen mislukt: gewoon verder als gebruiker.
+    }
+    router.push(standaard);
+  }
+
   function wisselModus(nieuweModus: Modus) {
     // Bewust de velden leegmaken bij het wisselen — voorkomt dat de browser per
     // ongeluk een opgeslagen e-mail/wachtwoord invult die bij de andere modus hoort
@@ -54,7 +85,7 @@ export default function LoginPage() {
       return;
     }
     if (data.session) {
-      router.push('/intake');
+      await koppelPartnerEnGaVerder('/intake');
     } else {
       setBericht('Account aangemaakt! Check je e-mail om je account te bevestigen.');
     }
@@ -70,7 +101,7 @@ export default function LoginPage() {
       setBericht(error.message);
       return;
     }
-    router.push('/dashboard');
+    await koppelPartnerEnGaVerder('/dashboard');
   }
 
   async function handleWachtwoordVergeten() {

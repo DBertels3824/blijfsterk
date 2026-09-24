@@ -28,6 +28,7 @@ const PARTNER_LINKS: Record<string, { href: string; label: string }> = {
   trainer: { href: '/trainer-dashboard', label: 'Mijn dashboard' },
   sportschool: { href: '/sportschool-dashboard', label: 'Mijn dashboard' },
 };
+const GESPREKKEN_LINK = { href: '/gesprekken', label: 'Gesprekken' };
 
 const PUBLIEKE_LINKS = [
   { href: '/waarom-krachttraining', label: 'Waarom krachttraining' },
@@ -100,7 +101,7 @@ export default function HeaderNav() {
 
   const partnerLink = PARTNER_LINKS[rol];
   const navLinks = partnerLink
-    ? [partnerLink]
+    ? [partnerLink, GESPREKKEN_LINK]
     : [
         ...LINKS,
         ...(isAdmin ? [MATCHING_LINK] : []),

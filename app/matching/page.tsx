@@ -135,13 +135,32 @@ export default function MatchingPagina() {
     if (data) setReviews(data);
   };
 
+  const [kiesMelding, setKiesMelding] = useState('');
+
+  // Kiezen gaat via de server: die legt de match vast, zet de matchvergoeding klaar
+  // voor de partner en opent het gesprek (meteen bij een gratis match, anders na betaling).
   const kies = async (trainerId: string, type: string) => {
     if (!userId) return;
-    await supabase.from('matches').delete().eq('user_id', userId).eq('type', type);
-    await supabase.from('matches').insert({ user_id: userId, trainer_id: trainerId, type });
+    setKiesMelding('');
+    const { data: { session } } = await supabase.auth.getSession();
+    const res = await fetch('/api/match/kies', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token || ''}` },
+      body: JSON.stringify({ trainerId }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      setKiesMelding(data.fout || 'Kiezen is niet gelukt. Probeer het nog eens.');
+      return;
+    }
     if (type === 'trainer') setGekozenTrainerId(trainerId);
     else if (type === 'voedingsdeskundige') setGekozenVoedingId(trainerId);
     else setGekozenSportschoolId(trainerId);
+    if (data.status === 'open') {
+      router.push(`/gesprekken/${data.gesprekId}`);
+    } else {
+      setKiesMelding('Gekozen! Zodra de trainer bevestigt, gaat jullie gesprek open. Je vindt het bij "Gesprekken".');
+    }
   };
 
   if (laden) return <p style={{ padding: 24 }}>Laden...</p>;
@@ -154,6 +173,11 @@ export default function MatchingPagina() {
   return (
     <div style={{ maxWidth: 480, margin: '0 auto', padding: '24px 20px 60px' }}>
       <h1 style={{ fontSize: 26, margin: '0 0 6px' }}>Kies wie bij je past</h1>
+      {kiesMelding && (
+        <div style={{ background: '#FFF1DC', border: '2px solid #FFBE0A', borderRadius: 14, padding: '12px 16px', margin: '10px 0 14px', fontSize: 14.5, lineHeight: 1.5 }}>
+          {kiesMelding}
+        </div>
+      )}
       <p style={{ color: '#8A7561', margin: '0 0 20px' }}>Op basis van je doelen en woonplaats.</p>
 
       <div style={{ display: 'flex', gap: 6, background: '#FFFFFF', border: '2px solid #F3E4C8', borderRadius: 999, padding: 4, marginBottom: 26 }}>

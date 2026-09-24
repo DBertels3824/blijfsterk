@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import Link from 'next/link';
+import { DOCUMENTEN, type DocumentSleutel } from '@/lib/toetsing';
 
 type VeldType = 'text' | 'textarea' | 'ja-nee';
 
@@ -62,6 +63,10 @@ export default function WordPartner() {
   const [fout, setFout] = useState<string | null>(null);
   const [uitgenodigd, setUitgenodigd] = useState(false);
   const [partnernummer, setPartnernummer] = useState('');
+  const [kvkNummer, setKvkNummer] = useState('');
+  const [registratienummer, setRegistratienummer] = useState('');
+  const [bestanden, setBestanden] = useState<Partial<Record<DocumentSleutel, File>>>({});
+  const [resultaat, setResultaat] = useState<{ geaccepteerd: boolean; partnernummer: string | null; redenen: string[] } | null>(null);
 
   // Uitnodigingslink uit een mailing: velden staan dan al ingevuld, de trainer hoeft
   // alleen te controleren en de vragen te beantwoorden. Voorbeeld:
@@ -103,31 +108,77 @@ export default function WordPartner() {
     }
 
     setVersturen(true);
-    const { error } = await supabase.from('trainer_aanmeldingen').insert({
-      type,
-      naam,
-      email,
-      telefoon: telefoon || null,
-      plaats: plaats || null,
-      antwoorden,
-      partnernummer: partnernummer || null,
-    });
-    setVersturen(false);
-
-    if (error) {
-      setFout('Versturen is niet gelukt. Probeer het nog eens.');
-      return;
+    const form = new FormData();
+    form.set('type', type);
+    form.set('naam', naam);
+    form.set('email', email);
+    form.set('telefoon', telefoon);
+    form.set('plaats', plaats);
+    form.set('kvk_nummer', kvkNummer);
+    form.set('registratienummer', registratienummer);
+    form.set('partnernummer', partnernummer);
+    form.set('antwoorden', JSON.stringify(antwoorden));
+    for (const doc of DOCUMENTEN) {
+      const f = bestanden[doc.sleutel];
+      if (f) form.set(`doc_${doc.sleutel}`, f);
     }
-    setVerstuurd(true);
+
+    try {
+      const res = await fetch('/api/partner/aanmelden', { method: 'POST', body: form });
+      const data = await res.json().catch(() => ({}));
+      setVersturen(false);
+      if (!res.ok) {
+        setFout(data.fout || 'Versturen is niet gelukt. Probeer het nog eens.');
+        return;
+      }
+      setResultaat({ geaccepteerd: !!data.geaccepteerd, partnernummer: data.partnernummer || null, redenen: data.redenen || [] });
+      setVerstuurd(true);
+    } catch {
+      setVersturen(false);
+      setFout('Versturen is niet gelukt. Controleer je verbinding en probeer het nog eens.');
+    }
   };
 
   if (verstuurd) {
+    const nummer = resultaat?.partnernummer || partnernummer;
     return (
-      <div style={{ maxWidth: 480, margin: '0 auto', padding: '40px 20px 60px', textAlign: 'center' }}>
-        <h1 style={{ fontSize: 24 }}>Bedankt voor je aanmelding!</h1>
-        <p style={{ color: '#8A7561', marginTop: 10 }}>
-          We nemen je aanmelding door en nemen contact met je op.
-        </p>
+      <div style={{ maxWidth: 520, margin: '0 auto', padding: '40px 20px 60px', textAlign: 'center' }}>
+        {resultaat?.geaccepteerd ? (
+          <>
+            <h1 style={{ fontSize: 26 }}>Welkom bij Blijf Sterk!</h1>
+            <p style={{ color: '#4A3624', marginTop: 10, lineHeight: 1.6 }}>
+              Je aanmelding is compleet en je bent per direct partner, op proef. Je partnernummer is{' '}
+              <strong style={{ fontFamily: 'monospace' }}>{nummer}</strong>.
+            </p>
+            <p style={{ color: '#4A3624', marginTop: 10, lineHeight: 1.6 }}>
+              Nog één stap: maak een account aan met hetzelfde e-mailadres (<strong>{email}</strong>). Dan zie je
+              je partnerdashboard, met je klanten en afrekeningen.
+            </p>
+            <Link
+              href={`/login?partner=1&email=${encodeURIComponent(email)}`}
+              style={{
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginTop: 20,
+                minHeight: 52, padding: '0 28px', borderRadius: 999, fontWeight: 700, fontSize: 16,
+                background: 'linear-gradient(135deg,#FFBE0A,#FF8601)', color: '#3A1E00', textDecoration: 'none',
+              }}
+            >
+              Account aanmaken
+            </Link>
+          </>
+        ) : (
+          <>
+            <h1 style={{ fontSize: 24 }}>Bedankt voor je aanmelding!</h1>
+            <p style={{ color: '#4A3624', marginTop: 10, lineHeight: 1.6 }}>
+              We nemen je aanmelding persoonlijk door en laten je binnen een paar dagen weten of je bent
+              toegelaten. Je partnernummer is <strong style={{ fontFamily: 'monospace' }}>{nummer}</strong>.
+            </p>
+            {resultaat && resultaat.redenen.length > 0 && (
+              <p style={{ color: '#6F5A48', marginTop: 12, fontSize: 14, lineHeight: 1.6 }}>
+                Nog niet compleet: {resultaat.redenen.join(', ')}. Je kunt dit later aanvullen via info@blijfsterk.nl.
+              </p>
+            )}
+          </>
+        )}
       </div>
     );
   }
@@ -191,6 +242,42 @@ export default function WordPartner() {
         <Veld label={type === 'trainer' ? 'Plaats / werkgebied' : 'Plaats / adres'}>
           <input style={inputStijl} value={plaats} onChange={(e) => setPlaats(e.target.value)} />
         </Veld>
+
+        <Veld label="KvK-nummer (8 cijfers)" verplicht>
+          <input style={inputStijl} inputMode="numeric" value={kvkNummer} onChange={(e) => setKvkNummer(e.target.value)} placeholder="12345678" />
+        </Veld>
+        {type === 'trainer' && (
+          <Veld label="Registratienummer NL Actief of EREPS (als je dat hebt)">
+            <input style={inputStijl} value={registratienummer} onChange={(e) => setRegistratienummer(e.target.value)} placeholder="bijv. NLA-12345" />
+          </Veld>
+        )}
+
+        <div style={{ background: '#FFF8EE', border: '2px solid #F3E4C8', borderRadius: 18, padding: '14px 16px' }}>
+          <div style={{ fontWeight: 800, fontSize: 15, marginBottom: 4 }}>Documenten</div>
+          <p style={{ fontSize: 13.5, color: '#6F5A48', margin: '0 0 12px', lineHeight: 1.5 }}>
+            We werken met een kwetsbare doelgroep. Daarom vragen we deze documenten. Alleen Blijf Sterk ziet ze,
+            ze worden nooit gedeeld. PDF, JPG of PNG, maximaal 8 MB per bestand. Is alles compleet, dan ben je
+            meteen partner.
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {DOCUMENTEN.map((doc) => (
+              <Veld key={doc.sleutel} label={doc.label} verplicht={doc.verplicht}>
+                <input
+                  type="file"
+                  accept="application/pdf,image/jpeg,image/png"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    setBestanden((prev) => ({ ...prev, [doc.sleutel]: f }));
+                  }}
+                  style={{ fontFamily: 'inherit', fontSize: 14 }}
+                />
+                {bestanden[doc.sleutel] && (
+                  <div style={{ fontSize: 12.5, color: '#2E7D32', marginTop: 4 }}>✓ {bestanden[doc.sleutel]!.name}</div>
+                )}
+              </Veld>
+            ))}
+          </div>
+        </div>
 
         {vragen.map((v) => (
           <Veld key={v.sleutel} label={v.label} verplicht={v.verplicht}>

@@ -29,7 +29,7 @@ const SOORTEN = [
 ];
 
 const statusKleur: Record<string, string> = {
-  open: '#B9601A', wacht_op_betaling: '#8A7561', betaald: '#2E7D32', mislukt: '#B3261E', geannuleerd: '#8A7561', verlopen: '#B3261E',
+  open: '#B9601A', wacht_op_betaling: '#8A7561', betaald: '#2E7D32', gratis: '#2E7D32', mislukt: '#B3261E', geannuleerd: '#8A7561', verlopen: '#B3261E',
 };
 
 const euro = (cent: number) => `€ ${(cent / 100).toFixed(2).replace('.', ',')}`;
@@ -170,7 +170,7 @@ export default function BetalingenAdmin() {
               </div>
               <div style={{ fontWeight: 800, color: '#E85D00' }}>{euro(b.bedrag_cent)}</div>
               <div style={{ fontWeight: 700, fontSize: 13.5, color: statusKleur[b.status] || '#8A7561', minWidth: 120 }}>{b.status.replace(/_/g, ' ')}</div>
-              {b.status !== 'betaald' && b.status !== 'geannuleerd' && (
+              {b.status !== 'betaald' && b.status !== 'gratis' && b.status !== 'geannuleerd' && (
                 <button onClick={() => annuleer(b)} style={{ ...knop, background: '#FFFFFF', border: '2px solid #F3E4C8', color: '#6F5A48', minHeight: 36, fontSize: 13 }}>Annuleer</button>
               )}
             </div>

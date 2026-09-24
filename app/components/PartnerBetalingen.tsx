@@ -29,6 +29,7 @@ const statusTekst: Record<string, { label: string; kleur: string }> = {
   open: { label: 'Nog te betalen', kleur: '#B9601A' },
   wacht_op_betaling: { label: 'Betaling gestart', kleur: '#8A7561' },
   betaald: { label: 'Betaald', kleur: '#2E7D32' },
+  gratis: { label: 'Gratis (founding partner)', kleur: '#2E7D32' },
   mislukt: { label: 'Mislukt, probeer opnieuw', kleur: '#B3261E' },
   geannuleerd: { label: 'Geannuleerd', kleur: '#8A7561' },
   verlopen: { label: 'Verlopen, probeer opnieuw', kleur: '#B3261E' },
@@ -86,7 +87,7 @@ export default function PartnerBetalingen({ trainerIds }: { trainerIds: string[]
   }
 
   const open = lijst.filter((b) => ['open', 'mislukt', 'verlopen', 'geannuleerd', 'wacht_op_betaling'].includes(b.status));
-  const betaald = lijst.filter((b) => b.status === 'betaald');
+  const betaald = lijst.filter((b) => b.status === 'betaald' || b.status === 'gratis');
   if (lijst.length === 0 && !melding) return null;
 
   return (
@@ -110,6 +111,9 @@ export default function PartnerBetalingen({ trainerIds }: { trainerIds: string[]
                 <div style={{ fontSize: 13.5, color: statusTekst[b.status]?.kleur || '#8A7561', marginTop: 2 }}>
                   {statusTekst[b.status]?.label || b.status} · {b.partnernummer} · {datum(b.aangemaakt_op)}
                 </div>
+                {b.soort === 'matchvergoeding' && (
+                  <div style={{ fontSize: 13, color: '#6F5A48', marginTop: 4 }}>Na betaling gaat het gesprek met je nieuwe klant open.</div>
+                )}
               </div>
               <div style={{ fontWeight: 800, fontSize: 18, color: '#E85D00' }}>{euro(b.bedrag_cent)}</div>
               <button
@@ -134,7 +138,7 @@ export default function PartnerBetalingen({ trainerIds }: { trainerIds: string[]
             <div key={b.id} style={{ ...card, padding: '12px 16px', display: 'flex', justifyContent: 'space-between', gap: 12, background: '#FAFAF6' }}>
               <div>
                 <div style={{ fontWeight: 600, fontSize: 14.5 }}>{b.omschrijving}</div>
-                <div style={{ fontSize: 13, color: '#2E7D32', marginTop: 2 }}>Betaald op {b.betaald_op ? datum(b.betaald_op) : '–'} · {b.partnernummer}</div>
+                <div style={{ fontSize: 13, color: '#2E7D32', marginTop: 2 }}>{b.status === 'gratis' ? 'Gratis' : 'Betaald'} op {b.betaald_op ? datum(b.betaald_op) : '–'} · {b.partnernummer}</div>
               </div>
               <div style={{ fontWeight: 700, color: '#6F5A48' }}>{euro(b.bedrag_cent)}</div>
             </div>

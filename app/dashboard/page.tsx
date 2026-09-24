@@ -50,6 +50,19 @@ export default function DashboardPagina() {
       // Nog helemaal geen profiel: dan is dit een nieuwe gebruiker die de intake nog
       // niet gezien heeft — daar eerst even langs, zodat Dirk iets over je weet.
       if (!profiel && user.email !== ADMIN_EMAIL) {
+        // Misschien een partner die net zijn account bevestigd heeft: dan koppelen en
+        // naar het partnerdashboard. Anders is dit een gewone nieuwe gebruiker → intake.
+        try {
+          const { data: { session } } = await supabase.auth.getSession();
+          const res = await fetch('/api/partner/koppel', { method: 'POST', headers: { Authorization: `Bearer ${session?.access_token || ''}` } });
+          const k = await res.json().catch(() => ({}));
+          if (res.ok && k.gekoppeld) {
+            router.replace(k.rol === 'sportschool' ? '/sportschool-dashboard' : '/trainer-dashboard');
+            return;
+          }
+        } catch {
+          // geen partner
+        }
         router.replace('/intake');
         return;
       }

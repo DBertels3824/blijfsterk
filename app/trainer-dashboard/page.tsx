@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import PartnerBetalingen from '@/app/components/PartnerBetalingen';
 
@@ -86,6 +87,20 @@ export default function TrainerDashboard() {
           <div style={{ color: '#8A7561', fontSize: 13, marginTop: 4 }}>{reviews.length} {reviews.length === 1 ? 'review' : 'reviews'}</div>
         </div>
       </div>
+
+      <Link
+        href="/gesprekken"
+        style={{ display: 'flex', alignItems: 'center', gap: 12, textDecoration: 'none', color: '#2B1B0E', ...card, padding: '14px 16px', marginBottom: 24 }}
+      >
+        <div style={{ width: 44, height: 44, borderRadius: 999, background: 'linear-gradient(135deg,#FFBE0A,#FF8601)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v12H8l-4 4V4z" stroke="#3A1E00" strokeWidth="2.2" strokeLinejoin="round" /></svg>
+        </div>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontWeight: 700, fontSize: 16 }}>Gesprekken met je klanten</div>
+          <div style={{ fontSize: 13.5, color: '#8A7561', marginTop: 2 }}>Dirk stelt jullie aan elkaar voor</div>
+        </div>
+        <span style={{ color: '#E85D00', fontWeight: 800, fontSize: 20 }}>→</span>
+      </Link>
 
       <PartnerBetalingen trainerIds={trainerIds} />
 

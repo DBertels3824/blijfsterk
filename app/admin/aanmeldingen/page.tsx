@@ -15,6 +15,19 @@ type Aanmelding = {
   antwoorden: Record<string, string>;
   status: string;
   created_at: string;
+  partnernummer: string | null;
+  kvk_nummer: string | null;
+  registratienummer: string | null;
+  documenten: Record<string, string> | null;
+  toetsing: string | null;
+  trainer_id: string | null;
+};
+
+const DOC_LABELS: Record<string, string> = {
+  vog: 'VOG',
+  verzekering: 'Verzekering',
+  ehbo: 'EHBO/BHV',
+  diploma: 'Diploma',
 };
 
 const LABELS: Record<string, string> = {
@@ -64,7 +77,27 @@ export default function AanmeldingenAdmin() {
 
   const zetStatus = async (id: string, status: string) => {
     setAanmeldingen((prev) => prev.map((a) => (a.id === id ? { ...a, status } : a)));
-    await supabase.from('trainer_aanmeldingen').update({ status }).eq('id', id);
+    // Via de server: accepteren maakt de partner-rij aan, afwijzen haalt 'm uit de lijst.
+    const { data: { session } } = await supabase.auth.getSession();
+    const res = await fetch('/api/partner/accepteer', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token || ''}` },
+      body: JSON.stringify({ aanmeldingId: id, besluit: status }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.trainerId) {
+      setAanmeldingen((prev) => prev.map((a) => (a.id === id ? { ...a, trainer_id: data.trainerId } : a)));
+    }
+  };
+
+  // Documenten staan in een privé-opslag; we vragen een tijdelijke link (10 minuten).
+  const openDocument = async (pad: string) => {
+    const { data, error } = await supabase.storage.from('partner-documenten').createSignedUrl(pad, 600);
+    if (error || !data?.signedUrl) {
+      window.alert('Document kon niet geopend worden.');
+      return;
+    }
+    window.open(data.signedUrl, '_blank', 'noopener');
   };
 
   if (toegestaan === null) return <p style={{ padding: 24 }}>Laden...</p>;
@@ -104,9 +137,18 @@ export default function AanmeldingenAdmin() {
             <div key={a.id} style={{ borderRadius: 20, border: '2px solid #F3E4C8', background: '#FFFFFF', padding: 18 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 10 }}>
                 <div>
-                  <div style={{ fontWeight: 700, fontSize: 17 }}>{a.naam}</div>
+                  <div style={{ fontWeight: 700, fontSize: 17 }}>
+                    {a.partnernummer && (
+                      <span style={{ fontFamily: 'monospace', fontWeight: 600, fontSize: 12.5, color: '#8A7561', background: '#FFF8EE', border: '1px solid #F3E4C8', borderRadius: 6, padding: '2px 6px', marginRight: 8 }}>
+                        {a.partnernummer}
+                      </span>
+                    )}
+                    {a.naam}
+                  </div>
                   <div style={{ color: '#8A7561', fontSize: 13, marginTop: 2 }}>
                     {a.type === 'trainer' ? 'Trainer' : 'Sportschool'} &middot; {a.plaats || 'plaats onbekend'}
+                    {a.kvk_nummer ? ` · KvK ${a.kvk_nummer}` : ' · geen KvK'}
+                    {a.registratienummer ? ` · reg. ${a.registratienummer}` : ''}
                   </div>
                 </div>
                 <span style={{ fontSize: 12, fontWeight: 700, color: statusKleur[a.status] || '#8A7561', whiteSpace: 'nowrap' }}>
@@ -118,6 +160,31 @@ export default function AanmeldingenAdmin() {
                 <a href={`mailto:${a.email}`} style={{ color: '#E85D00', fontWeight: 700, textDecoration: 'none' }}>{a.email}</a>
                 {a.telefoon && <span style={{ color: '#8A7561' }}>{a.telefoon}</span>}
               </div>
+
+              <div
+                style={{
+                  marginTop: 12, fontSize: 13.5, borderRadius: 12, padding: '8px 12px',
+                  background: a.toetsing === 'compleet' ? '#EAF6E9' : '#FDEDEA',
+                  color: a.toetsing === 'compleet' ? '#2E7D32' : '#B3261E', fontWeight: 600,
+                }}
+              >
+                {a.toetsing === 'compleet' ? 'Toetsing compleet — automatisch geaccepteerd' : `Toetsing: ${a.toetsing || 'onvolledig'}`}
+                {a.trainer_id ? ' · partner-rij aangemaakt' : ''}
+              </div>
+
+              {a.documenten && Object.keys(a.documenten).length > 0 && (
+                <div style={{ display: 'flex', gap: 6, marginTop: 10, flexWrap: 'wrap' }}>
+                  {Object.entries(a.documenten).map(([sleutel, pad]) => (
+                    <button
+                      key={sleutel}
+                      onClick={() => openDocument(pad)}
+                      style={{ fontFamily: 'inherit', fontSize: 12.5, fontWeight: 700, padding: '6px 12px', borderRadius: 999, cursor: 'pointer', border: '2px solid #F3E4C8', background: '#FFF8EE', color: '#2B1B0E' }}
+                    >
+                      Bekijk {DOC_LABELS[sleutel] || sleutel}
+                    </button>
+                  ))}
+                </div>
+              )}
 
               <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {Object.entries(a.antwoorden || {}).map(([sleutel, waarde]) => (
