@@ -116,12 +116,32 @@ async function main() {
     console.error('Supabase-gegevens niet gevonden in .env.local.');
     process.exit(1);
   }
-  const supabase = createClient(url, anonKey);
+  const supabase = createClient(url, anonKey, { auth: { autoRefreshToken: true, persistSession: false } });
   const wachtwoord = await vraagWachtwoord(`Wachtwoord van ${ADMIN_EMAIL}: `);
   const { error: loginFout } = await supabase.auth.signInWithPassword({ email: ADMIN_EMAIL, password: wachtwoord });
   if (loginFout) {
     console.error('Inloggen mislukt:', loginFout.message);
     process.exit(1);
+  }
+
+  // Een inlogsessie verloopt na een uur. Het script duurt langer, dus we loggen
+  // elke 40 minuten stilletjes opnieuw in. Anders mislukt het opslaan halverwege.
+  const herlogin = setInterval(async () => {
+    const { error } = await supabase.auth.signInWithPassword({ email: ADMIN_EMAIL, password: wachtwoord });
+    if (error) console.log(`\n>> Opnieuw inloggen mislukt: ${error.message}`);
+  }, 40 * 60 * 1000);
+
+  let mislukt = 0;
+  async function bewaar(id, velden) {
+    for (let poging = 0; poging < 3; poging++) {
+      const { error } = await supabase.from('trainer_kandidaten').update(velden).eq('id', id);
+      if (!error) return true;
+      // Sessie verlopen of netwerkhapering: opnieuw inloggen en nog eens proberen.
+      await supabase.auth.signInWithPassword({ email: ADMIN_EMAIL, password: wachtwoord });
+      await new Promise((r) => setTimeout(r, 2000));
+    }
+    mislukt++;
+    return false;
   }
 
   const teDoen = [];
@@ -150,16 +170,20 @@ async function main() {
       const t = wachtrij.shift();
       const { email, bron } = await zoekEmail(t.website);
       if (email) {
-        await supabase.from('trainer_kandidaten').update({ email, email_bron: bron, bijgewerkt_op: new Date().toISOString() }).eq('id', t.id);
-        if (bron === 'website') opSite++; else aangenomen++;
+        const gelukt = await bewaar(t.id, { email, email_bron: bron, bijgewerkt_op: new Date().toISOString() });
+        if (gelukt) { if (bron === 'website') opSite++; else aangenomen++; }
       }
       klaar++;
-      process.stdout.write(`\r${klaar} van ${teDoen.length}  (op site gevonden: ${opSite}, aangenomen info@: ${aangenomen})   `);
+      process.stdout.write(`\r${klaar} van ${teDoen.length}  (opgeslagen: op site ${opSite}, aangenomen ${aangenomen}, mislukt ${mislukt})   `);
     }
   }
   await Promise.all(Array.from({ length: TEGELIJK }, werker));
 
-  console.log(`\nKlaar. ${opSite} adressen op de website gevonden, ${aangenomen} keer info@ aangenomen.`);
+  clearInterval(herlogin);
+  const { count } = await supabase.from('trainer_kandidaten').select('*', { count: 'exact', head: true }).not('email', 'is', null);
+  console.log(`\nKlaar. Deze ronde opgeslagen: ${opSite} op de website gevonden, ${aangenomen} info@ aangenomen, ${mislukt} mislukt.`);
+  console.log(`In de database hebben nu ${count} trainers een e-mailadres.`);
+  if (mislukt > 0) console.log('Draai het script nog een keer voor de mislukte; die worden dan opnieuw geprobeerd.');
   console.log('Bekijk ze in het menu "Trainers uitnodigen". Aangenomen adressen kun je daar aanpassen als een mail terugkomt.');
   await supabase.auth.signOut();
 }
