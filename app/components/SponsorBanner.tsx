@@ -33,11 +33,11 @@ export default function SponsorBanner() {
       <p
         style={{
           textAlign: 'center',
-          fontSize: 12.5,
+          fontSize: 15,
           fontWeight: 700,
           letterSpacing: '0.04em',
           textTransform: 'uppercase',
-          color: '#8A7561',
+          color: '#6F5A48',
           margin: '0 0 14px',
         }}
       >
@@ -79,7 +79,7 @@ export default function SponsorBanner() {
                 style={{
                   flexShrink: 0,
                   fontWeight: 700,
-                  fontSize: 14,
+                  fontSize: 15.5,
                   fontStyle: 'italic',
                   color: '#C99A57',
                   whiteSpace: 'nowrap',

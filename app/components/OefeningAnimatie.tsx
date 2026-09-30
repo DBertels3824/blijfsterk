@@ -4,7 +4,7 @@ import type { Pose, Punt } from '@/lib/oefening-poses';
 
 const HUID = '#FFD9A8';
 const ROMP = '#FF8601';
-const OMLIJNING = '#B9601A';
+const OMLIJNING = '#9E5A18';
 
 function lijn(a: Punt, b: Punt) {
   return { x1: a[0], y1: a[1], x2: b[0], y2: b[1] };

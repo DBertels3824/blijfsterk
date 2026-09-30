@@ -19,7 +19,7 @@ type Resultaat = {
 const pil: React.CSSProperties = {
   display: 'inline-flex',
   alignItems: 'center',
-  fontSize: 13,
+  fontSize: 15,
   fontWeight: 700,
   borderRadius: 999,
   padding: '8px 16px',
@@ -31,12 +31,12 @@ const pil: React.CSSProperties = {
 const pilSecundair: React.CSSProperties = {
   display: 'inline-flex',
   alignItems: 'center',
-  fontSize: 13,
+  fontSize: 15,
   fontWeight: 700,
   borderRadius: 999,
   padding: '8px 16px',
   background: '#FFFFFF',
-  color: '#E85D00',
+  color: '#B34500',
   border: '2px solid #F3E4C8',
   textDecoration: 'none',
 };
@@ -130,7 +130,7 @@ export default function TrainersZoekenAdmin() {
   return (
     <div style={{ maxWidth: 640, margin: '0 auto', padding: '24px 20px 60px' }}>
       <h1 style={{ fontSize: 26, margin: '0 0 6px' }}>Trainers zoeken</h1>
-      <p style={{ color: '#8A7561', margin: '0 0 24px' }}>
+      <p style={{ color: '#6F5A48', margin: '0 0 24px' }}>
         Alleen zichtbaar voor jou. Zoek echte trainers of voedingsdeskundigen op plaats, om ze zelf te benaderen als partner.
       </p>
 
@@ -143,13 +143,13 @@ export default function TrainersZoekenAdmin() {
               flex: 1,
               fontFamily: 'inherit',
               fontWeight: 700,
-              fontSize: 14,
+              fontSize: 15.5,
               padding: '10px 0',
               borderRadius: 999,
               border: 'none',
               cursor: 'pointer',
               background: type === t ? 'linear-gradient(135deg,#FFBE0A,#FF8601)' : 'transparent',
-              color: type === t ? '#3A1E00' : '#8A7561',
+              color: type === t ? '#3A1E00' : '#6F5A48',
             }}
           >
             {t === 'trainer' ? 'Trainers' : 'Voeding'}
@@ -159,13 +159,13 @@ export default function TrainersZoekenAdmin() {
 
       <div style={{ borderRadius: 20, border: '2px solid #F3E4C8', background: '#FFFFFF', padding: 18, marginBottom: 24 }}>
         <p style={{ fontWeight: 700, fontSize: 15, margin: '0 0 4px' }}>Vraag bij gebruikers</p>
-        <p style={{ color: '#8A7561', fontSize: 13.5, margin: '0 0 14px' }}>
+        <p style={{ color: '#6F5A48', fontSize: 15, margin: '0 0 14px' }}>
           Gebruikers die nog geen {type === 'trainer' ? 'trainer' : 'voedingsdeskundige'} hebben gekozen, per plaats.
         </p>
         {vraagLaden ? (
-          <p style={{ color: '#8A7561', fontSize: 14 }}>Laden...</p>
+          <p style={{ color: '#6F5A48', fontSize: 15.5 }}>Laden...</p>
         ) : plaatsenMetVraag.length === 0 ? (
-          <p style={{ color: '#8A7561', fontSize: 14 }}>Op dit moment geen openstaande vraag.</p>
+          <p style={{ color: '#6F5A48', fontSize: 15.5 }}>Op dit moment geen openstaande vraag.</p>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {plaatsenMetVraag.map(([plaatsNaam, aantal]) => (
@@ -173,13 +173,13 @@ export default function TrainersZoekenAdmin() {
                 key={plaatsNaam}
                 style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, padding: '8px 12px', borderRadius: 12, background: '#FFF8EE' }}
               >
-                <span style={{ fontSize: 14.5 }}>
+                <span style={{ fontSize: 16 }}>
                   <strong>{plaatsNaam}</strong> — {aantal} op zoek
                 </span>
                 <button
                   onClick={() => zoekHier(plaatsNaam)}
                   style={{
-                    fontFamily: 'inherit', fontSize: 13, fontWeight: 700, padding: '7px 14px', borderRadius: 999,
+                    fontFamily: 'inherit', fontSize: 15, fontWeight: 700, padding: '7px 14px', borderRadius: 999,
                     border: 'none', background: '#2B1B0E', color: '#FFFFFF', cursor: 'pointer',
                   }}
                 >
@@ -224,10 +224,10 @@ export default function TrainersZoekenAdmin() {
       </div>
 
       {gezocht && !zoeken && fout && (
-        <p style={{ color: '#8A7561', fontSize: 14, marginTop: 20 }}>{fout}</p>
+        <p style={{ color: '#6F5A48', fontSize: 15.5, marginTop: 20 }}>{fout}</p>
       )}
       {gezocht && !zoeken && !fout && resultaten.length === 0 && (
-        <p style={{ color: '#8A7561', fontSize: 14, marginTop: 20 }}>Niks gevonden voor deze plaats.</p>
+        <p style={{ color: '#6F5A48', fontSize: 15.5, marginTop: 20 }}>Niks gevonden voor deze plaats.</p>
       )}
 
       {resultaten.length > 0 && (
@@ -235,9 +235,9 @@ export default function TrainersZoekenAdmin() {
           {resultaten.map((item, i) => (
             <div key={item.id || i} style={{ borderRadius: 20, border: '2px solid #F3E4C8', background: '#FFFFFF', padding: 18 }}>
               <div style={{ fontWeight: 700, fontSize: 17 }}>{item.naam}</div>
-              {item.adres && <div style={{ color: '#8A7561', fontSize: 14, marginTop: 4 }}>{item.adres}</div>}
+              {item.adres && <div style={{ color: '#6F5A48', fontSize: 15.5, marginTop: 4 }}>{item.adres}</div>}
               {item.rating !== null && (
-                <div style={{ marginTop: 8, fontSize: 13, fontWeight: 700, color: '#E85D00' }}>
+                <div style={{ marginTop: 8, fontSize: 15, fontWeight: 700, color: '#B34500' }}>
                   ⭐ {item.rating.toFixed(1).replace('.', ',')} ({item.aantalReviews} reviews)
                 </div>
               )}

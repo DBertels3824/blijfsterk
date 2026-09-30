@@ -67,29 +67,29 @@ export default function WachtwoordResettenPagina() {
         <h1 style={{ fontSize: 27, textAlign: 'center', margin: 0 }}>Nieuw wachtwoord</h1>
 
         {!klaarOmTeControleren && (
-          <p style={{ textAlign: 'center', color: '#8A7561', marginTop: 16 }}>Even controleren...</p>
+          <p style={{ textAlign: 'center', color: '#6F5A48', marginTop: 16 }}>Even controleren...</p>
         )}
 
         {klaarOmTeControleren && !geldig && (
           <>
-            <p style={{ textAlign: 'center', color: '#8A7561', marginTop: 10, fontSize: 15, lineHeight: 1.6 }}>
+            <p style={{ textAlign: 'center', color: '#6F5A48', marginTop: 10, fontSize: 15, lineHeight: 1.6 }}>
               Deze link is verlopen of al gebruikt. Vraag op de inlogpagina een nieuwe link aan bij "Wachtwoord vergeten".
             </p>
             <p style={{ textAlign: 'center', marginTop: 22 }}>
-              <Link href="/login" style={{ fontSize: 14.5, color: '#E85D00', fontWeight: 700 }}>Naar de inlogpagina</Link>
+              <Link href="/login" style={{ fontSize: 16, color: '#B34500', fontWeight: 700 }}>Naar de inlogpagina</Link>
             </p>
           </>
         )}
 
         {klaarOmTeControleren && geldig && !gelukt && (
           <>
-            <p style={{ textAlign: 'center', color: '#8A7561', marginTop: 10, fontSize: 15 }}>
+            <p style={{ textAlign: 'center', color: '#6F5A48', marginTop: 10, fontSize: 15 }}>
               Kies een nieuw wachtwoord voor je account.
             </p>
 
             <div style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 18 }}>
               <div>
-                <label style={{ fontWeight: 700, fontSize: 13.5, display: 'block', marginBottom: 8 }}>Nieuw wachtwoord</label>
+                <label style={{ fontWeight: 700, fontSize: 15, display: 'block', marginBottom: 8 }}>Nieuw wachtwoord</label>
                 <div style={{ position: 'relative' }}>
                   <input
                     type={toon ? 'text' : 'password'}
@@ -108,7 +108,7 @@ export default function WachtwoordResettenPagina() {
                     onClick={() => setToon((v) => !v)}
                     style={{
                       position: 'absolute', right: 6, top: 6, bottom: 6, border: 'none',
-                      background: 'transparent', color: '#E85D00', fontWeight: 700, fontSize: 13.5,
+                      background: 'transparent', color: '#B34500', fontWeight: 700, fontSize: 15,
                       cursor: 'pointer', padding: '0 10px',
                     }}
                   >
@@ -118,7 +118,7 @@ export default function WachtwoordResettenPagina() {
               </div>
 
               <div>
-                <label style={{ fontWeight: 700, fontSize: 13.5, display: 'block', marginBottom: 8 }}>Herhaal wachtwoord</label>
+                <label style={{ fontWeight: 700, fontSize: 15, display: 'block', marginBottom: 8 }}>Herhaal wachtwoord</label>
                 <input
                   type={toon ? 'text' : 'password'}
                   autoComplete="new-password"
@@ -157,7 +157,7 @@ export default function WachtwoordResettenPagina() {
         )}
 
         {bericht && (
-          <p style={{ textAlign: 'center', fontSize: 13.5, color: '#B9601A', marginTop: 16 }}>{bericht}</p>
+          <p style={{ textAlign: 'center', fontSize: 15, color: '#9E5A18', marginTop: 16 }}>{bericht}</p>
         )}
       </div>
     </div>

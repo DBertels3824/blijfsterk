@@ -29,7 +29,7 @@ const SOORTEN = [
 ];
 
 const statusKleur: Record<string, string> = {
-  open: '#B9601A', wacht_op_betaling: '#8A7561', betaald: '#2E7D32', gratis: '#2E7D32', mislukt: '#B3261E', geannuleerd: '#8A7561', verlopen: '#B3261E',
+  open: '#9E5A18', wacht_op_betaling: '#6F5A48', betaald: '#2E7D32', gratis: '#2E7D32', mislukt: '#B3261E', geannuleerd: '#6F5A48', verlopen: '#B3261E',
 };
 
 const euro = (cent: number) => `€ ${(cent / 100).toFixed(2).replace('.', ',')}`;
@@ -141,7 +141,7 @@ export default function BetalingenAdmin() {
         </div>
         <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginTop: 12, flexWrap: 'wrap' }}>
           <button onClick={klaarzetten} disabled={bezig} style={knop}>{bezig ? 'Bezig...' : 'Klaarzetten'}</button>
-          {melding && <span style={{ fontSize: 14, color: '#6F5A48' }}>{melding}</span>}
+          {melding && <span style={{ fontSize: 15.5, color: '#6F5A48' }}>{melding}</span>}
         </div>
       </div>
 
@@ -150,28 +150,28 @@ export default function BetalingenAdmin() {
           <option value="">Alle statussen</option>
           {Object.keys(statusKleur).map((s) => <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>)}
         </select>
-        <span style={{ fontSize: 13.5, color: '#6F5A48' }}>{gefilterd.length} betalingen</span>
+        <span style={{ fontSize: 15, color: '#6F5A48' }}>{gefilterd.length} betalingen</span>
       </div>
 
       {gefilterd.length === 0 ? (
-        <p style={{ color: '#8A7561' }}>Nog geen betalingen.</p>
+        <p style={{ color: '#6F5A48' }}>Nog geen betalingen.</p>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {gefilterd.map((b) => (
             <div key={b.id} style={{ borderRadius: 16, border: '2px solid #F3E4C8', background: '#FFFFFF', padding: '12px 16px', display: 'flex', flexWrap: 'wrap', gap: 10, alignItems: 'center' }}>
               <div style={{ flex: '1 1 260px' }}>
                 <div style={{ fontWeight: 700 }}>
-                  <span style={{ fontFamily: 'monospace', fontSize: 12.5, color: '#8A7561', background: '#FFF8EE', border: '1px solid #F3E4C8', borderRadius: 6, padding: '2px 6px', marginRight: 8 }}>{b.partnernummer}</span>
+                  <span style={{ fontFamily: 'monospace', fontSize: 15, color: '#6F5A48', background: '#FFF8EE', border: '1px solid #F3E4C8', borderRadius: 6, padding: '2px 6px', marginRight: 8 }}>{b.partnernummer}</span>
                   {partnerNaam(b.trainer_id)}
                 </div>
-                <div style={{ fontSize: 13.5, color: '#6F5A48', marginTop: 2 }}>
+                <div style={{ fontSize: 15, color: '#6F5A48', marginTop: 2 }}>
                   {b.omschrijving} · {datum(b.aangemaakt_op)}{b.betaald_op ? ` · betaald ${datum(b.betaald_op)}` : ''}{b.mollie_id ? ` · ${b.mollie_id}` : ''}
                 </div>
               </div>
-              <div style={{ fontWeight: 800, color: '#E85D00' }}>{euro(b.bedrag_cent)}</div>
-              <div style={{ fontWeight: 700, fontSize: 13.5, color: statusKleur[b.status] || '#8A7561', minWidth: 120 }}>{b.status.replace(/_/g, ' ')}</div>
+              <div style={{ fontWeight: 800, color: '#B34500' }}>{euro(b.bedrag_cent)}</div>
+              <div style={{ fontWeight: 700, fontSize: 15, color: statusKleur[b.status] || '#6F5A48', minWidth: 120 }}>{b.status.replace(/_/g, ' ')}</div>
               {b.status !== 'betaald' && b.status !== 'gratis' && b.status !== 'geannuleerd' && (
-                <button onClick={() => annuleer(b)} style={{ ...knop, background: '#FFFFFF', border: '2px solid #F3E4C8', color: '#6F5A48', minHeight: 36, fontSize: 13 }}>Annuleer</button>
+                <button onClick={() => annuleer(b)} style={{ ...knop, background: '#FFFFFF', border: '2px solid #F3E4C8', color: '#6F5A48', minHeight: 36, fontSize: 15 }}>Annuleer</button>
               )}
             </div>
           ))}
@@ -182,12 +182,12 @@ export default function BetalingenAdmin() {
 }
 
 const veld: React.CSSProperties = {
-  fontFamily: 'inherit', fontSize: 14, minHeight: 42, padding: '0 12px', borderRadius: 12,
+  fontFamily: 'inherit', fontSize: 15.5, minHeight: 42, padding: '0 12px', borderRadius: 12,
   border: '2px solid #F3E4C8', background: '#FFFFFF', boxSizing: 'border-box',
 };
 
 const knop: React.CSSProperties = {
-  fontFamily: 'inherit', fontWeight: 700, fontSize: 14.5, minHeight: 44, padding: '0 20px',
+  fontFamily: 'inherit', fontWeight: 700, fontSize: 16, minHeight: 44, padding: '0 20px',
   borderRadius: 999, border: 'none', cursor: 'pointer',
   background: 'linear-gradient(135deg,#FFBE0A,#FF8601)', color: '#3A1E00',
 };

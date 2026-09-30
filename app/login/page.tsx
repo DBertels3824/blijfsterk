@@ -128,7 +128,7 @@ export default function LoginPage() {
         <h1 style={{ fontSize: 27, textAlign: 'center', margin: 0 }}>
           {isRegistreren ? 'Account aanmaken' : 'Welkom terug'}
         </h1>
-        <p style={{ textAlign: 'center', color: '#8A7561', marginTop: 10, fontSize: 15 }}>
+        <p style={{ textAlign: 'center', color: '#6F5A48', marginTop: 10, fontSize: 15 }}>
           {isRegistreren ? 'Maak een gratis account aan om te beginnen.' : 'Log in om verder te gaan met je training.'}
         </p>
 
@@ -138,10 +138,10 @@ export default function LoginPage() {
             type="button"
             onClick={() => wisselModus('inloggen')}
             style={{
-              flex: 1, fontFamily: 'inherit', fontWeight: 700, fontSize: 14.5, minHeight: 42,
+              flex: 1, fontFamily: 'inherit', fontWeight: 700, fontSize: 16, minHeight: 42,
               borderRadius: 999, border: 'none', cursor: 'pointer',
               background: !isRegistreren ? '#FFFFFF' : 'transparent',
-              color: !isRegistreren ? '#2B1B0E' : '#8A7561',
+              color: !isRegistreren ? '#2B1B0E' : '#6F5A48',
             }}
           >
             Inloggen
@@ -150,10 +150,10 @@ export default function LoginPage() {
             type="button"
             onClick={() => wisselModus('registreren')}
             style={{
-              flex: 1, fontFamily: 'inherit', fontWeight: 700, fontSize: 14.5, minHeight: 42,
+              flex: 1, fontFamily: 'inherit', fontWeight: 700, fontSize: 16, minHeight: 42,
               borderRadius: 999, border: 'none', cursor: 'pointer',
               background: isRegistreren ? '#FFFFFF' : 'transparent',
-              color: isRegistreren ? '#2B1B0E' : '#8A7561',
+              color: isRegistreren ? '#2B1B0E' : '#6F5A48',
             }}
           >
             Account aanmaken
@@ -163,7 +163,7 @@ export default function LoginPage() {
         <div style={{ marginTop: 22, display: 'flex', flexDirection: 'column', gap: 18 }}>
           {isRegistreren && (
             <div>
-              <label style={{ fontWeight: 700, fontSize: 13.5, display: 'block', marginBottom: 8 }}>Jouw naam</label>
+              <label style={{ fontWeight: 700, fontSize: 15, display: 'block', marginBottom: 8 }}>Jouw naam</label>
               <input
                 type="text"
                 autoComplete="given-name"
@@ -180,7 +180,7 @@ export default function LoginPage() {
           )}
 
           <div>
-            <label style={{ fontWeight: 700, fontSize: 13.5, display: 'block', marginBottom: 8 }}>E-mailadres</label>
+            <label style={{ fontWeight: 700, fontSize: 15, display: 'block', marginBottom: 8 }}>E-mailadres</label>
             <input
               type="email"
               autoComplete="email"
@@ -196,7 +196,7 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label style={{ fontWeight: 700, fontSize: 13.5, display: 'block', marginBottom: 8 }}>Wachtwoord</label>
+            <label style={{ fontWeight: 700, fontSize: 15, display: 'block', marginBottom: 8 }}>Wachtwoord</label>
             <div style={{ position: 'relative' }}>
               <input
                 type={toonWachtwoord ? 'text' : 'password'}
@@ -216,7 +216,7 @@ export default function LoginPage() {
                 onClick={() => setToonWachtwoord((v) => !v)}
                 style={{
                   position: 'absolute', right: 6, top: 6, bottom: 6, border: 'none',
-                  background: 'transparent', color: '#E85D00', fontWeight: 700, fontSize: 13.5,
+                  background: 'transparent', color: '#B34500', fontWeight: 700, fontSize: 15,
                   cursor: 'pointer', padding: '0 10px',
                 }}
               >
@@ -231,7 +231,7 @@ export default function LoginPage() {
                 type="button"
                 onClick={handleWachtwoordVergeten}
                 disabled={bezig}
-                style={{ background: 'none', border: 'none', color: '#E85D00', fontWeight: 600, fontSize: 13.5, cursor: 'pointer', padding: 0 }}
+                style={{ background: 'none', border: 'none', color: '#B34500', fontWeight: 600, fontSize: 15, cursor: 'pointer', padding: 0 }}
               >
                 Wachtwoord vergeten?
               </button>
@@ -253,11 +253,11 @@ export default function LoginPage() {
         </div>
 
         {bericht && (
-          <p style={{ textAlign: 'center', fontSize: 13.5, color: '#B9601A', marginTop: 16 }}>{bericht}</p>
+          <p style={{ textAlign: 'center', fontSize: 15, color: '#9E5A18', marginTop: 16 }}>{bericht}</p>
         )}
 
         <p style={{ textAlign: 'center', marginTop: 22 }}>
-          <Link href="/" style={{ fontSize: 13.5, color: '#8A7561' }}>&larr; Terug naar de homepage</Link>
+          <Link href="/" style={{ fontSize: 15, color: '#6F5A48' }}>&larr; Terug naar de homepage</Link>
         </p>
       </div>
     </div>

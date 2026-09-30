@@ -18,11 +18,16 @@ const card: React.CSSProperties = {
   padding: 20,
 };
 
+// Kleuren met voldoende contrast (UX-punt 9): hulptekst #6F5A48, oranje tekst/links #B34500.
+const MUTED = '#6F5A48';
+const ORANJE_TEKST = '#B34500';
+
 export default function OefeningenPagina() {
   const router = useRouter();
   const [laden, setLaden] = useState(true);
   const [filter, setFilter] = useState<(typeof BENODIGDHEDEN)[number]>('Alles');
   const [laatstGedaan, setLaatstGedaan] = useState<Record<string, string>>({});
+  const [veiligheidOpen, setVeiligheidOpen] = useState(false);
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
@@ -58,63 +63,46 @@ export default function OefeningenPagina() {
   );
 
   return (
-    <div style={{ maxWidth: 640, margin: '0 auto', padding: '24px 20px 60px' }}>
-      <h1 style={{ fontSize: 26, margin: '0 0 6px' }}>Oefeningenbibliotheek</h1>
-      <p style={{ color: '#8A7561', margin: '0 0 16px' }}>
-        Rustige basisoefeningen om thuis te doen — met je weerstandsband, fitnessmatje, of gewoon een flesje water
-        als vervanger voor gewichten.
+    // 110px onderaan zodat de zwevende coachknop nooit over de laatste "Ik heb dit gedaan"-knop valt.
+    <div style={{ maxWidth: 640, margin: '0 auto', padding: '24px 20px 110px' }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+        <h1 style={{ fontSize: 26, margin: 0 }}>Oefeningen</h1>
+        <Link href="/oefeningen/schema" style={{ fontSize: 15, fontWeight: 700, color: ORANJE_TEKST, textDecoration: 'none' }}>
+          Jouw voortgang →
+        </Link>
+      </div>
+      <p style={{ color: MUTED, fontSize: 16, margin: '6px 0 14px' }}>
+        Rustige oefeningen voor thuis. Met je weerstandsband, je matje of een flesje water.
       </p>
 
-      <button
-        onClick={() => window.dispatchEvent(new Event('blijfsterk:open-coach'))}
-        style={{
-          display: 'flex', alignItems: 'center', gap: 14, textAlign: 'left',
-          fontFamily: 'inherit', cursor: 'pointer', width: '100%',
-          background: '#FFFFFF', border: '2px solid #F3E4C8', borderRadius: 20,
-          padding: '14px 16px', marginBottom: 16,
-        }}
-      >
-        <div
-          style={{
-            width: 44, height: 44, borderRadius: 999, flexShrink: 0,
-            background: 'linear-gradient(135deg,#FFBE0A,#FF8601)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontWeight: 800, color: '#3A1E00',
-          }}
-        >
-          D
+      {/* Veiligheid: één regel, uitklapbaar (UX-punt 5) */}
+      <div style={{ background: '#FFF8EE', borderRadius: 14, padding: '10px 14px', marginBottom: 14, fontSize: 15, lineHeight: 1.55, color: '#2B1B0E' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap' }}>
+          <span style={{ fontWeight: 700 }}>Stop meteen bij pijn, duizeligheid of kortademigheid.</span>
+          <button
+            onClick={() => setVeiligheidOpen((v) => !v)}
+            style={{ fontFamily: 'inherit', fontSize: 15, fontWeight: 700, color: ORANJE_TEKST, background: 'none', border: 'none', padding: '4px 0', cursor: 'pointer' }}
+          >
+            {veiligheidOpen ? 'Minder' : 'Lees meer'}
+          </button>
         </div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontWeight: 700, fontSize: 15, color: '#2B1B0E' }}>Niet zeker waar je moet beginnen?</div>
-          <div style={{ fontSize: 13.5, color: '#8A7561', marginTop: 2 }}>Vraag het Dirk, je virtuele coach, voor persoonlijk advies →</div>
-        </div>
-      </button>
-
-      <div style={{ fontSize: 13, color: '#8A7561', lineHeight: 1.6, background: '#FFF8EE', borderRadius: 14, padding: '12px 16px', marginBottom: 16 }}>
-        Stop meteen bij pijn, duizeligheid of kortademigheid. Twijfel je of een oefening geschikt is voor jou? Overleg
-        eerst met je huisarts of fysiotherapeut. Deze bibliotheek is een eerste, voorzichtige versie en nog niet
-        beoordeeld door een fysiotherapeut of sportarts. De video's en illustraties zijn een ondersteuning bij de
-        uitleg — volg voor de precieze uitvoering altijd de geschreven stappen.
+        {veiligheidOpen && (
+          <p style={{ margin: '8px 0 0', color: MUTED }}>
+            Twijfel je of een oefening geschikt is voor jou? Overleg eerst met je huisarts of fysiotherapeut. Deze
+            oefeningen zijn een eerste, voorzichtige versie en nog niet beoordeeld door een fysiotherapeut of sportarts.
+            De video&apos;s zijn een hulpmiddel — volg voor de precieze uitvoering altijd de geschreven stappen.
+          </p>
+        )}
       </div>
 
-      <Link
-        href="/oefeningen/schema"
-        style={{
-          display: 'block', textAlign: 'center', fontFamily: 'inherit', fontWeight: 700, fontSize: 14.5,
-          borderRadius: 999, padding: '12px 16px', marginBottom: 24, textDecoration: 'none',
-          background: 'linear-gradient(135deg,#FFBE0A,#FF8601)', color: '#3A1E00',
-        }}
-      >
-        Bekijk je voortgang en weekschema →
-      </Link>
-
-      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 24 }}>
+      {/* Filters: compact, maar wel goed aan te raken */}
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 20 }}>
         {BENODIGDHEDEN.map((b) => (
           <button
             key={b}
             onClick={() => setFilter(b)}
             style={{
-              fontFamily: 'inherit', fontWeight: 700, fontSize: 13, padding: '8px 16px', borderRadius: 999,
+              fontFamily: 'inherit', fontWeight: 700, fontSize: 15, padding: '9px 16px', minHeight: 40, borderRadius: 999,
               border: filter === b ? 'none' : '2px solid #F3E4C8', cursor: 'pointer',
               background: filter === b ? 'linear-gradient(135deg,#FFBE0A,#FF8601)' : '#FFFFFF',
               color: filter === b ? '#3A1E00' : '#5A4636',
@@ -130,7 +118,7 @@ export default function OefeningenPagina() {
         if (inCategorie.length === 0) return null;
         return (
           <div key={categorie} style={{ marginBottom: 28 }}>
-            <p style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#8A7561', marginBottom: 12 }}>
+            <p style={{ fontWeight: 800, fontSize: 15, textTransform: 'uppercase', letterSpacing: '0.04em', color: MUTED, marginBottom: 12 }}>
               {categorie}
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -146,6 +134,32 @@ export default function OefeningenPagina() {
           </div>
         );
       })}
+
+      {/* Coach-kaartje onderaan (UX-punt 5): eerst de oefeningen, dan de hulp */}
+      <button
+        onClick={() => window.dispatchEvent(new Event('blijfsterk:open-coach'))}
+        style={{
+          display: 'flex', alignItems: 'center', gap: 14, textAlign: 'left',
+          fontFamily: 'inherit', cursor: 'pointer', width: '100%',
+          background: '#FFFFFF', border: '2px solid #F3E4C8', borderRadius: 20,
+          padding: '14px 16px', marginTop: 8,
+        }}
+      >
+        <div
+          style={{
+            width: 44, height: 44, borderRadius: 999, flexShrink: 0,
+            background: 'linear-gradient(135deg,#FFBE0A,#FF8601)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontWeight: 800, color: '#3A1E00',
+          }}
+        >
+          D
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontWeight: 700, fontSize: 16, color: '#2B1B0E' }}>Niet zeker waar je moet beginnen?</div>
+          <div style={{ fontSize: 15, color: MUTED, marginTop: 2 }}>Vraag het Dirk, je virtuele coach →</div>
+        </div>
+      </button>
     </div>
   );
 }
@@ -217,7 +231,7 @@ function OefeningKaart({
             />
           </div>
           {videoOpmerking && (
-            <p style={{ fontSize: 12.5, color: '#B9601A', fontWeight: 700, margin: '0 0 14px' }}>
+            <p style={{ fontSize: 15, color: '#9E5A18', fontWeight: 700, margin: '0 0 14px' }}>
               {videoOpmerking}
             </p>
           )}
@@ -229,9 +243,9 @@ function OefeningKaart({
           <OefeningAnimatie start={animatie.start} eind={animatie.eind} statisch={animatie.statisch} />
         )}
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontWeight: 700, fontSize: 17 }}>{oefening.naam}</div>
-          <p style={{ color: '#8A7561', fontSize: 14, margin: '4px 0 0' }}>{oefening.uitleg}</p>
-          <p style={{ fontSize: 12.5, fontWeight: 700, margin: '6px 0 0', color: laatstGedaan ? '#2E7D32' : '#B9601A' }}>
+          <div style={{ fontWeight: 700, fontSize: 18 }}>{oefening.naam}</div>
+          <p style={{ color: MUTED, fontSize: 15.5, margin: '4px 0 0' }}>{oefening.uitleg}</p>
+          <p style={{ fontSize: 15, fontWeight: 700, margin: '6px 0 0', color: laatstGedaan ? '#2E7D32' : '#9E5A18' }}>
             {laatstGedaan ? `Laatst gedaan: ${relatieveDatum(laatstGedaan)}` : 'Nog niet gedaan'}
           </p>
         </div>
@@ -241,31 +255,59 @@ function OefeningKaart({
         {oefening.benodigdheden.map((b) => (
           <span
             key={b}
-            style={{ fontSize: 12, fontWeight: 700, color: '#B9601A', background: '#FFF1DC', borderRadius: 999, padding: '4px 10px' }}
+            style={{ fontSize: 15, fontWeight: 700, color: '#9E5A18', background: '#FFF1DC', borderRadius: 999, padding: '4px 12px' }}
           >
             {b}
           </span>
         ))}
       </div>
 
+      {/* Eerst: hoe doe je het (UX-punt 6). Grote knop, klapt de stappen uit. */}
+      <button
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        style={{
+          marginTop: 14, width: '100%', fontFamily: 'inherit', fontWeight: 700, fontSize: 16,
+          borderRadius: 999, minHeight: 50, border: 'none', cursor: 'pointer',
+          background: 'linear-gradient(135deg,#FFBE0A,#FF8601)', color: '#3A1E00',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+        }}
+      >
+        {open ? 'Verberg de stappen' : 'Zo doe je het'}
+        <span aria-hidden style={{ fontSize: 15.5 }}>{open ? '▲' : '▼'}</span>
+      </button>
+
+      {open && (
+        <div style={{ marginTop: 14, background: '#FFF8EE', borderRadius: 16, padding: '14px 16px' }}>
+          <ol style={{ margin: 0, paddingLeft: 22, fontSize: 16, lineHeight: 1.7, color: '#2B1B0E' }}>
+            {oefening.stappen.map((stap, i) => (
+              <li key={i} style={{ marginBottom: 4 }}>{stap}</li>
+            ))}
+          </ol>
+          <p style={{ fontSize: 16, fontWeight: 700, marginTop: 12, marginBottom: 0 }}>{oefening.setsHerhalingen}</p>
+          <p style={{ fontSize: 15, color: MUTED, marginTop: 6, marginBottom: 0 }}>{oefening.veiligheid}</p>
+        </div>
+      )}
+
+      {/* Daarna pas: afvinken */}
       <button
         onClick={markeerGedaan}
         disabled={bezig}
         style={{
-          marginTop: 14, width: '100%', fontFamily: 'inherit', fontWeight: 700, fontSize: 14.5,
-          borderRadius: 999, minHeight: 46, border: '2px solid #F3E4C8', background: '#FFF8EE',
+          marginTop: 10, width: '100%', fontFamily: 'inherit', fontWeight: 700, fontSize: 16,
+          borderRadius: 999, minHeight: 50, border: '2px solid #F3E4C8', background: '#FFFFFF',
           color: '#2B1B0E', cursor: bezig ? 'default' : 'pointer', opacity: bezig ? 0.7 : 1,
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
         }}
       >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-          <path d="M4 12.5l5 5L20 6.5" stroke="#E85D00" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M4 12.5l5 5L20 6.5" stroke={ORANJE_TEKST} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
         {bezig ? 'Bezig...' : 'Ik heb dit gedaan'}
       </button>
 
       {foutmelding && (
-        <p style={{ color: '#B3261E', marginTop: 12, fontSize: 13, fontWeight: 600 }}>
+        <p style={{ color: '#B3261E', marginTop: 12, fontSize: 15, fontWeight: 600 }}>
           Fout: {foutmelding}
         </p>
       )}
@@ -277,31 +319,12 @@ function OefeningKaart({
               width: 32, height: 32, borderRadius: 999, flexShrink: 0,
               background: 'linear-gradient(135deg,#FFBE0A,#FF8601)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontWeight: 800, fontSize: 13, color: '#3A1E00',
+              fontWeight: 800, fontSize: 15, color: '#3A1E00',
             }}
           >
             D
           </div>
-          <p style={{ margin: 0, fontSize: 13.5, fontWeight: 600, color: '#2B1B0E' }}>{motivatie}</p>
-        </div>
-      )}
-
-      <button
-        onClick={() => setOpen((v) => !v)}
-        style={{ marginTop: 14, fontSize: 13.5, background: 'none', border: 'none', color: '#E85D00', cursor: 'pointer', padding: 0, fontWeight: 700 }}
-      >
-        {open ? 'Verberg uitleg' : 'Bekijk stappen'}
-      </button>
-
-      {open && (
-        <div style={{ marginTop: 14 }}>
-          <ol style={{ margin: 0, paddingLeft: 20, fontSize: 14.5, lineHeight: 1.7, color: '#2B1B0E' }}>
-            {oefening.stappen.map((stap, i) => (
-              <li key={i}>{stap}</li>
-            ))}
-          </ol>
-          <p style={{ fontSize: 13.5, fontWeight: 700, marginTop: 12, marginBottom: 0 }}>{oefening.setsHerhalingen}</p>
-          <p style={{ fontSize: 13, color: '#8A7561', marginTop: 6, marginBottom: 0 }}>{oefening.veiligheid}</p>
+          <p style={{ margin: 0, fontSize: 15.5, fontWeight: 600, color: '#2B1B0E' }}>{motivatie}</p>
         </div>
       )}
     </div>

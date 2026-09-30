@@ -31,7 +31,7 @@ export default function HoeHetWerktPagina() {
                 justifyContent: "center",
                 fontWeight: 800,
                 fontSize: 18,
-                color: "#E85D00",
+                color: "#B34500",
               }}
             >
               {i + 1}
@@ -41,7 +41,7 @@ export default function HoeHetWerktPagina() {
           </div>
         ))}
       </div>
-      <p style={{ textAlign: "center", color: "#6F5A48", fontSize: 14.5, marginTop: 32 }}>
+      <p style={{ textAlign: "center", color: "#6F5A48", fontSize: 16, marginTop: 32 }}>
         Binnenkort: koppeling aan een echte trainer en voedingsdeskundige bij jou in de buurt.
       </p>
     </InfoPagina>

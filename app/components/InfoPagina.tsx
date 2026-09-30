@@ -31,7 +31,7 @@ const btnSecondary: CSSProperties = {
   minHeight: 52,
   padding: "0 30px",
   background: "#FFFFFF",
-  color: "#E85D00",
+  color: "#B34500",
   border: "2px solid #F3E4C8",
   textDecoration: "none",
 };
@@ -61,7 +61,7 @@ export default function InfoPagina({
     <div>
       <section style={{ maxWidth: 880, margin: "0 auto", padding: "24px 24px 40px", textAlign: "center" }}>
         <div style={{ textAlign: "left", marginBottom: 24 }}>
-          <Link href="/" style={{ fontSize: 14.5, fontWeight: 700, color: "#E85D00", textDecoration: "none" }}>
+          <Link href="/" style={{ fontSize: 16, fontWeight: 700, color: "#B34500", textDecoration: "none" }}>
             ← Terug naar de homepage
           </Link>
         </div>
@@ -75,8 +75,8 @@ export default function InfoPagina({
             borderRadius: 999,
             padding: "7px 16px",
             fontWeight: 600,
-            fontSize: 13.5,
-            color: "#E85D00",
+            fontSize: 15,
+            color: "#B34500",
           }}
         >
           {label}

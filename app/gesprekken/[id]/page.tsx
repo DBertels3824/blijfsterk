@@ -107,13 +107,13 @@ export default function GesprekPagina() {
   return (
     <div style={{ maxWidth: 560, margin: '0 auto', display: 'flex', flexDirection: 'column', height: 'calc(100vh - 140px)', minHeight: 480 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', borderBottom: '1px solid #F3E4C8', background: '#FFFFFF' }}>
-        <Link href="/gesprekken" style={{ fontSize: 13.5, fontWeight: 700, color: '#E85D00', textDecoration: 'none' }}>←</Link>
+        <Link href="/gesprekken" style={{ fontSize: 15, fontWeight: 700, color: '#B34500', textDecoration: 'none' }}>←</Link>
         <div style={{ width: 38, height: 38, borderRadius: 999, background: 'linear-gradient(135deg,#FFBE0A,#FF8601)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: '#3A1E00' }}>
           {titel.charAt(0).toUpperCase()}
         </div>
         <div>
           <div style={{ fontWeight: 700, fontSize: 15 }}>{titel}</div>
-          <div style={{ fontSize: 12.5, color: '#8A7561' }}>Dirk leest mee</div>
+          <div style={{ fontSize: 15, color: '#6F5A48' }}>Dirk leest mee</div>
         </div>
       </div>
 
@@ -123,7 +123,7 @@ export default function GesprekPagina() {
           const vanDirk = b.afzender === 'dirk';
           return (
             <div key={b.id} style={{ alignSelf: vanMij ? 'flex-end' : 'flex-start', maxWidth: '88%' }}>
-              <div style={{ fontSize: 11.5, fontWeight: 700, color: vanDirk ? '#E85D00' : '#8A7561', marginBottom: 4, textTransform: vanDirk ? 'uppercase' : 'none', letterSpacing: vanDirk ? '.04em' : 0 }}>
+              <div style={{ fontSize: 15, fontWeight: 700, color: vanDirk ? '#B34500' : '#6F5A48', marginBottom: 4, textTransform: vanDirk ? 'uppercase' : 'none', letterSpacing: vanDirk ? '.04em' : 0 }}>
                 {naamVan(b)} · {tijd(b.aangemaakt_op)}
               </div>
               <div
@@ -144,7 +144,7 @@ export default function GesprekPagina() {
       </div>
 
       <div style={{ padding: '10px 12px 14px', borderTop: '1px solid #F3E4C8', background: '#FFFFFF' }}>
-        {fout && <p style={{ margin: '0 0 8px', fontSize: 13.5, color: '#B3261E', fontWeight: 600 }}>{fout}</p>}
+        {fout && <p style={{ margin: '0 0 8px', fontSize: 15, color: '#B3261E', fontWeight: 600 }}>{fout}</p>}
         <div style={{ display: 'flex', gap: 8 }}>
           <input
             value={invoer}

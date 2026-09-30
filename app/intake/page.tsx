@@ -253,12 +253,12 @@ export default function IntakePage() {
   return (
     <div style={{ padding: '32px 20px 60px', maxWidth: 640, margin: '0 auto' }}>
       {bestaandProfiel && (
-        <Link href="/dashboard" style={{ fontSize: 13.5, fontWeight: 700, color: '#E85D00', textDecoration: 'none' }}>
+        <Link href="/dashboard" style={{ fontSize: 15, fontWeight: 700, color: '#B34500', textDecoration: 'none' }}>
           ← Terug naar dashboard
         </Link>
       )}
       <h1 style={{ fontSize: 26, marginTop: bestaandProfiel ? 10 : 0 }}>{bestaandProfiel ? 'Mijn gegevens' : 'Vertel iets over jezelf'}</h1>
-      <p style={{ color: '#8A7561', fontSize: 15.5, lineHeight: 1.6 }}>
+      <p style={{ color: '#6F5A48', fontSize: 15.5, lineHeight: 1.6 }}>
         {bestaandProfiel
           ? 'Werk je gegevens bij wanneer er iets verandert. Dirk gebruikt dit voor advies dat bij jou past.'
           : 'Deze vragen helpen Dirk, je virtuele coach, om advies te geven dat bij jou past. Geen quiz — tik gewoon aan wat past. Je kunt het ook later doen.'}
@@ -271,7 +271,7 @@ export default function IntakePage() {
           disabled={opslaan}
           style={{
             fontFamily: 'inherit', fontWeight: 700, fontSize: 15, minHeight: 48, padding: '0 20px',
-            borderRadius: 999, border: '2px solid #F3E4C8', background: '#FFFFFF', color: '#E85D00',
+            borderRadius: 999, border: '2px solid #F3E4C8', background: '#FFFFFF', color: '#B34500',
             cursor: opslaan ? 'default' : 'pointer', marginTop: 4,
           }}
         >
@@ -363,7 +363,7 @@ export default function IntakePage() {
       </Vraag>
 
       <h2 style={{ marginTop: 44, fontSize: 20 }}>Veiligheid</h2>
-      <p style={{ color: '#8A7561', fontSize: 15 }}>Vink aan wat op jou van toepassing is.</p>
+      <p style={{ color: '#6F5A48', fontSize: 15 }}>Vink aan wat op jou van toepassing is.</p>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 8 }}>
         <label style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0', fontSize: 15.5 }}>
@@ -384,7 +384,7 @@ export default function IntakePage() {
       </div>
 
       {risicoGesignaleerd && (
-        <p style={{ color: '#B3261E', marginTop: 14, fontSize: 14.5, fontWeight: 600 }}>
+        <p style={{ color: '#B3261E', marginTop: 14, fontSize: 16, fontWeight: 600 }}>
           Overleg bij twijfel eerst met je huisarts of fysiotherapeut voordat je begint.
         </p>
       )}

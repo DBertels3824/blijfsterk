@@ -173,7 +173,7 @@ export default function WordPartner() {
               toegelaten. Je partnernummer is <strong style={{ fontFamily: 'monospace' }}>{nummer}</strong>.
             </p>
             {resultaat && resultaat.redenen.length > 0 && (
-              <p style={{ color: '#6F5A48', marginTop: 12, fontSize: 14, lineHeight: 1.6 }}>
+              <p style={{ color: '#6F5A48', marginTop: 12, fontSize: 15.5, lineHeight: 1.6 }}>
                 Nog niet compleet: {resultaat.redenen.join(', ')}. Je kunt dit later aanvullen via info@blijfsterk.nl.
               </p>
             )}
@@ -195,11 +195,11 @@ export default function WordPartner() {
       </p>
 
       {uitgenodigd && (
-        <div style={{ background: '#FFF1DC', border: '2px solid #FFBE0A', borderRadius: 16, padding: '14px 16px', marginBottom: 22, fontSize: 14.5, lineHeight: 1.6 }}>
+        <div style={{ background: '#FFF1DC', border: '2px solid #FFBE0A', borderRadius: 16, padding: '14px 16px', marginBottom: 22, fontSize: 16, lineHeight: 1.6 }}>
           <strong>Founding partner:</strong> als een van de eerste trainers betaal je de eerste zes maanden geen
           abonnement, en zijn je eerste twee koppelingen gratis.
           {partnernummer && (
-            <div style={{ marginTop: 8, fontSize: 13.5, color: '#6F5A48' }}>
+            <div style={{ marginTop: 8, fontSize: 15, color: '#6F5A48' }}>
               Je partnernummer is <strong style={{ fontFamily: 'monospace' }}>{partnernummer}</strong>. Bewaar dit — het staat straks op elke afrekening.
             </div>
           )}
@@ -215,13 +215,13 @@ export default function WordPartner() {
               flex: 1,
               fontFamily: 'inherit',
               fontWeight: 700,
-              fontSize: 14,
+              fontSize: 15.5,
               padding: '10px 0',
               borderRadius: 999,
               border: 'none',
               cursor: 'pointer',
               background: type === t ? 'linear-gradient(135deg,#FFBE0A,#FF8601)' : 'transparent',
-              color: type === t ? '#3A1E00' : '#8A7561',
+              color: type === t ? '#3A1E00' : '#6F5A48',
             }}
           >
             {t === 'trainer' ? 'Ik ben trainer' : 'Wij zijn een sportschool'}
@@ -254,7 +254,7 @@ export default function WordPartner() {
 
         <div style={{ background: '#FFF8EE', border: '2px solid #F3E4C8', borderRadius: 18, padding: '14px 16px' }}>
           <div style={{ fontWeight: 800, fontSize: 15, marginBottom: 4 }}>Documenten</div>
-          <p style={{ fontSize: 13.5, color: '#6F5A48', margin: '0 0 12px', lineHeight: 1.5 }}>
+          <p style={{ fontSize: 15, color: '#6F5A48', margin: '0 0 12px', lineHeight: 1.5 }}>
             We werken met een kwetsbare doelgroep. Daarom vragen we deze documenten. Alleen Blijf Sterk ziet ze,
             ze worden nooit gedeeld. PDF, JPG of PNG, maximaal 8 MB per bestand. Is alles compleet, dan ben je
             meteen partner.
@@ -269,10 +269,10 @@ export default function WordPartner() {
                     const f = e.target.files?.[0];
                     setBestanden((prev) => ({ ...prev, [doc.sleutel]: f }));
                   }}
-                  style={{ fontFamily: 'inherit', fontSize: 14 }}
+                  style={{ fontFamily: 'inherit', fontSize: 15.5 }}
                 />
                 {bestanden[doc.sleutel] && (
-                  <div style={{ fontSize: 12.5, color: '#2E7D32', marginTop: 4 }}>✓ {bestanden[doc.sleutel]!.name}</div>
+                  <div style={{ fontSize: 15, color: '#2E7D32', marginTop: 4 }}>✓ {bestanden[doc.sleutel]!.name}</div>
                 )}
               </Veld>
             ))}
@@ -288,7 +288,7 @@ export default function WordPartner() {
                     key={optie}
                     onClick={() => zetAntwoord(v.sleutel, optie)}
                     style={{
-                      fontFamily: 'inherit', fontWeight: 700, fontSize: 14, padding: '10px 20px', borderRadius: 999,
+                      fontFamily: 'inherit', fontWeight: 700, fontSize: 15.5, padding: '10px 20px', borderRadius: 999,
                       cursor: 'pointer',
                       border: antwoorden[v.sleutel] === optie ? 'none' : '2px solid #F3E4C8',
                       background: antwoorden[v.sleutel] === optie ? 'linear-gradient(135deg,#FFBE0A,#FF8601)' : '#FFFFFF',
@@ -316,7 +316,7 @@ export default function WordPartner() {
           </Veld>
         ))}
 
-        {fout && <p style={{ color: '#B3261E', fontSize: 14 }}>{fout}</p>}
+        {fout && <p style={{ color: '#B3261E', fontSize: 15.5 }}>{fout}</p>}
 
         <button
           onClick={versturenKlik}
@@ -331,7 +331,7 @@ export default function WordPartner() {
           {versturen ? 'Versturen...' : 'Aanmelding versturen'}
         </button>
 
-        <p style={{ fontSize: 12.5, color: '#8A7561', lineHeight: 1.6, marginTop: 4 }}>
+        <p style={{ fontSize: 15, color: '#6F5A48', lineHeight: 1.6, marginTop: 4 }}>
           Let op: Blijf Sterk brengt gebruikers en partners bij elkaar, maar is geen partij in en niet aansprakelijk
           voor de samenwerking, begeleiding of eventuele schade die ontstaat tussen een partner en een gebruiker.
           Elke partner is zelf verantwoordelijk voor een passende verzekering.
@@ -344,8 +344,8 @@ export default function WordPartner() {
 function Veld({ label, verplicht, children }: { label: string; verplicht?: boolean; children: React.ReactNode }) {
   return (
     <div>
-      <label style={{ display: 'block', fontWeight: 700, fontSize: 14.5, marginBottom: 6 }}>
-        {label}{verplicht && <span style={{ color: '#E85D00' }}> *</span>}
+      <label style={{ display: 'block', fontWeight: 700, fontSize: 16, marginBottom: 6 }}>
+        {label}{verplicht && <span style={{ color: '#B34500' }}> *</span>}
       </label>
       {children}
     </div>

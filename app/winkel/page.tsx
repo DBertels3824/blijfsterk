@@ -92,15 +92,15 @@ export default function WinkelPagina() {
           borderRadius: 999,
           padding: '7px 16px',
           fontWeight: 600,
-          fontSize: 13.5,
-          color: '#E85D00',
+          fontSize: 15,
+          color: '#B34500',
         }}
       >
         Binnenkort beschikbaar
       </span>
 
       <h1 style={{ fontSize: 28, margin: '16px 0 6px' }}>Winkel</h1>
-      <p style={{ color: '#8A7561', fontSize: 16, lineHeight: 1.6, margin: 0 }}>
+      <p style={{ color: '#6F5A48', fontSize: 16, lineHeight: 1.6, margin: 0 }}>
         Kies een pakket. Nog niet te bestellen — laat je gegevens achter, dan laten we je als eerste weten
         wanneer het kan.
       </p>
@@ -129,7 +129,7 @@ export default function WinkelPagina() {
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
                 <div>
                   <p style={{ fontWeight: 800, fontSize: 17, margin: '0 0 4px' }}>{p.naam}</p>
-                  <p style={{ color: '#8A7561', fontSize: 14, margin: 0 }}>{p.ondertitel}</p>
+                  <p style={{ color: '#6F5A48', fontSize: 15.5, margin: 0 }}>{p.ondertitel}</p>
                 </div>
                 <div
                   style={{
@@ -149,7 +149,7 @@ export default function WinkelPagina() {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 16 }}>
                 {p.onderdelen.map((item) => (
-                  <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14.5, color: '#2B1B0E' }}>
+                  <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 16, color: '#2B1B0E' }}>
                     {vinkIcoon}
                     {item}
                   </div>
@@ -157,8 +157,8 @@ export default function WinkelPagina() {
               </div>
 
               <div style={{ marginTop: 18, paddingTop: 16, borderTop: '1px solid #F3E4C8', display: 'flex', alignItems: 'baseline', gap: 8 }}>
-                <span style={{ fontSize: 26, fontWeight: 800, color: '#E85D00' }}>{p.prijs}</span>
-                <span style={{ color: '#8A7561', fontSize: 13 }}>richtprijs, kan nog wijzigen</span>
+                <span style={{ fontSize: 26, fontWeight: 800, color: '#B34500' }}>{p.prijs}</span>
+                <span style={{ color: '#6F5A48', fontSize: 15 }}>richtprijs, kan nog wijzigen</span>
               </div>
             </button>
           );
@@ -177,7 +177,7 @@ export default function WinkelPagina() {
         {!verstuurd ? (
           <>
             <p style={{ fontWeight: 700, fontSize: 15, margin: '0 0 4px' }}>Ik wil: {product.naam}</p>
-            <p style={{ color: '#8A7561', fontSize: 14, margin: '0 0 16px' }}>
+            <p style={{ color: '#6F5A48', fontSize: 15.5, margin: '0 0 16px' }}>
               Nog niet te bestellen — laat je gegevens achter, dan laten we je als eerste weten wanneer het kan.
             </p>
 
@@ -221,7 +221,7 @@ export default function WinkelPagina() {
             />
 
             {fout && (
-              <p style={{ color: '#B3261E', marginTop: 12, fontSize: 14, fontWeight: 600 }}>{fout}</p>
+              <p style={{ color: '#B3261E', marginTop: 12, fontSize: 15.5, fontWeight: 600 }}>{fout}</p>
             )}
 
             <button

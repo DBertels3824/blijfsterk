@@ -79,23 +79,23 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             >
               <div>
                 <img src="/logo.png" alt="Blijf Sterk" style={{ height: 28, width: "auto" }} />
-                <p style={{ color: "#8A7561", fontSize: 13.5, marginTop: 12, maxWidth: 260 }}>
+                <p style={{ color: "#6F5A48", fontSize: 15, marginTop: 12, maxWidth: 260 }}>
                   Sterk, beweeglijk en zelfstandig blijven — op elke leeftijd.
                 </p>
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8, fontSize: 14 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8, fontSize: 15.5 }}>
                 <span style={{ fontWeight: 700, color: "#2B1B0E", marginBottom: 2 }}>Blijf Sterk</span>
                 <Link href="/hoe-het-werkt" style={{ color: "#2B1B0E" }}>Hoe het werkt</Link>
                 <Link href="/voor-wie" style={{ color: "#2B1B0E" }}>Voor wie is dit</Link>
                 <Link href="/waarom-krachttraining" style={{ color: "#2B1B0E" }}>Waarom krachttraining</Link>
                 <Link href="/login" style={{ color: "#2B1B0E" }}>Inloggen</Link>
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8, fontSize: 14 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8, fontSize: 15.5 }}>
                 <span style={{ fontWeight: 700, color: "#2B1B0E", marginBottom: 2 }}>Contact</span>
                 <span style={{ color: "#2B1B0E" }}>info@blijfsterk.nl</span>
               </div>
             </div>
-            <div style={{ borderTop: "1px solid #F3E4C8", paddingTop: 24, fontSize: 12.5, color: "#8A7561", lineHeight: 1.6 }}>
+            <div style={{ borderTop: "1px solid #F3E4C8", paddingTop: 24, fontSize: 15, color: "#6F5A48", lineHeight: 1.6 }}>
               <p style={{ margin: 0, maxWidth: 820 }}>
                 Blijf Sterk geeft algemene adviezen over training en voeding en vervangt geen medisch advies.
                 Raadpleeg bij twijfel, blessures of gezondheidsklachten altijd eerst je huisarts of behandelend

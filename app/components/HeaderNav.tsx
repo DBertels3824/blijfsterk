@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { ADMIN_EMAIL } from '@/lib/admin';
+import TekstgrootteKnop from '@/app/components/TekstgrootteKnop';
 
 const LINKS = [
   { href: '/dashboard', label: 'Dashboard' },
@@ -38,16 +39,16 @@ const PUBLIEKE_LINKS = [
 ];
 
 const linkStijl = (actief: boolean): CSSProperties => ({
-  fontSize: 14.5,
+  fontSize: 16,
   fontWeight: actief ? 600 : 500,
-  color: actief ? '#E85D00' : '#5A4636',
+  color: actief ? '#B34500' : '#5A4636',
   textDecoration: 'none',
 });
 
 const mobielLinkStijl = (actief: boolean): CSSProperties => ({
   fontSize: 17,
   fontWeight: actief ? 700 : 500,
-  color: actief ? '#E85D00' : '#2B1B0E',
+  color: actief ? '#B34500' : '#2B1B0E',
   textDecoration: 'none',
   padding: '14px 4px',
   borderBottom: '1px solid #F3E4C8',
@@ -141,7 +142,7 @@ export default function HeaderNav() {
                 background: 'linear-gradient(135deg,#FF8601,#E85D00)',
                 color: '#FFF8EE',
                 fontWeight: 600,
-                fontSize: 14.5,
+                fontSize: 16,
                 textDecoration: 'none',
                 boxShadow: '0 6px 16px rgba(232,93,0,0.25)',
               }}
@@ -151,12 +152,14 @@ export default function HeaderNav() {
           </>
         )}
 
+        {ingelogd !== null && <TekstgrootteKnop compact />}
+
         {ingelogd && (
           <button
             onClick={uitloggen}
             style={{
-              fontSize: 13.5,
-              color: '#8A7561',
+              fontSize: 15,
+              color: '#6F5A48',
               background: 'none',
               border: '1px solid #F3E4C8',
               borderRadius: 999,
@@ -219,6 +222,10 @@ export default function HeaderNav() {
             overflowY: 'auto',
           }}
         >
+          <div style={{ padding: '14px 0 10px', borderBottom: '1px solid #F3E4C8' }}>
+            <TekstgrootteKnop volleBreedte />
+          </div>
+
           {ingelogd &&
             navLinks.map((l) => (
               <Link key={l.href} href={l.href} style={mobielLinkStijl(pathname === l.href)}>
@@ -262,7 +269,7 @@ export default function HeaderNav() {
                 marginTop: 16,
                 minHeight: 48,
                 fontSize: 15,
-                color: '#8A7561',
+                color: '#6F5A48',
                 background: 'none',
                 border: '1px solid #F3E4C8',
                 borderRadius: 999,

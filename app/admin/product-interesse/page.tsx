@@ -48,17 +48,17 @@ export default function ProductInteresseAdmin() {
   return (
     <div style={{ maxWidth: 560, margin: '0 auto', padding: '24px 20px 60px' }}>
       <h1 style={{ fontSize: 26, margin: '0 0 6px' }}>Interesse in het Startpakket</h1>
-      <p style={{ color: '#8A7561', margin: '0 0 24px' }}>Alleen zichtbaar voor jou · {lijst.length} aanmelding{lijst.length === 1 ? '' : 'en'}</p>
+      <p style={{ color: '#6F5A48', margin: '0 0 24px' }}>Alleen zichtbaar voor jou · {lijst.length} aanmelding{lijst.length === 1 ? '' : 'en'}</p>
 
       {lijst.length === 0 ? (
-        <p style={{ color: '#8A7561' }}>Nog niemand aangemeld.</p>
+        <p style={{ color: '#6F5A48' }}>Nog niemand aangemeld.</p>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {lijst.map((item) => (
             <div key={item.id} style={{ borderRadius: 18, border: '2px solid #F3E4C8', background: '#FFFFFF', padding: 16 }}>
               <div style={{ fontWeight: 700, fontSize: 16 }}>{item.naam}</div>
-              <div style={{ color: '#8A7561', fontSize: 14.5, marginTop: 2 }}>{item.email}</div>
-              <div style={{ color: '#8A7561', fontSize: 12.5, marginTop: 6 }}>
+              <div style={{ color: '#6F5A48', fontSize: 16, marginTop: 2 }}>{item.email}</div>
+              <div style={{ color: '#6F5A48', fontSize: 15, marginTop: 6 }}>
                 {new Date(item.created_at).toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' })}
               </div>
             </div>

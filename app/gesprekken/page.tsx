@@ -60,7 +60,7 @@ export default function GesprekkenPagina() {
 
   return (
     <div style={{ maxWidth: 560, margin: '0 auto', padding: '24px 20px 100px' }}>
-      <Link href={ikBenPartner ? '/trainer-dashboard' : '/dashboard'} style={{ fontSize: 13.5, fontWeight: 700, color: '#E85D00', textDecoration: 'none' }}>
+      <Link href={ikBenPartner ? '/trainer-dashboard' : '/dashboard'} style={{ fontSize: 15, fontWeight: 700, color: '#B34500', textDecoration: 'none' }}>
         ← Terug naar dashboard
       </Link>
       <h1 style={{ fontSize: 26, margin: '10px 0 6px' }}>Gesprekken</h1>
@@ -69,7 +69,7 @@ export default function GesprekkenPagina() {
       </p>
 
       {lijst.length === 0 ? (
-        <p style={{ color: '#8A7561' }}>Nog geen gesprekken.</p>
+        <p style={{ color: '#6F5A48' }}>Nog geen gesprekken.</p>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           {lijst.map((g) => {
@@ -90,7 +90,7 @@ export default function GesprekkenPagina() {
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontWeight: 700, fontSize: 16 }}>{titel}</div>
-                  <div style={{ fontSize: 13.5, color: '#6F5A48', marginTop: 2 }}>
+                  <div style={{ fontSize: 15, color: '#6F5A48', marginTop: 2 }}>
                     {open
                       ? `Laatste bericht: ${g.laatste_bericht_op ? relatieveDatum(g.laatste_bericht_op).toLowerCase() : 'nog geen'}`
                       : ikBenPartner
@@ -98,7 +98,7 @@ export default function GesprekkenPagina() {
                         : 'Gaat open zodra de trainer bevestigd heeft'}
                   </div>
                 </div>
-                {open && <span style={{ color: '#E85D00', fontWeight: 800, fontSize: 20 }}>→</span>}
+                {open && <span style={{ color: '#B34500', fontWeight: 800, fontSize: 20 }}>→</span>}
               </Link>
             );
           })}

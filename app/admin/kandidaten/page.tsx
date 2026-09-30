@@ -29,8 +29,8 @@ type Kandidaat = {
 const STATUSSEN = ['nieuw', 'uitgenodigd', 'gereageerd', 'aangemeld', 'nee'] as const;
 
 const statusKleur: Record<string, { bg: string; tekst: string }> = {
-  nieuw: { bg: '#FFF8EE', tekst: '#8A7561' },
-  uitgenodigd: { bg: '#FFF1DC', tekst: '#B9601A' },
+  nieuw: { bg: '#FFF8EE', tekst: '#6F5A48' },
+  uitgenodigd: { bg: '#FFF1DC', tekst: '#9E5A18' },
   gereageerd: { bg: '#E8F1FB', tekst: '#2A5A8C' },
   aangemeld: { bg: '#EAF6E9', tekst: '#2E7D32' },
   nee: { bg: '#F3F3F3', tekst: '#777' },
@@ -157,19 +157,19 @@ export default function KandidatenAdmin() {
           <option value="">Alle statussen</option>
           {STATUSSEN.map((s) => <option key={s} value={s}>{s}</option>)}
         </select>
-        <label style={{ fontSize: 13.5, color: '#6F5A48' }}>
+        <label style={{ fontSize: 15, color: '#6F5A48' }}>
           Score ≥{' '}
           <select value={minScore} onChange={(e) => { setMinScore(Number(e.target.value)); setPagina(0); }} style={{ ...veldStijl, minWidth: 70 }}>
             {[0, 4, 4.5, 4.8, 5].map((v) => <option key={v} value={v}>{v}</option>)}
           </select>
         </label>
-        <label style={{ fontSize: 13.5, color: '#6F5A48' }}>
+        <label style={{ fontSize: 15, color: '#6F5A48' }}>
           Reviews ≥{' '}
           <select value={minReviews} onChange={(e) => { setMinReviews(Number(e.target.value)); setPagina(0); }} style={{ ...veldStijl, minWidth: 70 }}>
             {[0, 5, 10, 20, 50].map((v) => <option key={v} value={v}>{v}</option>)}
           </select>
         </label>
-        <span style={{ fontSize: 13.5, color: '#6F5A48', marginLeft: 'auto' }}>
+        <span style={{ fontSize: 15, color: '#6F5A48', marginLeft: 'auto' }}>
           {gefilterd.length.toLocaleString('nl-NL')} gevonden
         </span>
       </div>
@@ -181,24 +181,24 @@ export default function KandidatenAdmin() {
               <div style={{ flex: '1 1 320px', minWidth: 0 }}>
                 <div style={{ fontWeight: 700, fontSize: 16 }}>
                   {k.partnernummer && (
-                    <span style={{ fontFamily: 'monospace', fontWeight: 600, fontSize: 12.5, color: '#8A7561', background: '#FFF8EE', border: '1px solid #F3E4C8', borderRadius: 6, padding: '2px 6px', marginRight: 8 }}>
+                    <span style={{ fontFamily: 'monospace', fontWeight: 600, fontSize: 15, color: '#6F5A48', background: '#FFF8EE', border: '1px solid #F3E4C8', borderRadius: 6, padding: '2px 6px', marginRight: 8 }}>
                       {k.partnernummer}
                     </span>
                   )}
                   {k.naam}
                   {k.google_score != null && (
-                    <span style={{ fontWeight: 600, fontSize: 13, color: '#B9601A', marginLeft: 8 }}>
+                    <span style={{ fontWeight: 600, fontSize: 15, color: '#9E5A18', marginLeft: 8 }}>
                       ★ {k.google_score.toFixed(1)} · {k.aantal_reviews} reviews
                     </span>
                   )}
                 </div>
-                <div style={{ color: '#6F5A48', fontSize: 14, marginTop: 2 }}>
+                <div style={{ color: '#6F5A48', fontSize: 15.5, marginTop: 2 }}>
                   {k.gemeente}{k.adres ? ` · ${k.adres}` : ''}
                 </div>
-                <div style={{ fontSize: 14, marginTop: 4, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                <div style={{ fontSize: 15.5, marginTop: 4, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                   {k.telefoon && <span>{k.telefoon}</span>}
-                  {k.website && <a href={k.website} target="_blank" rel="noreferrer" style={{ color: '#E85D00' }}>website</a>}
-                  {k.maps_link && <a href={k.maps_link} target="_blank" rel="noreferrer" style={{ color: '#E85D00' }}>Google Maps</a>}
+                  {k.website && <a href={k.website} target="_blank" rel="noreferrer" style={{ color: '#B34500' }}>website</a>}
+                  {k.maps_link && <a href={k.maps_link} target="_blank" rel="noreferrer" style={{ color: '#B34500' }}>Google Maps</a>}
                 </div>
               </div>
 
@@ -237,7 +237,7 @@ export default function KandidatenAdmin() {
       {aantalPaginas > 1 && (
         <div style={{ display: 'flex', gap: 10, justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
           <button onClick={() => setPagina((p) => Math.max(0, p - 1))} disabled={pagina === 0} style={knopStijl}>← Vorige</button>
-          <span style={{ fontSize: 14, color: '#6F5A48' }}>Pagina {pagina + 1} van {aantalPaginas}</span>
+          <span style={{ fontSize: 15.5, color: '#6F5A48' }}>Pagina {pagina + 1} van {aantalPaginas}</span>
           <button onClick={() => setPagina((p) => Math.min(aantalPaginas - 1, p + 1))} disabled={pagina >= aantalPaginas - 1} style={knopStijl}>Volgende →</button>
         </div>
       )}
@@ -247,7 +247,7 @@ export default function KandidatenAdmin() {
 
 const veldStijl: React.CSSProperties = {
   fontFamily: 'inherit',
-  fontSize: 14,
+  fontSize: 15.5,
   minHeight: 40,
   padding: '0 12px',
   borderRadius: 12,
@@ -259,7 +259,7 @@ const veldStijl: React.CSSProperties = {
 const knopStijl: React.CSSProperties = {
   fontFamily: 'inherit',
   fontWeight: 700,
-  fontSize: 13.5,
+  fontSize: 15,
   minHeight: 40,
   padding: '0 14px',
   borderRadius: 999,

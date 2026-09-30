@@ -174,11 +174,11 @@ export default function MatchingPagina() {
     <div style={{ maxWidth: 480, margin: '0 auto', padding: '24px 20px 60px' }}>
       <h1 style={{ fontSize: 26, margin: '0 0 6px' }}>Kies wie bij je past</h1>
       {kiesMelding && (
-        <div style={{ background: '#FFF1DC', border: '2px solid #FFBE0A', borderRadius: 14, padding: '12px 16px', margin: '10px 0 14px', fontSize: 14.5, lineHeight: 1.5 }}>
+        <div style={{ background: '#FFF1DC', border: '2px solid #FFBE0A', borderRadius: 14, padding: '12px 16px', margin: '10px 0 14px', fontSize: 16, lineHeight: 1.5 }}>
           {kiesMelding}
         </div>
       )}
-      <p style={{ color: '#8A7561', margin: '0 0 20px' }}>Op basis van je doelen en woonplaats.</p>
+      <p style={{ color: '#6F5A48', margin: '0 0 20px' }}>Op basis van je doelen en woonplaats.</p>
 
       <div style={{ display: 'flex', gap: 6, background: '#FFFFFF', border: '2px solid #F3E4C8', borderRadius: 999, padding: 4, marginBottom: 26 }}>
         {(['trainer', 'voedingsdeskundige', 'sportschool'] as const).map((t) => (
@@ -189,13 +189,13 @@ export default function MatchingPagina() {
               flex: 1,
               fontFamily: 'inherit',
               fontWeight: 700,
-              fontSize: 13,
+              fontSize: 15,
               padding: '11px 0',
               borderRadius: 999,
               border: 'none',
               cursor: 'pointer',
               background: tab === t ? 'linear-gradient(135deg,#FFBE0A,#FF8601)' : 'transparent',
-              color: tab === t ? '#3A1E00' : '#8A7561',
+              color: tab === t ? '#3A1E00' : '#6F5A48',
             }}
           >
             {t === 'trainer' ? 'Trainers' : t === 'voedingsdeskundige' ? 'Voeding' : 'Sportscholen'}
@@ -203,15 +203,15 @@ export default function MatchingPagina() {
         ))}
       </div>
 
-      <p style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#8A7561', marginBottom: 12 }}>
+      <p style={{ fontWeight: 800, fontSize: 15, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#6F5A48', marginBottom: 12 }}>
         Onze partners
       </p>
-      <p style={{ fontSize: 12.5, color: '#8A7561', lineHeight: 1.6, margin: '0 0 16px', background: '#FFF8EE', borderRadius: 14, padding: '10px 14px' }}>
+      <p style={{ fontSize: 15, color: '#6F5A48', lineHeight: 1.6, margin: '0 0 16px', background: '#FFF8EE', borderRadius: 14, padding: '10px 14px' }}>
         Blijf Sterk brengt je in contact met een trainer, voedingsdeskundige of sportschool, maar is geen partij in
         en niet aansprakelijk voor de samenwerking of begeleiding zelf.
       </p>
       {partnerItems.length === 0 ? (
-        <p style={{ color: '#8A7561', fontSize: 14.5 }}>Hier staan binnenkort partners bij jou in de buurt.</p>
+        <p style={{ color: '#6F5A48', fontSize: 16 }}>Hier staan binnenkort partners bij jou in de buurt.</p>
       ) : (
         <Lijst
           items={partnerItems}
@@ -272,7 +272,7 @@ function Lijst({
             }}
           >
             {isAanbevolen && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 800, color: '#E85D00', marginBottom: 10 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 800, color: '#B34500', marginBottom: 10 }}>
                 {sterIcon} AANBEVOLEN VOOR JOU
               </div>
             )}
@@ -283,25 +283,25 @@ function Lijst({
                   width: 56, height: 56, borderRadius: 18, flexShrink: 0,
                   background: isAanbevolen ? 'linear-gradient(135deg,#FFBE0A,#FF8601)' : '#FFF1DC',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontWeight: 700, fontSize: 16, color: isAanbevolen ? '#3A1E00' : '#B9601A',
+                  fontWeight: 700, fontSize: 16, color: isAanbevolen ? '#3A1E00' : '#9E5A18',
                 }}
               >
                 {initialen(item.naam)}
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 700, fontSize: 17 }}>{item.naam}</div>
-                <div style={{ color: '#8A7561', fontSize: 14, marginTop: 2 }}>{item.specialisatie}</div>
+                <div style={{ color: '#6F5A48', fontSize: 15.5, marginTop: 2 }}>{item.specialisatie}</div>
                 <div style={{ display: 'flex', gap: 14, marginTop: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 13, fontWeight: 700, color: '#E85D00' }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 15, fontWeight: 700, color: '#B34500' }}>
                     {gemiddelde ? <>{sterIcon} {gemiddelde} ({eigenReviews.length})</> : 'Nog geen reviews'}
                   </span>
-                  <span style={{ color: '#8A7561', fontSize: 13 }}>{item.plaats} &middot; reist tot {item.reisbereidheid_km} km</span>
+                  <span style={{ color: '#6F5A48', fontSize: 15 }}>{item.plaats} &middot; reist tot {item.reisbereidheid_km} km</span>
                 </div>
               </div>
             </div>
 
             {isAanbevolen && aanbevolenReden && (
-              <p style={{ fontSize: 14, color: '#4A3624', margin: '12px 0 0', background: '#FFFFFF', borderRadius: 14, padding: '10px 12px' }}>
+              <p style={{ fontSize: 15.5, color: '#4A3624', margin: '12px 0 0', background: '#FFFFFF', borderRadius: 14, padding: '10px 12px' }}>
                 {aanbevolenReden}
               </p>
             )}
@@ -322,7 +322,7 @@ function Lijst({
             {eigenReviews.length > 0 && (
               <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {eigenReviews.map((r) => (
-                  <div key={r.id} style={{ fontSize: 14, background: '#FFF8EE', padding: 10, borderRadius: 12 }}>
+                  <div key={r.id} style={{ fontSize: 15.5, background: '#FFF8EE', padding: 10, borderRadius: 12 }}>
                     {'⭐'.repeat(r.rating)} {r.tekst}
                   </div>
                 ))}
@@ -374,7 +374,7 @@ function ReviewFormulier({
     return (
       <button
         onClick={() => setOpen(true)}
-        style={{ marginTop: 12, fontSize: 13, background: 'none', border: 'none', color: '#E85D00', cursor: 'pointer', padding: 0, fontWeight: 700 }}
+        style={{ marginTop: 12, fontSize: 15, background: 'none', border: 'none', color: '#B34500', cursor: 'pointer', padding: 0, fontWeight: 700 }}
       >
         {bestaandeReview ? 'Review aanpassen' : 'Review achterlaten'}
       </button>

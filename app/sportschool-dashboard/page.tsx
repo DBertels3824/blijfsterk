@@ -69,26 +69,26 @@ export default function SportschoolDashboard() {
   return (
     <div style={{ maxWidth: 480, margin: '0 auto', padding: '24px 20px 60px' }}>
       <h1 style={{ fontSize: 26, margin: '0 0 6px' }}>Mijn dashboard</h1>
-      <p style={{ color: '#8A7561', margin: '0 0 24px' }}>
+      <p style={{ color: '#6F5A48', margin: '0 0 24px' }}>
         {eigenNaam ? `Welkom, ${eigenNaam}.` : 'Welkom.'} Hier zie je wie jullie gekozen heeft.
       </p>
 
       <div style={{ display: 'flex', gap: 14, marginBottom: 24 }}>
         <div style={{ ...card, flex: 1, textAlign: 'center', padding: '18px 10px' }}>
-          <div style={{ fontSize: 26, fontWeight: 800, color: '#E85D00' }}>{klanten.length}</div>
-          <div style={{ color: '#8A7561', fontSize: 13, marginTop: 4 }}>{klanten.length === 1 ? 'lid' : 'leden'}</div>
+          <div style={{ fontSize: 26, fontWeight: 800, color: '#B34500' }}>{klanten.length}</div>
+          <div style={{ color: '#6F5A48', fontSize: 15, marginTop: 4 }}>{klanten.length === 1 ? 'lid' : 'leden'}</div>
         </div>
         <div style={{ ...card, flex: 1, textAlign: 'center', padding: '18px 10px' }}>
-          <div style={{ fontSize: 26, fontWeight: 800, color: '#E85D00' }}>{gemiddelde ?? '–'}</div>
-          <div style={{ color: '#8A7561', fontSize: 13, marginTop: 4 }}>{reviews.length} {reviews.length === 1 ? 'review' : 'reviews'}</div>
+          <div style={{ fontSize: 26, fontWeight: 800, color: '#B34500' }}>{gemiddelde ?? '–'}</div>
+          <div style={{ color: '#6F5A48', fontSize: 15, marginTop: 4 }}>{reviews.length} {reviews.length === 1 ? 'review' : 'reviews'}</div>
         </div>
       </div>
 
-      <p style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#8A7561', marginBottom: 12 }}>
+      <p style={{ fontWeight: 800, fontSize: 15, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#6F5A48', marginBottom: 12 }}>
         Leden die jullie gekozen hebben
       </p>
       {klanten.length === 0 ? (
-        <p style={{ color: '#8A7561', fontSize: 14.5 }}>Nog niemand heeft jullie gekozen.</p>
+        <p style={{ color: '#6F5A48', fontSize: 16 }}>Nog niemand heeft jullie gekozen.</p>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
           {klanten.map((k, i) => (
@@ -101,7 +101,7 @@ export default function SportschoolDashboard() {
 
       {reviews.length > 0 && (
         <>
-          <p style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#8A7561', marginBottom: 12 }}>
+          <p style={{ fontWeight: 800, fontSize: 15, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#6F5A48', marginBottom: 12 }}>
             Reviews
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>

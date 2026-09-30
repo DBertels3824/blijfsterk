@@ -7,7 +7,6 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { berekenWeekstatus, type Weekstatus } from '@/lib/weekschema';
 import { ADMIN_EMAIL } from '@/lib/admin';
-import TekstgrootteKnop from '@/app/components/TekstgrootteKnop';
 
 function startVanDeWeek(): Date {
   const nu = new Date();
@@ -20,7 +19,7 @@ function startVanDeWeek(): Date {
 
 const statusKleur: Record<Weekstatus['soort'], { achtergrond: string; rand: string; tekst: string }> = {
   gehaald: { achtergrond: '#EAF6E9', rand: '#BFE3BC', tekst: '#2E7D32' },
-  op_schema: { achtergrond: '#FFF8EE', rand: '#F3E4C8', tekst: '#8A7561' },
+  op_schema: { achtergrond: '#FFF8EE', rand: '#F3E4C8', tekst: '#6F5A48' },
   risico: { achtergrond: '#FDEDEA', rand: '#F4C2B8', tekst: '#B3261E' },
 };
 
@@ -117,10 +116,7 @@ export default function DashboardPagina() {
 
   return (
     <div style={{ maxWidth: 520, margin: '0 auto', padding: '20px 20px 100px' }}>
-      <div style={{ display: 'flex', justifyContent: naam ? 'space-between' : 'flex-end', alignItems: 'center', marginBottom: 20, gap: 12 }}>
-        {naam && <h1 style={{ fontSize: 24, margin: 0, color: '#2B1B0E' }}>Hoi, {naam}</h1>}
-        <TekstgrootteKnop />
-      </div>
+      {naam && <h1 style={{ fontSize: 24, margin: '0 0 20px', color: '#2B1B0E' }}>Hoi, {naam}</h1>}
 
       {profielLeeg && (
         <Link
@@ -133,11 +129,11 @@ export default function DashboardPagina() {
         >
           <div style={{ flex: 1 }}>
             <div style={{ fontWeight: 800, fontSize: 16 }}>Vertel Dirk kort iets over jezelf</div>
-            <div style={{ fontSize: 14.5, color: '#5A4636', marginTop: 4, lineHeight: 1.5 }}>
+            <div style={{ fontSize: 16, color: '#5A4636', marginTop: 4, lineHeight: 1.5 }}>
               Dan kan je coach advies geven dat echt bij jou past. Duurt een paar minuten.
             </div>
           </div>
-          <span style={{ fontWeight: 800, color: '#E85D00', fontSize: 22 }}>→</span>
+          <span style={{ fontWeight: 800, color: '#B34500', fontSize: 22 }}>→</span>
         </Link>
       )}
 
@@ -245,7 +241,7 @@ function GroteTegel({
         <div style={{ fontWeight: 800, fontSize: 18, color: '#2B1B0E' }}>{titel}</div>
         <div
           style={{
-            fontSize: 14.5, marginTop: 4, lineHeight: 1.4,
+            fontSize: 16, marginTop: 4, lineHeight: 1.4,
             color: badgeKleur ? badgeKleur.tekst : '#6F5A48',
             fontWeight: badgeKleur ? 700 : 500,
           }}

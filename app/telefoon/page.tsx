@@ -12,7 +12,7 @@ const stapNummer: React.CSSProperties = {
   width: 28, height: 28, borderRadius: 999, flexShrink: 0,
   background: 'linear-gradient(135deg,#FFBE0A,#FF8601)',
   display: 'flex', alignItems: 'center', justifyContent: 'center',
-  fontWeight: 800, fontSize: 13.5, color: '#3A1E00',
+  fontWeight: 800, fontSize: 15, color: '#3A1E00',
 };
 
 function Stap({ nummer, children }: { nummer: number; children: React.ReactNode }) {
@@ -27,24 +27,24 @@ function Stap({ nummer, children }: { nummer: number; children: React.ReactNode 
 export default function TelefoonPagina() {
   return (
     <div style={{ maxWidth: 640, margin: '0 auto', padding: '24px 20px 60px' }}>
-      <Link href="/dashboard" style={{ fontSize: 13.5, fontWeight: 700, color: '#E85D00', textDecoration: 'none' }}>
+      <Link href="/dashboard" style={{ fontSize: 15, fontWeight: 700, color: '#B34500', textDecoration: 'none' }}>
         ← Terug naar dashboard
       </Link>
 
       <h1 style={{ fontSize: 26, margin: '10px 0 6px' }}>Zet Blijf Sterk op je telefoon</h1>
-      <p style={{ color: '#8A7561', margin: '0 0 16px', lineHeight: 1.6 }}>
+      <p style={{ color: '#6F5A48', margin: '0 0 16px', lineHeight: 1.6 }}>
         Dan krijg je een icoontje op je scherm, net als een gewone app. Je hoeft dan niet meer de website op
         te zoeken — je tikt gewoon op het icoontje. Het kost niets en je hoeft niets te downloaden uit een
         appstore.
       </p>
 
-      <div style={{ fontSize: 13, color: '#8A7561', lineHeight: 1.6, background: '#FFF8EE', borderRadius: 14, padding: '12px 16px', marginBottom: 24 }}>
+      <div style={{ fontSize: 15, color: '#6F5A48', lineHeight: 1.6, background: '#FFF8EE', borderRadius: 14, padding: '12px 16px', marginBottom: 24 }}>
         Volg de stappen hieronder voor jouw type telefoon. Het duurt maar een minuutje.
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         <div style={card}>
-          <p style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#8A7561', marginBottom: 14 }}>
+          <p style={{ fontWeight: 800, fontSize: 15, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#6F5A48', marginBottom: 14 }}>
             iPhone (Safari)
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -56,7 +56,7 @@ export default function TelefoonPagina() {
         </div>
 
         <div style={card}>
-          <p style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#8A7561', marginBottom: 14 }}>
+          <p style={{ fontWeight: 800, fontSize: 15, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#6F5A48', marginBottom: 14 }}>
             Android (Chrome)
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -71,7 +71,7 @@ export default function TelefoonPagina() {
       <div style={{ marginTop: 24 }}>
         <PushMeldingenKnop />
       </div>
-      <p style={{ fontSize: 13, color: '#8A7561', marginTop: 12, lineHeight: 1.6 }}>
+      <p style={{ fontSize: 15, color: '#6F5A48', marginTop: 12, lineHeight: 1.6 }}>
         Zet meldingen aan en we sturen je een seintje als je een tijdje niet getraind hebt.
       </p>
     </div>

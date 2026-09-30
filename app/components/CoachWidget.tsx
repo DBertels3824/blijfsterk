@@ -224,7 +224,7 @@ export default function CoachWidget() {
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontWeight: 700, fontSize: 15 }}>Dirk, je virtuele coach</div>
-              <div style={{ fontSize: 12.5, color: '#8A7561' }}>Training &amp; voeding</div>
+              <div style={{ fontSize: 15, color: '#6F5A48' }}>Training &amp; voeding</div>
             </div>
             <button
               onClick={zetGeluidOm}
@@ -234,7 +234,7 @@ export default function CoachWidget() {
               {geluidAan ? (
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="#E85D00" /><path d="M16.5 8.5a5 5 0 010 7" stroke="#E85D00" strokeWidth="2" strokeLinecap="round" /></svg>
               ) : (
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="#8A7561" /><path d="M15 9l5 6M20 9l-5 6" stroke="#8A7561" strokeWidth="2" strokeLinecap="round" /></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="#6F5A48" /><path d="M15 9l5 6M20 9l-5 6" stroke="#6F5A48" strokeWidth="2" strokeLinecap="round" /></svg>
               )}
             </button>
             <button
@@ -248,12 +248,12 @@ export default function CoachWidget() {
 
           {/* messages */}
           <div style={{ flex: 1, overflowY: 'auto', padding: 16, display: 'flex', flexDirection: 'column', gap: 14 }}>
-            {laden && berichten.length === 0 && <p style={{ color: '#8A7561', fontSize: 16 }}>Even denken...</p>}
+            {laden && berichten.length === 0 && <p style={{ color: '#6F5A48', fontSize: 16 }}>Even denken...</p>}
 
             {berichten.map((bericht, i) => (
               <div key={i} style={{ alignSelf: bericht.role === 'user' ? 'flex-end' : 'flex-start', maxWidth: '90%' }}>
                 {bericht.role === 'assistant' && bericht.agent && (
-                  <div style={{ fontSize: 11.5, fontWeight: 700, color: '#E85D00', textTransform: 'uppercase', marginBottom: 4, letterSpacing: '.04em' }}>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: '#B34500', textTransform: 'uppercase', marginBottom: 4, letterSpacing: '.04em' }}>
                     {bericht.agent}
                   </div>
                 )}
@@ -266,7 +266,7 @@ export default function CoachWidget() {
                         onClick={() => setOpen(false)}
                         style={{
                           display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 12,
-                          fontFamily: 'inherit', fontWeight: 700, fontSize: 14, color: '#3A1E00',
+                          fontFamily: 'inherit', fontWeight: 700, fontSize: 15.5, color: '#3A1E00',
                           background: 'linear-gradient(135deg,#FFBE0A,#FF8601)', borderRadius: 999,
                           padding: '9px 15px', textDecoration: 'none',
                         }}
@@ -287,7 +287,7 @@ export default function CoachWidget() {
 
           {/* input */}
           <div style={{ padding: '10px 12px 12px', borderTop: '1px solid #F3E4C8', background: '#FFFFFF' }}>
-            <p style={{ margin: '0 0 8px', fontSize: 12.5, color: '#8A7561', fontWeight: 600 }}>
+            <p style={{ margin: '0 0 8px', fontSize: 15, color: '#6F5A48', fontWeight: 600 }}>
               {luisteren ? 'Ik luister... spreek rustig je vraag in.' : 'Typ hieronder, of tik op de microfoon om te praten.'}
             </p>
             <div style={{ display: 'flex', gap: 8 }}>

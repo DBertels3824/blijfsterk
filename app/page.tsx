@@ -29,7 +29,7 @@ const btnSecondary: CSSProperties = {
   minHeight: 52,
   padding: "0 30px",
   background: "#FFFFFF",
-  color: "#E85D00",
+  color: "#B34500",
   border: "2px solid #F3E4C8",
   textDecoration: "none",
 };
@@ -86,7 +86,7 @@ export default function Home() {
               padding: "12px 18px",
               boxShadow: "0 10px 28px rgba(43,27,14,0.14)",
               fontWeight: 700,
-              fontSize: 13.5,
+              fontSize: 15,
               maxWidth: 220,
             }}
           >
@@ -99,7 +99,7 @@ export default function Home() {
       <section style={{ maxWidth: 1140, margin: "0 auto", padding: "0 24px 64px" }}>
         <div style={{ ...card, padding: "40px 32px", textAlign: "center" }}>
           <h2 style={{ fontSize: 26, margin: 0 }}>Maak kennis met Blijf Sterk</h2>
-          <p style={{ color: "#8A7561", marginTop: 8, fontSize: 15.5 }}>
+          <p style={{ color: "#6F5A48", marginTop: 8, fontSize: 15.5 }}>
             Een korte introductie door de oprichter — binnenkort hier te bekijken.
           </p>
           <div
@@ -129,7 +129,7 @@ export default function Home() {
                 <svg width="22" height="26" viewBox="0 0 26 30" fill="none"><path d="M2 2v26l22-13L2 2z" fill="#E85D00" /></svg>
               </div>
             </div>
-            <span style={{ position: "absolute", bottom: 14, left: 0, right: 0, textAlign: "center", fontSize: 14, color: "#8A7561", fontWeight: 500 }}>
+            <span style={{ position: "absolute", bottom: 14, left: 0, right: 0, textAlign: "center", fontSize: 15.5, color: "#6F5A48", fontWeight: 500 }}>
               Introductievideo — wordt binnenkort toegevoegd
             </span>
           </div>

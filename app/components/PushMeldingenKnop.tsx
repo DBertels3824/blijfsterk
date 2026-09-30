@@ -107,7 +107,7 @@ export default function PushMeldingenKnop() {
         <div style={{ fontWeight: 700, fontSize: 15, color: '#2B1B0E' }}>
           {status === 'geweigerd' ? 'Meldingen staan uit' : 'Wil je een seintje als je een dag mist?'}
         </div>
-        <div style={{ fontSize: 13.5, color: '#8A7561', marginTop: 2 }}>
+        <div style={{ fontSize: 15, color: '#6F5A48', marginTop: 2 }}>
           {status === 'geweigerd'
             ? 'Zet meldingen aan bij de instellingen van je browser of telefoon.'
             : 'Zet meldingen aan, dan herinneren we je eraan.'}
@@ -118,7 +118,7 @@ export default function PushMeldingenKnop() {
           onClick={zetAan}
           disabled={status === 'bezig'}
           style={{
-            fontFamily: 'inherit', fontWeight: 700, fontSize: 13.5, whiteSpace: 'nowrap',
+            fontFamily: 'inherit', fontWeight: 700, fontSize: 15, whiteSpace: 'nowrap',
             borderRadius: 999, padding: '10px 18px', border: 'none', cursor: status === 'bezig' ? 'default' : 'pointer',
             background: 'linear-gradient(135deg,#FFBE0A,#FF8601)', color: '#3A1E00',
             opacity: status === 'bezig' ? 0.7 : 1,

@@ -66,7 +66,7 @@ export default function WaaromKrachttrainingPagina() {
         ))}
       </div>
 
-      <p style={{ color: "#6F5A48", fontSize: 14, lineHeight: 1.6, marginTop: 28, maxWidth: 720 }}>
+      <p style={{ color: "#6F5A48", fontSize: 15.5, lineHeight: 1.6, marginTop: 28, maxWidth: 720 }}>
         Gebaseerd op onderzoek en overzichtsstudies van onder meer Harvard Medical School, de Amerikaanse
         gezondheidsdienst CDC en wetenschappelijke publicaties over krachttraining bij ouderen. De cijfers zijn
         gemiddelden uit onderzoek — je eigen resultaat hangt af van je situatie. Dit is algemene informatie en
