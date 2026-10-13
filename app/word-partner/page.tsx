@@ -78,7 +78,11 @@ export default function WordPartner() {
   const kiesType = (t: PartnerType) => {
     setType(t);
     // Elk beroep heeft eigen vragen. De website uit een uitnodigingslink blijft staan.
-    setAntwoorden((prev) => (prev.referenties ? { referenties: prev.referenties } : {}));
+    setAntwoorden((prev) => {
+      const behouden: Record<string, string> = {};
+      if (prev.referenties) behouden.referenties = prev.referenties;
+      return behouden;
+    });
   };
 
   const versturenKlik = async () => {
