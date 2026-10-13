@@ -21,7 +21,7 @@ const btnPrimary: CSSProperties = {
   boxShadow: "0 6px 18px rgba(232,93,0,0.28)",
 };
 
-const btnSecondary: CSSProperties = {
+export const btnSecondary: CSSProperties = {
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
