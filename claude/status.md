@@ -135,6 +135,13 @@ Alle 12 oefeningen hebben video. Consistente naam "Dirk, je virtuele coach". Ban
 - Getest met het echte model (10 gesprekken, en de hele route tegen een nagebouwde database). **Nog niet getest:** de echte database en pushmeldingen, want lokaal staat geen `SUPABASE_SERVICE_ROLE_KEY`. Na de eerste deploy: `/hulp` openen, een vraag stellen, kijken in het postvak.
 - **Fase 2 (e-mail lezen en beantwoorden) wacht op** het domein, een mailbox en een mailprovider met inkomende mail (Dirk maakt account en sleutel zelf aan). Ontwerp en veiligheidsregels staan in `claude/klantenservice-agent.md`.
 
+**Autonomie-check (13 okt): het platform is nog niet autonoom.** Volledig rapport: `claude/autonomie-check-2026-10-13.md`. Kort, het belangrijkste:
+- **`SUPABASE_SERVICE_ROLE_KEY` lijkt in Vercel te ontbreken of niet voor Production te gelden** (twee routes die hem gebruiken geven op de live site een serverfout). Daardoor werken partner aanmelden, accepteren, koppelen, match kiezen, de Mollie-webhook, de hulp-chat en de dagelijkse herinneringen niet. Dirk: controleren bij Environment Variables en redeployen.
+- **Tabel `push_subscriptions` bestaat niet** (`sql/push_subscriptions.sql` nooit uitgevoerd). Pushmeldingen en herinneringen werken dus niet. Claude kan de migratie uitvoeren.
+- De partnerflow is nooit in productie gedraaid (0 aanmeldingen, 0 betalingen, 0 gesprekken).
+- Het platform kan geen e-mail sturen (geen melding aan partners, geen factuur terwijl de voorwaarden die beloven) en heeft geen monitoring: het kan stil falen. Voorstel: eerst een pagina `/admin/gezondheid`.
+- Bij het controleren bleek ook: 6995 van de 7681 kandidaten hebben nu een e-mailadres (het script is dus opnieuw gedraaid), maar er is nog niemand uitgenodigd. De 7 proefpartners in `trainers` staan op zichtbaar; zet ze uit voordat matching opengaat.
+
 ## Huisstijl
 Merkkleuren als CSS-variabelen in `app/globals.css`: geel `#FFBE0A`, oranje `#FF8601`, dieporanje `#E85D00`, crème `#FFF8EE`, donkerbruine leestekst `#2B1B0E`. IBM Plex Sans, 17px basis. Tekstkleuren sinds 30 sep: hulptekst `#6F5A48`, oranje tekst/links `#B34500`, waarschuwing `#9E5A18` (alle ≥ 5:1 op crème). `#E85D00` alleen nog in verlopen, iconen en achtergronden.
 
@@ -166,7 +173,8 @@ Terugkerende scheduled task: elke 3 weken op vrijdag. Eerste firing 25 sep 2026.
 - Nooit screenshots met zichtbare sleutels verwerken zonder op rotatie te wijzen.
 
 ## Openstaand
-- **`node scripts/vind-emails.mjs` opnieuw draaien** (ca. 4099 kandidaten zonder e-mail).
+- **EERST (13 okt, autonomie-check):** `SUPABASE_SERVICE_ROLE_KEY` in Vercel controleren en redeployen; `push_subscriptions` aanmaken; daarna `/admin/gezondheid` bouwen. Zie `claude/autonomie-check-2026-10-13.md`.
+- ~~`node scripts/vind-emails.mjs` opnieuw draaien~~ Gedaan: 6995 van 7681 kandidaten hebben een e-mailadres (gemeten 13 okt).
 - **Mollie-account aanmaken + `MOLLIE_API_KEY` in Vercel + redeploy.** Daarna testen met een test-sleutel. Later ook winkel aansluiten.
 - **Domein blijfsterk.nl:** in Vercel toevoegen (ik kan dat doen na "ja"), DNS bij Yourhosting (A `@`, CNAME `www`, MX laten staan), daarna `vercel.app` vervangen in code (`SITE` in `maak-uitnodigingslinks.mjs`, links) en Supabase Site URL.
 - Intro-video opnemen/genereren; LinkedIn-post plaatsen.
