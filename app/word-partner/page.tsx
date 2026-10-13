@@ -2,36 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { DOCUMENTEN, type DocumentSleutel } from '@/lib/toetsing';
-
-type VeldType = 'text' | 'textarea' | 'ja-nee';
-
-type Vraag = {
-  sleutel: string;
-  label: string;
-  type: VeldType;
-  verplicht?: boolean;
-};
-
-const VRAGEN_TRAINER: Vraag[] = [
-  { sleutel: 'ervaring_55plus', label: 'Hoeveel jaar ervaring heb je met het trainen van 55-plussers?', type: 'text', verplicht: true },
-  { sleutel: 'diplomas', label: "Welke relevante diploma's of certificeringen heb je? (bijv. CIOS, fysiotherapie, Senior Fitness)", type: 'textarea', verplicht: true },
-  { sleutel: 'ehbo', label: 'Heb je een geldig EHBO- of BHV-certificaat?', type: 'ja-nee', verplicht: true },
-  { sleutel: 'gezondheidsbeperkingen', label: 'Hoe ga je om met deelnemers met gezondheidsbeperkingen, zoals hartklachten, artrose of evenwichtsproblemen?', type: 'textarea', verplicht: true },
-  { sleutel: 'aanpak', label: 'Beschrijf kort je aanpak en trainingsstijl.', type: 'textarea', verplicht: true },
-  { sleutel: 'verzekering', label: 'Heb je een eigen beroeps- of bedrijfsaansprakelijkheidsverzekering?', type: 'ja-nee', verplicht: true },
-  { sleutel: 'motivatie', label: 'Waarom wil je je aansluiten bij Blijf Sterk?', type: 'textarea' },
-  { sleutel: 'referenties', label: 'Referenties, website of links naar reviews (optioneel)', type: 'text' },
-];
-
-const VRAGEN_SPORTSCHOOL: Vraag[] = [
-  { sleutel: 'toegankelijkheid', label: 'Is de sportschool goed toegankelijk voor 55-plussers (gelijkvloers of lift, geen hoge drempels)?', type: 'ja-nee', verplicht: true },
-  { sleutel: 'aangepaste_begeleiding', label: 'Bieden jullie aangepaste apparatuur of begeleiding voor 55-plussers?', type: 'textarea', verplicht: true },
-  { sleutel: 'ehbo_aanwezig', label: 'Is er tijdens openingstijden personeel met EHBO/BHV aanwezig?', type: 'ja-nee', verplicht: true },
-  { sleutel: 'rustige_lessen', label: 'Bieden jullie rustige of aangepaste groepslessen aan buiten de spits, gericht op senioren?', type: 'textarea', verplicht: true },
-  { sleutel: 'verzekering', label: 'Beschikt de sportschool over een aansprakelijkheidsverzekering?', type: 'ja-nee', verplicht: true },
-  { sleutel: 'motivatie', label: 'Waarom willen jullie je aansluiten bij Blijf Sterk?', type: 'textarea' },
-];
+import { isPartnerType, PARTNERTYPEN, PARTNERTYPEN_VOLGORDE, type DocumentSleutel, type PartnerType } from '@/lib/partnertypen';
 
 const inputStijl: React.CSSProperties = {
   fontFamily: 'inherit',
@@ -52,7 +23,7 @@ const textareaStijl: React.CSSProperties = {
 };
 
 export default function WordPartner() {
-  const [type, setType] = useState<'trainer' | 'sportschool'>('trainer');
+  const [type, setType] = useState<PartnerType>('trainer');
   const [naam, setNaam] = useState('');
   const [email, setEmail] = useState('');
   const [telefoon, setTelefoon] = useState('');
@@ -67,19 +38,26 @@ export default function WordPartner() {
   const [kvkNummer, setKvkNummer] = useState('');
   const [registratienummer, setRegistratienummer] = useState('');
   const [bestanden, setBestanden] = useState<Partial<Record<DocumentSleutel, File>>>({});
-  const [resultaat, setResultaat] = useState<{ geaccepteerd: boolean; partnernummer: string | null; redenen: string[] } | null>(null);
+  const [resultaat, setResultaat] = useState<{
+    geaccepteerd: boolean;
+    partnernummer: string | null;
+    redenen: string[];
+    controle: string | null;
+  } | null>(null);
 
-  // Uitnodigingslink uit een mailing: velden staan dan al ingevuld, de trainer hoeft
+  // Uitnodigingslink uit een mailing: velden staan dan al ingevuld, de partner hoeft
   // alleen te controleren en de vragen te beantwoorden. Voorbeeld:
   //   /word-partner?naam=Jan%20de%20Vries&plaats=Zwolle&telefoon=06...&website=https://...
-  // Deze parameters worden alleen in het formulier gezet, niet opgeslagen tot de
-  // trainer zelf op "versturen" klikt.
+  // Met &type=fysiotherapeut (of sportmasseur, voedingsdeskundige, sportschool) staat
+  // meteen het goede formulier open. Deze parameters worden alleen in het formulier
+  // gezet, niet opgeslagen tot de partner zelf op "versturen" klikt.
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const q = new URLSearchParams(window.location.search);
+    const typeUitLink = q.get('type');
+    if (isPartnerType(typeUitLink)) setType(typeUitLink);
     if (!q.has('naam') && !q.has('email')) return;
     const kort = (v: string | null) => (v || '').trim().slice(0, 200);
-    if (q.get('type') === 'sportschool') setType('sportschool');
     setPartnernummer(kort(q.get('pn')).replace(/[^A-Z0-9-]/gi, '').toUpperCase());
     setNaam(kort(q.get('naam')));
     setEmail(kort(q.get('email')));
@@ -90,16 +68,27 @@ export default function WordPartner() {
     setUitgenodigd(true);
   }, []);
 
-  const vragen = type === 'trainer' ? VRAGEN_TRAINER : VRAGEN_SPORTSCHOOL;
+  const cfg = PARTNERTYPEN[type];
+  const vragen = cfg.vragen;
 
   const zetAntwoord = (sleutel: string, waarde: string) => {
     setAntwoorden((prev) => ({ ...prev, [sleutel]: waarde }));
+  };
+
+  const kiesType = (t: PartnerType) => {
+    setType(t);
+    // Elk beroep heeft eigen vragen. De website uit een uitnodigingslink blijft staan.
+    setAntwoorden((prev) => (prev.referenties ? { referenties: prev.referenties } : {}));
   };
 
   const versturenKlik = async () => {
     setFout(null);
     if (!naam.trim() || !email.trim()) {
       setFout('Vul in ieder geval je naam en e-mailadres in.');
+      return;
+    }
+    if (cfg.registratie?.eis === 'verplicht' && !registratienummer.trim()) {
+      setFout(`Vul je ${cfg.registratie.kort} in.`);
       return;
     }
     const ontbreekt = vragen.find((v) => v.verplicht && !antwoorden[v.sleutel]?.trim());
@@ -120,10 +109,10 @@ export default function WordPartner() {
     form.set('telefoon', telefoon);
     form.set('plaats', plaats);
     form.set('kvk_nummer', kvkNummer);
-    form.set('registratienummer', registratienummer);
+    form.set('registratienummer', cfg.registratie ? registratienummer : '');
     form.set('partnernummer', partnernummer);
     form.set('antwoorden', JSON.stringify(antwoorden));
-    for (const doc of DOCUMENTEN) {
+    for (const doc of cfg.documenten) {
       const f = bestanden[doc.sleutel];
       if (f) form.set(`doc_${doc.sleutel}`, f);
     }
@@ -136,7 +125,12 @@ export default function WordPartner() {
         setFout(data.fout || 'Versturen is niet gelukt. Probeer het nog eens.');
         return;
       }
-      setResultaat({ geaccepteerd: !!data.geaccepteerd, partnernummer: data.partnernummer || null, redenen: data.redenen || [] });
+      setResultaat({
+        geaccepteerd: !!data.geaccepteerd,
+        partnernummer: data.partnernummer || null,
+        redenen: data.redenen || [],
+        controle: data.controle || null,
+      });
       setVerstuurd(true);
     } catch {
       setVersturen(false);
@@ -182,6 +176,11 @@ export default function WordPartner() {
                 Nog niet compleet: {resultaat.redenen.join(', ')}. Je kunt dit later aanvullen via info@blijfsterk.nl.
               </p>
             )}
+            {resultaat && resultaat.redenen.length === 0 && resultaat.controle && (
+              <p style={{ color: '#6F5A48', marginTop: 12, fontSize: 15.5, lineHeight: 1.6 }}>
+                Je aanmelding is compleet. Eén ding doen we zelf: {resultaat.controle}. Daarna hoor je van ons.
+              </p>
+            )}
           </>
         )}
       </div>
@@ -196,12 +195,12 @@ export default function WordPartner() {
       <p style={{ color: '#6F5A48', margin: '0 0 24px', lineHeight: 1.6 }}>
         {uitgenodigd
           ? 'We hebben je gegevens alvast ingevuld. Kijk of alles klopt, beantwoord de vragen hieronder, en klik op versturen. Dat is alles.'
-          : 'We werken alleen samen met trainers en sportscholen die goed passen bij onze doelgroep: volwassenen van 55+.'}
+          : 'We werken alleen samen met trainers, fysiotherapeuten, sportmasseurs, voedingsdeskundigen en sportscholen die goed passen bij onze doelgroep: volwassenen van 55+.'}
       </p>
 
       {uitgenodigd && (
         <div style={{ background: '#FFF1DC', border: '2px solid #FFBE0A', borderRadius: 16, padding: '14px 16px', marginBottom: 22, fontSize: 16, lineHeight: 1.6 }}>
-          <strong>Founding partner:</strong> als een van de eerste trainers betaal je de eerste zes maanden geen
+          <strong>Founding partner:</strong> als een van de eerste partners betaal je de eerste zes maanden geen
           abonnement, en zijn je eerste twee koppelingen gratis.
           {partnernummer && (
             <div style={{ marginTop: 8, fontSize: 15, color: '#6F5A48' }}>
@@ -211,31 +210,33 @@ export default function WordPartner() {
         </div>
       )}
 
-      <div style={{ display: 'flex', gap: 8, background: '#FFFFFF', border: '2px solid #F3E4C8', borderRadius: 999, padding: 4, marginBottom: 26, maxWidth: 340 }}>
-        {(['trainer', 'sportschool'] as const).map((t) => (
+      <div role="group" aria-label="Wat ben je?" style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 26 }}>
+        {PARTNERTYPEN_VOLGORDE.map((t) => (
           <button
             key={t}
-            onClick={() => { setType(t); setAntwoorden({}); }}
+            type="button"
+            aria-pressed={type === t}
+            onClick={() => kiesType(t)}
             style={{
-              flex: 1,
               fontFamily: 'inherit',
               fontWeight: 700,
               fontSize: 15.5,
-              padding: '10px 0',
+              minHeight: 46,
+              padding: '0 18px',
               borderRadius: 999,
-              border: 'none',
               cursor: 'pointer',
-              background: type === t ? 'linear-gradient(135deg,#FFBE0A,#FF8601)' : 'transparent',
+              border: type === t ? 'none' : '2px solid #F3E4C8',
+              background: type === t ? 'linear-gradient(135deg,#FFBE0A,#FF8601)' : '#FFFFFF',
               color: type === t ? '#3A1E00' : '#6F5A48',
             }}
           >
-            {t === 'trainer' ? 'Ik ben trainer' : 'Wij zijn een sportschool'}
+            {PARTNERTYPEN[t].knop}
           </button>
         ))}
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-        <Veld label={type === 'trainer' ? 'Naam' : 'Naam sportschool'} verplicht>
+        <Veld label={cfg.naamLabel} verplicht>
           <input style={inputStijl} value={naam} onChange={(e) => setNaam(e.target.value)} />
         </Veld>
         <Veld label="E-mailadres" verplicht>
@@ -244,16 +245,16 @@ export default function WordPartner() {
         <Veld label="Telefoonnummer">
           <input style={inputStijl} value={telefoon} onChange={(e) => setTelefoon(e.target.value)} />
         </Veld>
-        <Veld label={type === 'trainer' ? 'Plaats / werkgebied' : 'Plaats / adres'}>
+        <Veld label={cfg.plaatsLabel}>
           <input style={inputStijl} value={plaats} onChange={(e) => setPlaats(e.target.value)} />
         </Veld>
 
         <Veld label="KvK-nummer (8 cijfers)" verplicht>
           <input style={inputStijl} inputMode="numeric" value={kvkNummer} onChange={(e) => setKvkNummer(e.target.value)} placeholder="12345678" />
         </Veld>
-        {type === 'trainer' && (
-          <Veld label="Registratienummer NL Actief of EREPS (als je dat hebt)">
-            <input style={inputStijl} value={registratienummer} onChange={(e) => setRegistratienummer(e.target.value)} placeholder="bijv. NLA-12345" />
+        {cfg.registratie && (
+          <Veld label={cfg.registratie.label} verplicht={cfg.registratie.eis === 'verplicht'}>
+            <input style={inputStijl} value={registratienummer} onChange={(e) => setRegistratienummer(e.target.value)} placeholder={cfg.registratie.plaatshouder} />
           </Veld>
         )}
 
@@ -261,11 +262,13 @@ export default function WordPartner() {
           <div style={{ fontWeight: 800, fontSize: 15, marginBottom: 4 }}>Documenten</div>
           <p style={{ fontSize: 15, color: '#6F5A48', margin: '0 0 12px', lineHeight: 1.5 }}>
             We werken met een kwetsbare doelgroep. Daarom vragen we deze documenten. Alleen Blijf Sterk ziet ze,
-            ze worden nooit gedeeld. PDF, JPG of PNG, maximaal 8 MB per bestand. Is alles compleet, dan ben je
-            meteen partner.
+            ze worden nooit gedeeld. PDF, JPG of PNG, maximaal 8 MB per bestand.{' '}
+            {cfg.handmatigeControle
+              ? 'Is alles compleet, dan controleren we je registratie en hoor je binnen een paar dagen van ons.'
+              : 'Is alles compleet, dan ben je meteen partner.'}
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {DOCUMENTEN.map((doc) => (
+            {cfg.documenten.map((doc) => (
               <Veld key={doc.sleutel} label={doc.label} verplicht={doc.verplicht}>
                 <input
                   type="file"
@@ -291,6 +294,7 @@ export default function WordPartner() {
                 {['Ja', 'Nee'].map((optie) => (
                   <button
                     key={optie}
+                    type="button"
                     onClick={() => zetAntwoord(v.sleutel, optie)}
                     style={{
                       fontFamily: 'inherit', fontWeight: 700, fontSize: 15.5, padding: '10px 20px', borderRadius: 999,
@@ -330,7 +334,7 @@ export default function WordPartner() {
           />
           <span>
             Ik ga akkoord met de{' '}
-            <Link href={type === 'sportschool' ? '/voorwaarden/sportscholen' : '/voorwaarden/trainers'} target="_blank" style={{ color: '#B34500', fontWeight: 600 }}>{type === 'sportschool' ? 'voorwaarden voor sportscholen' : 'voorwaarden voor trainers'}</Link>
+            <Link href={cfg.voorwaardenHref} target="_blank" style={{ color: '#B34500', fontWeight: 600 }}>{cfg.voorwaardenLabel}</Link>
             {' '}en de{' '}
             <Link href="/privacy" target="_blank" style={{ color: '#B34500', fontWeight: 600 }}>privacyverklaring</Link>
             {' '}van Blijf Sterk, en ik ben bevoegd om deze aanmelding te doen.
