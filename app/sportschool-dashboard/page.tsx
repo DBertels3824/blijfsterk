@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import PartnerBetalingen from '@/app/components/PartnerBetalingen';
 
 type Klant = { user_id: string; woonplaats: string | null };
 type Review = { id: string; rating: number; tekst: string | null };
@@ -21,6 +22,7 @@ export default function SportschoolDashboard() {
   const [klanten, setKlanten] = useState<Klant[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [laden, setLaden] = useState(true);
+  const [trainerIds, setTrainerIds] = useState<string[]>([]);
 
   useEffect(() => {
     const laad = async () => {
@@ -40,6 +42,7 @@ export default function SportschoolDashboard() {
       const { data: eigenSportscholen } = await supabase.from('trainers').select('id, naam').eq('user_id', user.id);
       const ids = (eigenSportscholen || []).map((t) => t.id);
       setEigenNaam(eigenSportscholen?.[0]?.naam || '');
+      setTrainerIds(ids);
 
       if (ids.length > 0) {
         const { data: matches } = await supabase.from('matches').select('user_id').in('trainer_id', ids);
@@ -83,6 +86,8 @@ export default function SportschoolDashboard() {
           <div style={{ color: '#6F5A48', fontSize: 15, marginTop: 4 }}>{reviews.length} {reviews.length === 1 ? 'review' : 'reviews'}</div>
         </div>
       </div>
+
+      <PartnerBetalingen trainerIds={trainerIds} />
 
       <p style={{ fontWeight: 800, fontSize: 15, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#6F5A48', marginBottom: 12 }}>
         Leden die jullie gekozen hebben

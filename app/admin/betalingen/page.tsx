@@ -1,5 +1,6 @@
 'use client';
 
+import { TARIEVEN } from '@/lib/juridisch';
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
@@ -24,6 +25,7 @@ type Betaling = {
 
 const SOORTEN = [
   { key: 'matchvergoeding', label: 'Matchvergoeding (nieuwe klant)', bedrag: 3500 },
+  { key: 'inschrijfgeld', label: 'Inschrijfgeld (eenmalig)', bedrag: TARIEVEN.inschrijfgeld * 100 },
   { key: 'abonnement', label: 'Partnerabonnement (maand)', bedrag: 2900 },
   { key: 'overig', label: 'Overig', bedrag: 0 },
 ];
@@ -107,6 +109,19 @@ export default function BetalingenAdmin() {
     await laad();
   }
 
+  // Kwijtschelden gaat via de server: bij het inschrijfgeld wordt de partner dan ook meteen zichtbaar.
+  async function kwijtschelden(b: Betaling) {
+    const { data: { session } } = await supabase.auth.getSession();
+    const res = await fetch('/api/betalingen/kwijtschelden', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token || ''}` },
+      body: JSON.stringify({ betalingId: b.id }),
+    });
+    const data = await res.json().catch(() => ({}));
+    setMelding(res.ok ? 'Kwijtgescholden.' : data.fout || 'Kwijtschelden is niet gelukt.');
+    await laad();
+  }
+
   const gefilterd = useMemo(() => lijst.filter((b) => !filterStatus || b.status === filterStatus), [lijst, filterStatus]);
   const totaalBetaald = lijst.filter((b) => b.status === 'betaald').reduce((s, b) => s + b.bedrag_cent, 0);
   const totaalOpen = lijst.filter((b) => b.status === 'open' || b.status === 'wacht_op_betaling').reduce((s, b) => s + b.bedrag_cent, 0);
@@ -172,6 +187,9 @@ export default function BetalingenAdmin() {
               <div style={{ fontWeight: 700, fontSize: 15, color: statusKleur[b.status] || '#6F5A48', minWidth: 120 }}>{b.status.replace(/_/g, ' ')}</div>
               {b.status !== 'betaald' && b.status !== 'gratis' && b.status !== 'geannuleerd' && (
                 <button onClick={() => annuleer(b)} style={{ ...knop, background: '#FFFFFF', border: '2px solid #F3E4C8', color: '#6F5A48', minHeight: 36, fontSize: 15 }}>Annuleer</button>
+              )}
+              {b.status !== 'betaald' && b.status !== 'gratis' && (
+                <button onClick={() => kwijtschelden(b)} style={{ ...knop, background: '#FFFFFF', border: '2px solid #F3E4C8', color: '#2E7D32', minHeight: 36, fontSize: 15 }}>Kwijtschelden</button>
               )}
             </div>
           ))}

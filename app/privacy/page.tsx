@@ -70,6 +70,7 @@ export default function PrivacyPagina() {
         <li style={lijstItem}>Als je meldingen aanzet: een technisch adres van je telefoon of browser om die meldingen te kunnen sturen. Geen locatie, geen contacten.</li>
         <li style={lijstItem}>Je beoordeling van een trainer, als je die geeft.</li>
         <li style={lijstItem}>Interesse in een product uit de winkel, als je dat formulier invult.</li>
+        <li style={lijstItem}>Gebruik je de hulppagina, dan bewaren we je berichten, het e-mailadres dat je daar invult, de pagina waar je vandaan kwam, je apparaat en browser, en een versleutelde afkorting van je IP-adres om misbruik te voorkomen. Zo kunnen we je helpen en fouten beter nalopen. We verwijderen deze gesprekken uiterlijk twaalf maanden nadat ze zijn afgehandeld.</li>
       </ul>
 
       <h2 id="partners" style={kop2}>3. Gegevens van trainers, sportscholen en andere partners</h2>
@@ -98,7 +99,8 @@ export default function PrivacyPagina() {
 
       <h2 id="coach" style={kop2}>6. De virtuele coach en kunstmatige intelligentie</h2>
       <p style={alinea}>&ldquo;Dirk, je virtuele coach&rdquo; werkt met kunstmatige intelligentie van het bedrijf Anthropic. Als je de coach een vraag stelt, sturen we je bericht, de eerdere berichten in dat gesprek en een samenvatting van je profiel (zoals je naam, doelen, ervaring, eetpatroon en of er een gezondheidsrisico is gemeld) naar Anthropic om een antwoord te maken. Anthropic is gevestigd in de Verenigde Staten; de doorgifte is gedekt door de standaardbepalingen van de Europese Commissie. Volgens de voorwaarden van Anthropic worden deze gegevens niet gebruikt om hun modellen te trainen.</p>
-      <p style={alinea}>Wil je dat liever niet? Gebruik de coach dan niet; de oefeningen en video&rsquo;s werken ook zonder.</p>
+      <p style={alinea}>Hetzelfde geldt voor de digitale hulp op de hulppagina. Die is ook een computerprogramma van Anthropic. Wat je daar typt, wordt (met de eerdere berichten van het gesprek en, als je bent ingelogd, je voornaam en rol) naar Anthropic gestuurd om te kunnen antwoorden. Dirk kan het gesprek lezen. Typ daar daarom nooit je wachtwoord.</p>
+      <p style={alinea}>Wil je dat liever niet? Gebruik de coach en de digitale hulp dan niet; de oefeningen en video&rsquo;s werken ook zonder. Voor hulp kun je ons dan mailen.</p>
 
       <h2 id="delen" style={kop2}>7. Met wie we gegevens delen</h2>
       <p style={alinea}>We werken met een paar dienstverleners die gegevens voor ons verwerken. Met elk van hen hebben we afspraken over beveiliging en geheimhouding.</p>

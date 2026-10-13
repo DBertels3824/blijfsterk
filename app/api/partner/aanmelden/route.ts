@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { isPartnerType, PARTNERTYPEN } from '@/lib/partnertypen';
+import { maakPartnerRij } from '@/lib/partners';
 import { beoordeel, DOCUMENTEN, MAX_BESTAND_BYTES, TOEGESTANE_BESTANDEN, type DocumentSleutel } from '@/lib/toetsing';
 
 export const dynamic = 'force-dynamic';
@@ -15,6 +16,10 @@ export async function POST(req: Request) {
   if (!form) return NextResponse.json({ fout: 'Ongeldige aanmelding.' }, { status: 400 });
 
   const tekst = (naam: string) => String(form.get(naam) || '').trim().slice(0, 500);
+  // Verborgen veld dat alleen robots invullen: dan doen we alsof het gelukt is, zonder iets op te slaan.
+  if (tekst('bedrijfswebsite')) {
+    return NextResponse.json({ ok: true, geaccepteerd: false, partnernummer: null, redenen: [], controle: null });
+  }
   const typeInvoer = tekst('type');
   const type = isPartnerType(typeInvoer) ? typeInvoer : 'trainer';
   const naam = tekst('naam');
@@ -111,24 +116,17 @@ export async function POST(req: Request) {
   // Automatisch geaccepteerd: meteen een partner-rij aanmaken (nog zonder login;
   // die koppelt de partner zelf via /api/partner/koppel als hij een account maakt).
   if (automatisch) {
-    const { data: trainer } = await service
-      .from('trainers')
-      .insert({
-        naam,
-        plaats: plaats || null,
-        type,
-        contact: email,
-        email,
-        specialisatie: PARTNERTYPEN[type].specialisatie,
-        reisbereidheid_km: 15,
-        partnernummer,
-        status: 'proef',
-        aanmelding_id: aanmelding.id,
-        zichtbaar: true,
-      })
-      .select('id')
-      .single();
-    if (trainer) await service.from('trainer_aanmeldingen').update({ trainer_id: trainer.id }).eq('id', aanmelding.id);
+    // De partner-rij is nog niet zichtbaar: dat wordt hij pas na betaling van het inschrijfgeld.
+    const trainerId = await maakPartnerRij(service, {
+      naam,
+      plaats: plaats || null,
+      type,
+      email,
+      specialisatie: PARTNERTYPEN[type].specialisatie,
+      partnernummer,
+      aanmeldingId: aanmelding.id,
+    });
+    if (trainerId) await service.from('trainer_aanmeldingen').update({ trainer_id: trainerId }).eq('id', aanmelding.id);
   }
 
   return NextResponse.json({

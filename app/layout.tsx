@@ -93,6 +93,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               <div style={{ display: "flex", flexDirection: "column", gap: 8, fontSize: 15.5 }}>
                 <span style={{ fontWeight: 700, color: "#2B1B0E", marginBottom: 2 }}>Contact</span>
                 <span style={{ color: "#2B1B0E" }}>info@blijfsterk.nl</span>
+                <Link href="/hulp" style={{ color: "#2B1B0E" }}>Hulp nodig? Chat met ons</Link>
                 <Link href="/voorwaarden/gebruikers" style={{ color: "#2B1B0E", marginTop: 8 }}>Voorwaarden gebruikers</Link>
                 <Link href="/voorwaarden/trainers" style={{ color: "#2B1B0E" }}>Voorwaarden trainers</Link>
                 <Link href="/voorwaarden/sportscholen" style={{ color: "#2B1B0E" }}>Voorwaarden sportscholen</Link>

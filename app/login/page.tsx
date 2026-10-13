@@ -358,6 +358,8 @@ export default function LoginPage() {
               <a href={`mailto:${HULP_EMAIL}?subject=Hulp%20bij%20inloggen%20Blijf%20Sterk`} style={{ color: '#B34500', fontWeight: 700 }}>
                 Mail ons
               </a>
+              {' '}of{' '}
+              <Link href="/hulp" style={{ color: '#B34500', fontWeight: 700 }}>chat met onze digitale hulp</Link>.
             </p>
           </div>
         )}

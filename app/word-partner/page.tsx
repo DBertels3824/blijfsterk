@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { TARIEVEN } from '@/lib/juridisch';
 import { isPartnerType, PARTNERTYPEN, PARTNERTYPEN_VOLGORDE, type DocumentSleutel, type PartnerType } from '@/lib/partnertypen';
 
 const inputStijl: React.CSSProperties = {
@@ -35,6 +36,7 @@ export default function WordPartner() {
   const [uitgenodigd, setUitgenodigd] = useState(false);
   const [partnernummer, setPartnernummer] = useState('');
   const [akkoord, setAkkoord] = useState(false);
+  const [valstrik, setValstrik] = useState(''); // verborgen veld tegen robots
   const [kvkNummer, setKvkNummer] = useState('');
   const [registratienummer, setRegistratienummer] = useState('');
   const [bestanden, setBestanden] = useState<Partial<Record<DocumentSleutel, File>>>({});
@@ -115,6 +117,7 @@ export default function WordPartner() {
     form.set('kvk_nummer', kvkNummer);
     form.set('registratienummer', cfg.registratie ? registratienummer : '');
     form.set('partnernummer', partnernummer);
+    form.set('bedrijfswebsite', valstrik);
     form.set('antwoorden', JSON.stringify(antwoorden));
     for (const doc of cfg.documenten) {
       const f = bestanden[doc.sleutel];
@@ -150,12 +153,13 @@ export default function WordPartner() {
           <>
             <h1 style={{ fontSize: 26 }}>Welkom bij Blijf Sterk!</h1>
             <p style={{ color: '#4A3624', marginTop: 10, lineHeight: 1.6 }}>
-              Je aanmelding is compleet en je bent per direct partner, op proef. Je partnernummer is{' '}
+              Je aanmelding is goedgekeurd. Je partnernummer is{' '}
               <strong style={{ fontFamily: 'monospace' }}>{nummer}</strong>.
             </p>
             <p style={{ color: '#4A3624', marginTop: 10, lineHeight: 1.6 }}>
-              Nog één stap: maak een account aan met hetzelfde e-mailadres (<strong>{email}</strong>). Dan zie je
-              je partnerdashboard, met je klanten en afrekeningen.
+              Nog twee stappen. Maak een account aan met hetzelfde e-mailadres (<strong>{email}</strong>). Betaal
+              daarna in je dashboard het eenmalige inschrijfgeld van €{TARIEVEN.inschrijfgeld}. Zodra dat is gedaan,
+              sta je op het platform.
             </p>
             <Link
               href={`/login?partner=1&email=${encodeURIComponent(email)}`}
@@ -201,6 +205,12 @@ export default function WordPartner() {
           ? 'We hebben je gegevens alvast ingevuld. Kijk of alles klopt, beantwoord de vragen hieronder, en klik op versturen. Dat is alles.'
           : 'We werken alleen samen met trainers, fysiotherapeuten, sportmasseurs, voedingsdeskundigen en sportscholen die goed passen bij onze doelgroep: volwassenen van 55+.'}
       </p>
+
+      <div style={{ background: '#FFFFFF', border: '2px solid #F3E4C8', borderRadius: 16, padding: '14px 16px', marginBottom: 22, fontSize: 15.5, lineHeight: 1.6, color: '#4A3624' }}>
+        <strong>Wat kost het?</strong> Aanmelden is gratis. Word je toegelaten, dan betaal je eenmalig €{TARIEVEN.inschrijfgeld}{' '}
+        inschrijfgeld. Pas daarna sta je op het platform. Zo houden we nepaanmeldingen en misbruik buiten de deur.
+        Daarna betaal je alleen als Blijf Sterk je een nieuwe klant oplevert.
+      </div>
 
       {uitgenodigd && (
         <div style={{ background: '#FFF1DC', border: '2px solid #FFBE0A', borderRadius: 16, padding: '14px 16px', marginBottom: 22, fontSize: 16, lineHeight: 1.6 }}>
@@ -269,7 +279,7 @@ export default function WordPartner() {
             ze worden nooit gedeeld. PDF, JPG of PNG, maximaal 8 MB per bestand.{' '}
             {cfg.handmatigeControle
               ? 'Is alles compleet, dan controleren we je registratie en hoor je binnen een paar dagen van ons.'
-              : 'Is alles compleet, dan ben je meteen partner.'}
+              : 'Is alles compleet, dan word je toegelaten.'}
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {cfg.documenten.map((doc) => (
@@ -328,6 +338,13 @@ export default function WordPartner() {
             )}
           </Veld>
         ))}
+
+        <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>
+          <label>
+            Laat dit veld leeg
+            <input tabIndex={-1} autoComplete="off" value={valstrik} onChange={(e) => setValstrik(e.target.value)} />
+          </label>
+        </div>
 
         <label style={{ display: 'flex', alignItems: 'flex-start', gap: 12, fontSize: 15.5, lineHeight: 1.55, cursor: 'pointer' }}>
           <input

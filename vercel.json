@@ -1,5 +1,6 @@
 {
   "crons": [
-    { "path": "/api/cron/inactief", "schedule": "0 8 * * *" }
+    { "path": "/api/cron/inactief", "schedule": "0 8 * * *" },
+    { "path": "/api/cron/opschonen", "schedule": "0 3 * * 0" }
   ]
 }

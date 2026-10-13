@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { haalBetaling, naarOnzeStatus, isMollieIngesteld } from '@/lib/mollie';
 import { openGesprek } from '@/lib/gesprekken';
+import { INSCHRIJFGELD_SOORT, maakZichtbaar } from '@/lib/partners';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,12 +35,17 @@ export async function POST(req: Request) {
         bijgewerkt_op: new Date().toISOString(),
       })
       .eq('mollie_id', mollieId)
-      .select('gesprek_id')
+      .select('gesprek_id, soort, trainer_id')
       .maybeSingle();
 
     // Matchvergoeding betaald → het gesprek tussen gebruiker en trainer gaat open.
     if (status === 'betaald' && rij?.gesprek_id) {
       await openGesprek(service, rij.gesprek_id);
+    }
+
+    // Inschrijfgeld betaald → de partner wordt zichtbaar voor gebruikers.
+    if (status === 'betaald' && rij?.soort === INSCHRIJFGELD_SOORT && rij.trainer_id) {
+      await maakZichtbaar(service, rij.trainer_id);
     }
 
     return NextResponse.json({ ok: true });

@@ -32,8 +32,9 @@ export async function POST(req: Request) {
   if (!betaling) return NextResponse.json({ fout: 'Betaling niet gevonden.' }, { status: 404 });
 
   // Hoort deze betaling bij een trainer-rij van de ingelogde gebruiker?
-  const { data: eigen } = await service.from('trainers').select('id').eq('id', betaling.trainer_id).eq('user_id', user.id).maybeSingle();
+  const { data: eigen } = await service.from('trainers').select('id, type').eq('id', betaling.trainer_id).eq('user_id', user.id).maybeSingle();
   if (!eigen) return NextResponse.json({ fout: 'Deze betaling is niet van jou.' }, { status: 403 });
+  const dashboard = eigen.type === 'sportschool' ? '/sportschool-dashboard' : '/trainer-dashboard';
 
   if (betaling.status === 'betaald') return NextResponse.json({ fout: 'Deze betaling is al voldaan.' }, { status: 400 });
 
@@ -43,7 +44,7 @@ export async function POST(req: Request) {
       bedragCent: betaling.bedrag_cent,
       // Het partnernummer staat in de omschrijving: zo staat het ook op het bankafschrift.
       omschrijving: `Blijf Sterk ${betaling.partnernummer} - ${betaling.omschrijving}`.slice(0, 255),
-      redirectUrl: `${origin}/trainer-dashboard?betaling=${betaling.id}`,
+      redirectUrl: `${origin}${dashboard}?betaling=${betaling.id}`,
       webhookUrl: `${origin}/api/betalingen/webhook`,
       metadata: { betalingId: betaling.id, partnernummer: betaling.partnernummer },
     });

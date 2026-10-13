@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { ADMIN_EMAIL } from '@/lib/admin';
 import { isPartnerType, PARTNERTYPEN } from '@/lib/partnertypen';
+import { inschrijfgeldVoldaan, maakPartnerRij, maakZichtbaar } from '@/lib/partners';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,27 +26,19 @@ export async function POST(req: Request) {
   let trainerId: string | null = a.trainer_id;
 
   if (besluit === 'geaccepteerd' && !trainerId) {
-    const { data: trainer } = await service
-      .from('trainers')
-      .insert({
-        naam: a.naam,
-        plaats: a.plaats,
-        type: a.type,
-        contact: a.email,
-        email: a.email,
-        specialisatie: isPartnerType(partnerType) ? PARTNERTYPEN[partnerType].specialisatie : 'Partner',
-        reisbereidheid_km: 15,
-        partnernummer: a.partnernummer,
-        status: 'proef',
-        aanmelding_id: a.id,
-        zichtbaar: true,
-      })
-      .select('id')
-      .single();
-    trainerId = trainer?.id || null;
+    // Nog niet zichtbaar: dat wordt de partner pas na betaling van het inschrijfgeld.
+    trainerId = await maakPartnerRij(service, {
+      naam: a.naam,
+      plaats: a.plaats,
+      type: a.type,
+      email: a.email,
+      specialisatie: isPartnerType(partnerType) ? PARTNERTYPEN[partnerType].specialisatie : 'Partner',
+      partnernummer: a.partnernummer,
+      aanmeldingId: a.id,
+    });
   }
-  if (besluit === 'geaccepteerd' && trainerId) {
-    await service.from('trainers').update({ zichtbaar: true }).eq('id', trainerId);
+  if (besluit === 'geaccepteerd' && trainerId && (await inschrijfgeldVoldaan(service, trainerId))) {
+    await maakZichtbaar(service, trainerId);
   }
   if (besluit === 'afgewezen' && trainerId) {
     await service.from('trainers').update({ zichtbaar: false, status: 'pauze' }).eq('id', trainerId);

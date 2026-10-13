@@ -14,7 +14,7 @@
 - Intro-video script + Runway-instructies: `introvideo-script-en-instructies.txt`. LinkedIn-collage: `blijfsterk-collage.png`.
 
 ## Businessmodel
-Gratis voor de gebruiker. Inkomsten van: trainers (matchvergoeding €35 per nieuwe klant, eerste 2 gratis als founding partner; partnerabonnement €29/mnd later), sportscholen (partnerprogramma), sponsors (€250–1.000/mnd), merchandise. **Belangrijk principe (bevestigd 14 sep, verstevigd 24 sep): gebruikers zien alléén onze eigen partnertrainers, en contact tussen gebruiker en trainer loopt via de chat op het platform die pas opengaat na betaling van de matchvergoeding. Zo kan niemand om de fee heen.**
+Gratis voor de gebruiker. Inkomsten van: partners (eenmalig inschrijfgeld €25, sinds 13 okt; zonder betaling geen zichtbaarheid), trainers (matchvergoeding €35 per nieuwe klant, eerste 2 gratis als founding partner; partnerabonnement €29/mnd later), sportscholen (partnerprogramma), sponsors (€250–1.000/mnd), merchandise. **Belangrijk principe (bevestigd 14 sep, verstevigd 24 sep): gebruikers zien alléén onze eigen partnertrainers, en contact tussen gebruiker en trainer loopt via de chat op het platform die pas opengaat na betaling van de matchvergoeding. Zo kan niemand om de fee heen.**
 
 ## Kernconcepten (concept-hoofdstukken)
 1–2 Probleem & marktomvang · 3 Visie (Coach/Connect/Prove) · 4 Doelgroepen · 5 Propositie (incl. trainer-dashboard) · 6 AI-agents & de Blijf Sterk Coach · 7 De continue Blijf Sterk-cyclus · 8 Groei & vindbaarheid · 9 Binden zonder geld · 10 Content & video (incl. later-fase AI-avatar oefenvideo's) · 11 Verdienmodel · 12 Financiën · 13 MVP-scope · 14 Roadmap · 15 Validatieplan · 16 Team & rollen · 17 Techniek · 18 Merk & tone of voice · 19 Juridische structuur (AVG) · 20 Risico's · 21 Succesmaatstaven · 22 Referentiekader · 23 Dubbele businesscase · 24 Volgende stappen.
@@ -116,6 +116,25 @@ Alle 12 oefeningen hebben video. Consistente naam "Dirk, je virtuele coach". Ban
 - `/api/match/kies` en het openingsbericht van een gesprek herkennen de nieuwe beroepen (anders zou een fysio de trainerkeuze van een gebruiker overschrijven).
 - **Nog niet gedaan:** geaccepteerde fysio's en sportmasseurs staan in de database, maar zijn nog niet zichtbaar in `/matching` (tabs bestaan alleen voor trainers, voeding en sportscholen) en de aanbevelingsagent kent ze niet. Partners van de nieuwe beroepen gebruiken het bestaande trainer-dashboard.
 
+**Inschrijfgeld voor partners (13 okt, tsc EXIT:0, Dirk commit zelf):**
+- Eenmalig **€25** (aanname van Claude, aanpassen in `TARIEVEN.inschrijfgeld` in `lib/juridisch.ts`) voor alle partnertypen, niet voor gebruikers. Aanmelden blijft gratis. Na toelating (automatisch of via admin) maakt `lib/partners.ts` de partner-rij aan met `zichtbaar = false` en zet een betaling `soort = 'inschrijfgeld'` klaar. De partner betaalt in zijn dashboard (`PartnerBetalingen`, iDEAL); de Mollie-webhook zet `zichtbaar` dan op true.
+- **Kwijtschelden:** knop in `/admin/betalingen` (route `/api/betalingen/kwijtschelden`, alleen Dirk). Zet de betaling op 'gratis' en maakt de partner zichtbaar. Werkt ook zolang Mollie nog niet actief is.
+- Handmatig accepteren in `/admin/aanmeldingen` maakt een partner alleen zichtbaar als het inschrijfgeld voldaan is. Partners van vóór 13 okt hebben geen inschrijfgeld-rij en blijven zichtbaar.
+- `/matching` toont alleen partners met `zichtbaar = true`.
+- **Sportschooldashboard** kon nog geen afrekeningen tonen of betalen (alleen trainer-dashboard had `PartnerBetalingen`); toegevoegd. Na betaling gaat de gebruiker terug naar het eigen dashboard.
+- **Tegen robots:** verborgen veld (valstrik) op `/word-partner`; ingevuld = stil genegeerd. Een echt account vraagt bovendien e-mailbevestiging.
+- Voorwaarden voor trainers en sportscholen en het partnerplan (Laag 1) noemen het inschrijfgeld. **Bedragen in de voorwaarden zijn nu "inclusief btw, voor zover verschuldigd"** (de code rekent het vlakke bedrag af; eerder stond er "exclusief"). Met de boekhouder bevestigen.
+- Getest: nagebootste database voor `maakPartnerRij` en `inschrijfgeldVoldaan`; formulier bekeken. **Nog niet getest met echte betaling:** wacht op Mollie-account en testsleutel. Test dan: aanmelden → account → betalen met testsleutel → partner zichtbaar.
+
+**Klantenservice-agent, fase 1 (13 okt, tsc EXIT:0, Dirk commit zelf):** volledig uitgewerkt in `claude/klantenservice-agent.md`. Kort:
+- Digitale hulp-assistent op `/hulp` (link in voettekst en op de inlogpagina; werkt ook zonder account). Antwoordt alleen op basis van `lib/klantenservice-kennis.ts` (**bijhouden bij elke wijziging aan de site, prijzen of werkwijze**), is poortwachter voor fouten en wensen (vraagt door, herkent dubbele meldingen, voegt samen) en geeft klachten, betaalproblemen, partnerzaken en privacyverzoeken door.
+- Postvak voor Dirk: `/admin/klantenservice` (menu Klantenservice). Antwoorden in de chat, gesprek overnemen of teruggeven aan de assistent, "Kopieer voor Claude Code" voor fouten en wensen, e-mailknop als de klant een adres gaf. Pushmelding bij doorgegeven meldingen (Dirk moet pushmeldingen aanzetten).
+- Database: `support_tickets` en `support_berichten` (RLS alleen beheerder, anon geen rechten, GRANTs expliciet), migratie al uitgevoerd. Wekelijkse opruiming na 12 maanden via `/api/cron/opschonen` (staat in `vercel.json`).
+- Privacyverklaring en voorwaarden voor gebruikers noemen de hulp-assistent; de coach verwijst bij problemen met de site naar `/hulp`.
+- Standaardmodel `claude-sonnet-5-5` (overschrijven met `SUPPORT_MODEL` in Vercel; valt terug op `claude-sonnet-4-5`). Grenzen: 1500 tekens per bericht, 60 berichten per gesprek, 8 nieuwe gesprekken per uur per apparaat.
+- Getest met het echte model (10 gesprekken, en de hele route tegen een nagebouwde database). **Nog niet getest:** de echte database en pushmeldingen, want lokaal staat geen `SUPABASE_SERVICE_ROLE_KEY`. Na de eerste deploy: `/hulp` openen, een vraag stellen, kijken in het postvak.
+- **Fase 2 (e-mail lezen en beantwoorden) wacht op** het domein, een mailbox en een mailprovider met inkomende mail (Dirk maakt account en sleutel zelf aan). Ontwerp en veiligheidsregels staan in `claude/klantenservice-agent.md`.
+
 ## Huisstijl
 Merkkleuren als CSS-variabelen in `app/globals.css`: geel `#FFBE0A`, oranje `#FF8601`, dieporanje `#E85D00`, crème `#FFF8EE`, donkerbruine leestekst `#2B1B0E`. IBM Plex Sans, 17px basis. Tekstkleuren sinds 30 sep: hulptekst `#6F5A48`, oranje tekst/links `#B34500`, waarschuwing `#9E5A18` (alle ≥ 5:1 op crème). `#E85D00` alleen nog in verlopen, iconen en achtergronden.
 
@@ -155,7 +174,7 @@ Terugkerende scheduled task: elke 3 weken op vrijdag. Eerste firing 25 sep 2026.
 - Notificaties bij nieuwe chatberichten (mail naar trainer, push naar gebruiker) — wacht op domein-mailbox.
 - Beoordeling van de trainer na een match (sterren + zin) en automatisch op pauze na 2 slechte beoordelingen.
 - **Signaal naar een kind of verzorger over het oefenen (wens 13 okt):** alleen als de oudere dat zélf aanzet in het profiel (naam + e-mail van de naaste), met een wekelijks, vriendelijk mailtje (geen alarm). Blokkade: de app kan nog geen e-mail versturen. Nodig: mailprovider (bijv. Resend) + sleutel in Vercel, liefst na de domein-mailbox. Daarna: opt-in in `/intake`, cron naast `/api/cron/inactief`.
-- E-mail-agent voor de partnermailbox (na domein). Abonnement-incasso. Sponsorbrochure. KvK-adreslijst als aanvulling.
+- **Klantenservice fase 2: e-mail** (zie `claude/klantenservice-agent.md`; na domein-mailbox en mailprovider). Abonnement-incasso. Sponsorbrochure. KvK-adreslijst als aanvulling.
 - **Jurist:** conceptteksten op `/voorwaarden` en `/privacy` laten nakijken (beleidskeuzes: zie sessie 13 okt), daarna `JURIDISCH_CONCEPT` op false en bedrijfsgegevens in `lib/juridisch.ts` invullen. Fysiotherapeut/sportarts (oefeningen) vóór brede lancering. Optioneel externe beveiligingscheck.
 - Registratienummer NL Actief/EREPS wordt nog niet echt geverifieerd (geen API) — steekproef door Dirk.
 - Weekschema personaliseren; naam achteraf toevoegen voor bestaande accounts; eigen logo uit de sponsorbanner vóór lancering; architectuur-artifact bijwerken.

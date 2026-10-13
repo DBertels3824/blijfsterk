@@ -68,6 +68,7 @@ export default function VoorwaardenGebruikers() {
 
       <h2 id="coach" style={kop2}>5. De virtuele coach</h2>
       <p style={alinea}>&ldquo;Dirk, je virtuele coach&rdquo; is een computerprogramma dat werkt met kunstmatige intelligentie. De coach helpt je op weg en motiveert je, maar kan fouten maken. De coach is geen arts, fysiotherapeut of diëtist en kent je medische geschiedenis niet. Twijfel je over een antwoord? Vraag het aan een professional. Wat de coach met je gegevens doet, lees je in de privacyverklaring.</p>
+      <p style={alinea}>De digitale hulp op de hulppagina is ook een computerprogramma. Die helpt met vragen over de site en geeft fouten en wensen door aan Dirk. Ook die kan fouten maken. Over uitzonderingen, terugbetalingen en toezeggingen beslist alleen Dirk.</p>
 
       <h2 id="partners" style={kop2}>6. Trainers en sportscholen via Blijf Sterk</h2>
       <p style={alinea}>Je kunt via het platform in contact komen met trainers en sportscholen die bij ons zijn aangesloten. Daarbij geldt:</p>

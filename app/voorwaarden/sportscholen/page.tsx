@@ -37,7 +37,7 @@ export default function VoorwaardenSportscholen() {
     <JuridischePagina
       label="Voorwaarden voor sportscholen"
       titel="Afspraken voor sportscholen"
-      intro="Dit zijn de afspraken voor sportscholen en vergelijkbare locaties die 55-plussers willen verwelkomen. Aansluiten is gratis. Je betaalt pas als Blijf Sterk je een nieuwe klant oplevert."
+      intro="Dit zijn de afspraken voor sportscholen en vergelijkbare locaties die 55-plussers willen verwelkomen. Aanmelden is gratis. Na toelating betaal je eenmalig een klein inschrijfgeld, en daarna alleen als Blijf Sterk je een nieuwe klant oplevert."
     >
       <Inhoudsopgave items={HOOFDSTUKKEN} />
 
@@ -57,6 +57,7 @@ export default function VoorwaardenSportscholen() {
         <li style={lijstItem}>Verandert er iets, bijvoorbeeld doordat de verzekering of een certificaat verloopt, de locatie verhuist of er geen EHBO-medewerker meer is, dan laten jullie dat ons meteen weten.</li>
         <li style={lijstItem}>Wij controleren de aanmelding. Als alles klopt, worden jullie automatisch toegelaten. Zo niet, dan beoordeelt een medewerker van Blijf Sterk de aanmelding. Wij beslissen of we een sportschool toelaten en mogen een aanmelding weigeren. We leggen dan uit waarom.</li>
         <li style={lijstItem}>Jullie krijgen een partnernummer. Dat staat op de aanmelding en op elke betaling.</li>
+        <li style={lijstItem}>Jullie worden pas zichtbaar voor gebruikers nadat het inschrijfgeld is betaald (zie hoofdstuk 6).</li>
         <li style={lijstItem}>Toelating betekent niet dat Blijf Sterk instaat voor de kwaliteit van de sportschool. Het is een controle op de documenten, geen keurmerk.</li>
       </ul>
 
@@ -85,11 +86,11 @@ export default function VoorwaardenSportscholen() {
 
       <h2 id="kosten" style={kop2}>6. Wat het kost</h2>
       <ul style={lijst}>
-        <li style={lijstItem}><strong>Gratis vermelding.</strong> Aansluiten en op het platform staan kost niets.</li>
+        <li style={lijstItem}><strong>Inschrijfgeld.</strong> Aanmelden kost niets. Na toelating betalen jullie eenmalig €{TARIEVEN.inschrijfgeld} inschrijfgeld. Pas daarna worden jullie zichtbaar voor gebruikers. Zo houden we nepaanmeldingen en misbruik buiten het platform. Jullie betalen het in het dashboard en we betalen het niet terug, behalve als wij een fout hebben gemaakt.</li>
         <li style={lijstItem}><strong>Matchvergoeding.</strong> €{TARIEVEN.matchvergoeding} per nieuwe klant die via Blijf Sterk voor jullie sportschool kiest. Partners van het eerste uur betalen voor hun eerste {TARIEVEN.gratisMatchesFoundingPartner} matches niets.</li>
         <li style={lijstItem}>De matchvergoeding geldt per gebruiker die voor jullie kiest. Ook als die zich later niet inschrijft, blijft de vergoeding verschuldigd. Daar staat tegenover dat jullie het gesprek en het contact met die gebruiker krijgen.</li>
         <li style={lijstItem}>Later kunnen we extra diensten of een abonnement aanbieden. Dat kondigen we vooraf aan en jullie kiezen zelf of jullie meedoen.</li>
-        <li style={lijstItem}>Bedragen zijn exclusief btw, tenzij anders vermeld. De actuele tarieven staan in het dashboard. Wijzigen we een tarief, dan laten we dat minimaal dertig dagen vooraf weten.</li>
+        <li style={lijstItem}>Bedragen zijn inclusief btw, voor zover die verschuldigd is. De actuele tarieven staan in het dashboard. Wijzigen we een tarief, dan laten we dat minimaal dertig dagen vooraf weten.</li>
         <li style={lijstItem}>Wat een lid aan de sportschool betaalt voor zijn lidmaatschap, bepaalt de sportschool zelf. Daar krijgt Blijf Sterk geen deel van.</li>
       </ul>
 
@@ -118,7 +119,7 @@ export default function VoorwaardenSportscholen() {
 
       <h2 id="betalingen" style={kop2}>10. Betalingen</h2>
       <ul style={lijst}>
-        <li style={lijstItem}>Betalingen lopen via onze betaaldienst Mollie, bijvoorbeeld met iDEAL. Jullie betalen de matchvergoeding vooraf in het dashboard.</li>
+        <li style={lijstItem}>Betalingen lopen via onze betaaldienst Mollie, bijvoorbeeld met iDEAL. Jullie betalen het inschrijfgeld en elke matchvergoeding vooraf in het dashboard.</li>
         <li style={lijstItem}>Een betaalde matchvergoeding geeft toegang tot het gesprek met die ene gebruiker. We betalen de vergoeding niet terug, ook niet als de gebruiker uiteindelijk niet met jullie verder gaat. Komt het gesprek door een fout van Blijf Sterk niet tot stand, dan betalen we wel terug.</li>
         <li style={lijstItem}>Wij sturen een factuur of betaalbewijs voor elke betaling.</li>
       </ul>

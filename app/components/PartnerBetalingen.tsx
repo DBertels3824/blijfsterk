@@ -105,7 +105,7 @@ export default function PartnerBetalingen({ trainerIds }: { trainerIds: string[]
       {open.length > 0 && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 12 }}>
           {open.map((b) => (
-            <div key={b.id} style={{ ...card, padding: '14px 16px', display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center' }}>
+            <div key={b.id} style={{ ...card, padding: '14px 16px', display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center', ...(b.soort === 'inschrijfgeld' ? { borderColor: '#FFBE0A', background: '#FFF8EE' } : {}) }}>
               <div style={{ flex: '1 1 200px' }}>
                 <div style={{ fontWeight: 700 }}>{b.omschrijving}</div>
                 <div style={{ fontSize: 15, color: statusTekst[b.status]?.kleur || '#6F5A48', marginTop: 2 }}>
@@ -113,6 +113,9 @@ export default function PartnerBetalingen({ trainerIds }: { trainerIds: string[]
                 </div>
                 {b.soort === 'matchvergoeding' && (
                   <div style={{ fontSize: 15, color: '#6F5A48', marginTop: 4 }}>Na betaling gaat het gesprek met je nieuwe klant open.</div>
+                )}
+                {b.soort === 'inschrijfgeld' && (
+                  <div style={{ fontSize: 15, color: '#4A3624', marginTop: 4 }}>Eenmalig. Na betaling sta je op het platform en kunnen gebruikers je kiezen.</div>
                 )}
               </div>
               <div style={{ fontWeight: 800, fontSize: 18, color: '#B34500' }}>{euro(b.bedrag_cent)}</div>

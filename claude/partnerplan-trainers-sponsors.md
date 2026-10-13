@@ -133,12 +133,12 @@ Bouw: tabellen `gesprekken` en `berichten` in Supabase, een chatpagina per match
 
 ### Uitgangspunt
 
-De trainer betaalt pas als Blijf Sterk hem iets oplevert. Instappen is gratis. Zo wordt uitnodigen makkelijk, en verdien jij aan elk succes.
+De trainer betaalt pas als Blijf Sterk hem iets oplevert, op één kleine drempel na: een eenmalig inschrijfgeld (besloten 13 okt 2026). Aanmelden is gratis; het inschrijfgeld komt pas na toelating. Het houdt nepaanmeldingen en robots buiten het platform, en wie betaalt, meent het.
 
 ### Drie lagen
 
-**Laag 1 — Gratis vermelding.**
-Trainer staat in de lijst, met naam, plaats en kwaliteitskeurmerk. Kost niets. Doel: zoveel mogelijk trainers binnen, zodat elke gebruiker iemand in de buurt vindt.
+**Laag 1 — Inschrijfgeld: €25, eenmalig.**
+Geldt voor alle partners (trainers, fysiotherapeuten, sportmasseurs, voedingsdeskundigen, sportscholen), niet voor gebruikers. Aanmelden en toetsing zijn gratis. Na toelating staat het inschrijfgeld klaar in het dashboard (iDEAL via Mollie). Pas na betaling is de partner zichtbaar voor gebruikers, met naam, plaats en kwaliteitskeurmerk. Dirk kan het inschrijfgeld per partner kwijtschelden in het menu Betalingen (bijvoorbeeld voor een founding partner). Geen restitutie, behalve bij een fout van Blijf Sterk. Het bedrag staat op één plek: `TARIEVEN.inschrijfgeld` in `lib/juridisch.ts`.
 
 **Laag 2 — Matchvergoeding: €35 per nieuwe klant.**
 Zodra een gebruiker kiest voor een trainer én de eerste afspraak is bevestigd, betaalt de trainer €35. Eenmalig, per nieuwe klant. Geen match, geen kosten.

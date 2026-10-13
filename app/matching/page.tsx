@@ -76,7 +76,7 @@ export default function MatchingPagina() {
         .eq('id', user.id)
         .single();
 
-      const { data: alleTrainers } = await supabase.from('trainers').select('*');
+      const { data: alleTrainers } = await supabase.from('trainers').select('*').eq('zichtbaar', true);
       const trainersLijst = alleTrainers ? alleTrainers.filter((t) => t.type === 'trainer') : [];
       const voedingLijst = alleTrainers ? alleTrainers.filter((t) => t.type === 'voedingsdeskundige') : [];
       const sportschoolLijst = alleTrainers ? alleTrainers.filter((t) => t.type === 'sportschool') : [];
