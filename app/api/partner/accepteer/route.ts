@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { ADMIN_EMAIL } from '@/lib/admin';
+import { isPartnerType, PARTNERTYPEN } from '@/lib/partnertypen';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,6 +21,7 @@ export async function POST(req: Request) {
   const { data: a } = await service.from('trainer_aanmeldingen').select('*').eq('id', aanmeldingId).single();
   if (!a) return NextResponse.json({ fout: 'Aanmelding niet gevonden.' }, { status: 404 });
 
+  const partnerType: unknown = a.type;
   let trainerId: string | null = a.trainer_id;
 
   if (besluit === 'geaccepteerd' && !trainerId) {
@@ -31,7 +33,7 @@ export async function POST(req: Request) {
         type: a.type,
         contact: a.email,
         email: a.email,
-        specialisatie: a.type === 'trainer' ? 'Personal trainer 55+' : 'Sportschool',
+        specialisatie: isPartnerType(partnerType) ? PARTNERTYPEN[partnerType].specialisatie : 'Partner',
         reisbereidheid_km: 15,
         partnernummer: a.partnernummer,
         status: 'proef',

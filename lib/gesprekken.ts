@@ -1,3 +1,4 @@
+import { beroepZin } from '@/lib/partnertypen';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 // Server-side hulpfuncties voor gesprekken (chat na een match). Alleen aanroepen met
@@ -35,7 +36,7 @@ export async function openGesprek(service: SupabaseClient, gesprekId: string): P
     `${gebruikerNaam} woont in ${profiel?.woonplaats || 'de buurt'}${doelen.length ? ` en wil vooral: ${doelen.slice(0, 2).join(' en ').toLowerCase()}` : ''}.${
       profiel?.dagen_per_week ? ` Trainen kan ${profiel.dagen_per_week} ${/^\d$/.test(profiel.dagen_per_week) && profiel.dagen_per_week === '1' ? 'dag' : 'dagen'} per week.` : ''
     }`,
-    `${trainerNaam} is ${trainer?.type === 'sportschool' ? 'een sportschool' : 'personal trainer'} in ${trainer?.plaats || 'de buurt'}, met ervaring met 55-plussers.`,
+    `${trainerNaam} is ${beroepZin(trainer?.type)} in ${trainer?.plaats || 'de buurt'}, met ervaring met 55-plussers.`,
     `${trainerNaam}, wanneer zou een kennismaking kunnen? Stel gerust een paar momenten voor. ${gebruikerNaam}, alles wat je wilt weten kun je hier vragen. Ik lees mee.`,
   ];
 

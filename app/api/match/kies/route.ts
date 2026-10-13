@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { isPartnerType } from '@/lib/partnertypen';
 import { GRATIS_MATCHES, MATCHVERGOEDING_CENT, openGesprek } from '@/lib/gesprekken';
 
 export const dynamic = 'force-dynamic';
@@ -24,7 +25,7 @@ export async function POST(req: Request) {
   const { data: trainer } = await service.from('trainers').select('id, naam, type, partnernummer, zichtbaar').eq('id', trainerId).single();
   if (!trainer || trainer.zichtbaar === false) return NextResponse.json({ fout: 'Deze partner is niet beschikbaar.' }, { status: 404 });
 
-  const matchType = trainer.type === 'sportschool' ? 'sportschool' : trainer.type === 'voedingsdeskundige' ? 'voedingsdeskundige' : 'trainer';
+  const matchType = isPartnerType(trainer.type) ? trainer.type : 'trainer';
 
   // 1. Match (één per type per gebruiker)
   await service.from('matches').delete().eq('user_id', user.id).eq('type', matchType);

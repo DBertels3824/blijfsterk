@@ -4,10 +4,11 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { ADMIN_EMAIL } from '@/lib/admin';
+import { isPartnerType, PARTNERTYPEN, PARTNERTYPEN_VOLGORDE, type PartnerType } from '@/lib/partnertypen';
 
 type Aanmelding = {
   id: string;
-  type: 'trainer' | 'sportschool';
+  type: PartnerType;
   naam: string;
   email: string;
   telefoon: string | null;
@@ -30,20 +31,29 @@ const DOC_LABELS: Record<string, string> = {
   diploma: 'Diploma',
 };
 
-const LABELS: Record<string, string> = {
-  ervaring_55plus: 'Ervaring met 55-plussers',
-  diplomas: "Diploma's / certificeringen",
-  ehbo: 'EHBO/BHV',
-  gezondheidsbeperkingen: 'Omgang met gezondheidsbeperkingen',
-  aanpak: 'Aanpak / stijl',
-  verzekering: 'Aansprakelijkheidsverzekering',
-  motivatie: 'Motivatie',
-  referenties: 'Referenties',
-  toegankelijkheid: 'Toegankelijkheid',
-  aangepaste_begeleiding: 'Aangepaste begeleiding/apparatuur',
-  ehbo_aanwezig: 'EHBO/BHV aanwezig',
-  rustige_lessen: 'Rustige lessen voor senioren',
-};
+// Korte naam van een vraag, uit lib/partnertypen.ts (per beroep kan dezelfde sleutel
+// een andere vraag zijn).
+function vraagLabel(type: string, sleutel: string): string {
+  if (isPartnerType(type)) {
+    const vraag = PARTNERTYPEN[type].vragen.find((q) => q.sleutel === sleutel);
+    if (vraag) return vraag.kort;
+  }
+  return sleutel;
+}
+
+function typeNaam(type: string): string {
+  if (!isPartnerType(type)) return type;
+  const naam = PARTNERTYPEN[type].beroep;
+  return naam.charAt(0).toUpperCase() + naam.slice(1);
+}
+
+function toetsingWeergave(t: string | null) {
+  if (t === 'compleet') return { achtergrond: '#EAF6E9', kleur: '#2E7D32', tekst: 'Toetsing compleet — automatisch geaccepteerd' };
+  if (t && t.startsWith('compleet,')) {
+    return { achtergrond: '#FFF1DC', kleur: '#9E5A18', tekst: `Toetsing compleet, nog niet toegelaten: ${t.replace('compleet, ', '')}` };
+  }
+  return { achtergrond: '#FDEDEA', kleur: '#B3261E', tekst: `Toetsing: ${t || 'onvolledig'}` };
+}
 
 const STATUSSEN = ['nieuw', 'in behandeling', 'geaccepteerd', 'afgewezen'];
 
@@ -58,7 +68,7 @@ export default function AanmeldingenAdmin() {
   const router = useRouter();
   const [toegestaan, setToegestaan] = useState<boolean | null>(null);
   const [aanmeldingen, setAanmeldingen] = useState<Aanmelding[]>([]);
-  const [filter, setFilter] = useState<'alle' | 'trainer' | 'sportschool'>('alle');
+  const [filter, setFilter] = useState<'alle' | PartnerType>('alle');
   const [laden, setLaden] = useState(true);
 
   useEffect(() => {
@@ -108,21 +118,22 @@ export default function AanmeldingenAdmin() {
   return (
     <div style={{ maxWidth: 640, margin: '0 auto', padding: '24px 20px 60px' }}>
       <h1 style={{ fontSize: 26, margin: '0 0 6px' }}>Aanmeldingen</h1>
-      <p style={{ color: '#6F5A48', margin: '0 0 20px' }}>Trainers en sportscholen die zich hebben aangemeld als partner.</p>
+      <p style={{ color: '#6F5A48', margin: '0 0 20px' }}>Trainers, fysiotherapeuten, sportmasseurs, voedingsdeskundigen en sportscholen die zich hebben aangemeld als partner.</p>
 
-      <div style={{ display: 'flex', gap: 8, background: '#FFFFFF', border: '2px solid #F3E4C8', borderRadius: 999, padding: 4, marginBottom: 24, maxWidth: 400 }}>
-        {(['alle', 'trainer', 'sportschool'] as const).map((f) => (
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 24 }}>
+        {(['alle', ...PARTNERTYPEN_VOLGORDE] as const).map((f) => (
           <button
             key={f}
             onClick={() => setFilter(f)}
             style={{
-              flex: 1, fontFamily: 'inherit', fontWeight: 700, fontSize: 15, padding: '9px 0', borderRadius: 999,
-              border: 'none', cursor: 'pointer',
-              background: filter === f ? 'linear-gradient(135deg,#FFBE0A,#FF8601)' : 'transparent',
+              fontFamily: 'inherit', fontWeight: 700, fontSize: 15, padding: '9px 16px', borderRadius: 999,
+              cursor: 'pointer',
+              border: filter === f ? 'none' : '2px solid #F3E4C8',
+              background: filter === f ? 'linear-gradient(135deg,#FFBE0A,#FF8601)' : '#FFFFFF',
               color: filter === f ? '#3A1E00' : '#6F5A48',
             }}
           >
-            {f === 'alle' ? 'Alle' : f === 'trainer' ? 'Trainers' : 'Sportscholen'}
+            {f === 'alle' ? 'Alle' : PARTNERTYPEN[f].meervoud}
           </button>
         ))}
       </div>
@@ -146,7 +157,7 @@ export default function AanmeldingenAdmin() {
                     {a.naam}
                   </div>
                   <div style={{ color: '#6F5A48', fontSize: 15, marginTop: 2 }}>
-                    {a.type === 'trainer' ? 'Trainer' : 'Sportschool'} &middot; {a.plaats || 'plaats onbekend'}
+                    {typeNaam(a.type)} &middot; {a.plaats || 'plaats onbekend'}
                     {a.kvk_nummer ? ` · KvK ${a.kvk_nummer}` : ' · geen KvK'}
                     {a.registratienummer ? ` · reg. ${a.registratienummer}` : ''}
                   </div>
@@ -164,11 +175,11 @@ export default function AanmeldingenAdmin() {
               <div
                 style={{
                   marginTop: 12, fontSize: 15, borderRadius: 12, padding: '8px 12px',
-                  background: a.toetsing === 'compleet' ? '#EAF6E9' : '#FDEDEA',
-                  color: a.toetsing === 'compleet' ? '#2E7D32' : '#B3261E', fontWeight: 600,
+                  background: toetsingWeergave(a.toetsing).achtergrond,
+                  color: toetsingWeergave(a.toetsing).kleur, fontWeight: 600,
                 }}
               >
-                {a.toetsing === 'compleet' ? 'Toetsing compleet — automatisch geaccepteerd' : `Toetsing: ${a.toetsing || 'onvolledig'}`}
+                {toetsingWeergave(a.toetsing).tekst}
                 {a.trainer_id ? ' · partner-rij aangemaakt' : ''}
               </div>
 
@@ -189,7 +200,7 @@ export default function AanmeldingenAdmin() {
               <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {Object.entries(a.antwoorden || {}).map(([sleutel, waarde]) => (
                   <div key={sleutel} style={{ fontSize: 15, background: '#FFF8EE', borderRadius: 12, padding: '8px 12px' }}>
-                    <span style={{ fontWeight: 700 }}>{LABELS[sleutel] || sleutel}:</span> {waarde}
+                    <span style={{ fontWeight: 700 }}>{vraagLabel(a.type, sleutel)}:</span> {waarde}
                   </div>
                 ))}
               </div>

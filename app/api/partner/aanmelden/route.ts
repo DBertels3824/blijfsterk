@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { isPartnerType, PARTNERTYPEN } from '@/lib/partnertypen';
 import { beoordeel, DOCUMENTEN, MAX_BESTAND_BYTES, TOEGESTANE_BESTANDEN, type DocumentSleutel } from '@/lib/toetsing';
 
 export const dynamic = 'force-dynamic';
@@ -14,7 +15,8 @@ export async function POST(req: Request) {
   if (!form) return NextResponse.json({ fout: 'Ongeldige aanmelding.' }, { status: 400 });
 
   const tekst = (naam: string) => String(form.get(naam) || '').trim().slice(0, 500);
-  const type = tekst('type') === 'sportschool' ? 'sportschool' : 'trainer';
+  const typeInvoer = tekst('type');
+  const type = isPartnerType(typeInvoer) ? typeInvoer : 'trainer';
   const naam = tekst('naam');
   const email = tekst('email').toLowerCase();
   const telefoon = tekst('telefoon');
@@ -58,6 +60,9 @@ export async function POST(req: Request) {
   }
 
   const toetsing = beoordeel({ type, kvkNummer, registratienummer, documenten, antwoorden });
+  // Automatisch toelaten alleen als alles compleet is én er geen handmatige controle nodig is
+  // (bij fysiotherapeuten kijkt Dirk eerst zelf het BIG-nummer na).
+  const automatisch = toetsing.compleet && !toetsing.handmatig;
 
   // Partnernummer: uit de uitnodigingslink als dat klopt met een kandidaat, anders een nieuw.
   let partnernummer: string | null = null;
@@ -82,10 +87,14 @@ export async function POST(req: Request) {
       kvk_nummer: kvkNummer || null,
       registratienummer: registratienummer || null,
       documenten,
-      toetsing: toetsing.compleet ? 'compleet' : `onvolledig: ${toetsing.redenen.join('; ')}`,
-      status: toetsing.compleet ? 'geaccepteerd' : 'nieuw',
+      toetsing: !toetsing.compleet
+        ? `onvolledig: ${toetsing.redenen.join('; ')}`
+        : toetsing.handmatig
+          ? `compleet, handmatige controle: ${toetsing.handmatig}`
+          : 'compleet',
+      status: automatisch ? 'geaccepteerd' : 'nieuw',
       partnernummer,
-      beoordeeld_op: toetsing.compleet ? new Date().toISOString() : null,
+      beoordeeld_op: automatisch ? new Date().toISOString() : null,
     })
     .select('id')
     .single();
@@ -101,7 +110,7 @@ export async function POST(req: Request) {
 
   // Automatisch geaccepteerd: meteen een partner-rij aanmaken (nog zonder login;
   // die koppelt de partner zelf via /api/partner/koppel als hij een account maakt).
-  if (toetsing.compleet) {
+  if (automatisch) {
     const { data: trainer } = await service
       .from('trainers')
       .insert({
@@ -110,7 +119,7 @@ export async function POST(req: Request) {
         type,
         contact: email,
         email,
-        specialisatie: type === 'trainer' ? 'Personal trainer 55+' : 'Sportschool',
+        specialisatie: PARTNERTYPEN[type].specialisatie,
         reisbereidheid_km: 15,
         partnernummer,
         status: 'proef',
@@ -124,8 +133,9 @@ export async function POST(req: Request) {
 
   return NextResponse.json({
     ok: true,
-    geaccepteerd: toetsing.compleet,
+    geaccepteerd: automatisch,
     partnernummer,
-    redenen: toetsing.compleet ? [] : toetsing.redenen,
+    redenen: toetsing.redenen,
+    controle: toetsing.handmatig,
   });
 }
