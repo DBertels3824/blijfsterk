@@ -63,6 +63,7 @@ export default function WordPartner() {
   const [fout, setFout] = useState<string | null>(null);
   const [uitgenodigd, setUitgenodigd] = useState(false);
   const [partnernummer, setPartnernummer] = useState('');
+  const [akkoord, setAkkoord] = useState(false);
   const [kvkNummer, setKvkNummer] = useState('');
   const [registratienummer, setRegistratienummer] = useState('');
   const [bestanden, setBestanden] = useState<Partial<Record<DocumentSleutel, File>>>({});
@@ -104,6 +105,10 @@ export default function WordPartner() {
     const ontbreekt = vragen.find((v) => v.verplicht && !antwoorden[v.sleutel]?.trim());
     if (ontbreekt) {
       setFout('Vul alle verplichte vragen in.');
+      return;
+    }
+    if (!akkoord) {
+      setFout('Vink aan dat je akkoord gaat met de voorwaarden en de privacyverklaring.');
       return;
     }
 
@@ -315,6 +320,23 @@ export default function WordPartner() {
             )}
           </Veld>
         ))}
+
+        <label style={{ display: 'flex', alignItems: 'flex-start', gap: 12, fontSize: 15.5, lineHeight: 1.55, cursor: 'pointer' }}>
+          <input
+            type="checkbox"
+            checked={akkoord}
+            onChange={(e) => setAkkoord(e.target.checked)}
+            style={{ width: 24, height: 24, marginTop: 2, flexShrink: 0, accentColor: '#FF8601' }}
+          />
+          <span>
+            Ik ga akkoord met de{' '}
+            <Link href="/voorwaarden" target="_blank" style={{ color: '#B34500', fontWeight: 600 }}>algemene voorwaarden</Link>
+            {' '}en de{' '}
+            <Link href="/privacy" target="_blank" style={{ color: '#B34500', fontWeight: 600 }}>privacyverklaring</Link>
+            {' '}van Blijf Sterk, en ik ben bevoegd om deze aanmelding te doen.
+            <span style={{ color: '#B34500' }}> *</span>
+          </span>
+        </label>
 
         {fout && <p style={{ color: '#B3261E', fontSize: 15.5 }}>{fout}</p>}
 

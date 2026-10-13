@@ -99,6 +99,12 @@ Alle 12 oefeningen hebben video. Consistente naam "Dirk, je virtuele coach". Ban
 - Knop "Hulp nodig bij inloggen?" met een rustig paneel: wachtwoord kwijt, e-mailadres kwijt (vraag een naaste), en "Mail ons" naar `HULP_EMAIL` in `lib/admin.ts` (nu Dirks adres; later `info@blijfsterk.nl`).
 - Blok "Help je je vader of moeder?" op `/voor-wie` met link naar de helper-stand. `btnSecondary` is nu geëxporteerd uit `InfoPagina.tsx`.
 
+**Voorwaarden en privacy (concept, tsc EXIT:0, Dirk commit zelf):**
+- Nieuwe pagina's `/voorwaarden` (hoofdstukken voor gebruikers, trainers/partners en sportscholen) en `/privacy` (per rol welke gegevens, grondslag, Anthropic/Supabase-Ierland/Vercel/Mollie, bewaartermijnen, rechten). Gedeeld sjabloon `JuridischePagina.tsx` (zonder verkoopband), inhoudsopgave, grote letters.
+- Bedrijfsgegevens, versiedatum, concept-vlag en tarieven staan in `lib/juridisch.ts`. **Dirk vult KvK, rechtsvorm en adres in**; zolang `JURIDISCH_CONCEPT` op true staat, tonen beide pagina's een "Conceptversie"-melding.
+- Links in de voettekst. Akkoord-zin onder "Account aanmaken" op `/login` (ook in helper-stand). Verplicht vinkje op `/word-partner` ("akkoord + bevoegd").
+- **Beleidskeuzes in de tekst die Dirk/jurist moeten bevestigen:** bedragen excl. btw; matchvergoeding niet terugbetaald behalve bij fout van Blijf Sterk; aansprakelijkheid beperkt tot betaalde bedragen (gebruikers €100); accounts na 2 jaar niet inloggen verwijderen (nog niet gebouwd); verwijdering binnen 30 dagen na opzegging (handmatig door Dirk); partnerdocumenten 1 jaar na einde bewaren; 18+. Doorgifte Anthropic op standaardbepalingen EU: controleren in de Anthropic-DPA.
+
 ## Huisstijl
 Merkkleuren als CSS-variabelen in `app/globals.css`: geel `#FFBE0A`, oranje `#FF8601`, dieporanje `#E85D00`, crème `#FFF8EE`, donkerbruine leestekst `#2B1B0E`. IBM Plex Sans, 17px basis. Tekstkleuren sinds 30 sep: hulptekst `#6F5A48`, oranje tekst/links `#B34500`, waarschuwing `#9E5A18` (alle ≥ 5:1 op crème). `#E85D00` alleen nog in verlopen, iconen en achtergronden.
 
@@ -139,7 +145,7 @@ Terugkerende scheduled task: elke 3 weken op vrijdag. Eerste firing 25 sep 2026.
 - Beoordeling van de trainer na een match (sterren + zin) en automatisch op pauze na 2 slechte beoordelingen.
 - **Signaal naar een kind of verzorger over het oefenen (wens 13 okt):** alleen als de oudere dat zélf aanzet in het profiel (naam + e-mail van de naaste), met een wekelijks, vriendelijk mailtje (geen alarm). Blokkade: de app kan nog geen e-mail versturen. Nodig: mailprovider (bijv. Resend) + sleutel in Vercel, liefst na de domein-mailbox. Daarna: opt-in in `/intake`, cron naast `/api/cron/inactief`.
 - E-mail-agent voor de partnermailbox (na domein). Abonnement-incasso. Sponsorbrochure. KvK-adreslijst als aanvulling.
-- Jurist (voorwaarden/disclaimer) en fysiotherapeut/sportarts (oefeningen) vóór brede lancering. Optioneel externe beveiligingscheck.
+- **Jurist:** conceptteksten op `/voorwaarden` en `/privacy` laten nakijken (beleidskeuzes: zie sessie 13 okt), daarna `JURIDISCH_CONCEPT` op false en bedrijfsgegevens in `lib/juridisch.ts` invullen. Fysiotherapeut/sportarts (oefeningen) vóór brede lancering. Optioneel externe beveiligingscheck.
 - Registratienummer NL Actief/EREPS wordt nog niet echt geverifieerd (geen API) — steekproef door Dirk.
 - Weekschema personaliseren; naam achteraf toevoegen voor bestaande accounts; eigen logo uit de sponsorbanner vóór lancering; architectuur-artifact bijwerken.
 - Later-fase: groepsvormings-agent, AI-avatar-laag, SEO-agent, Blijf Sterk Score, maatjes-matching.
