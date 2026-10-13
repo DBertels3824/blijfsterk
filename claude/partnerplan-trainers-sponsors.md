@@ -174,7 +174,7 @@ Het conceptdocument rekende met break-even rond €2.900 per maand. Met sponsors
 
 ### Sportscholen
 
-Zelfde opzet, andere getallen. Sportschool betaalt geen matchvergoeding maar een vaste bonus per lid dat via Blijf Sterk komt: €25 bij inschrijving, en €25 als het lid na 3 maanden nog lid is. Dat past bij hoe sportscholen rekenen (ledenwerving).
+Zelfde opzet en zelfde bedragen als bij trainers (besloten 13 okt 2026): €35 matchvergoeding per nieuwe klant die via Blijf Sterk voor de sportschool kiest, de eerste twee gratis, chat open na betaling. Een eerder idee was een ledenbonus (€25 bij inschrijving + €25 na 3 maanden); dat is vervallen omdat het meldingen van inschrijvingen en controle vraagt, en omdat één regel voor alle partners eenvoudiger is.
 
 ### Gebouwd (24 sep): betalen via Mollie, klaar voor de sleutel
 

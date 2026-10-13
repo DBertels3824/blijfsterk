@@ -314,7 +314,7 @@ export default function LoginPage() {
           {isRegistreren && (
             <p style={{ margin: '-6px 0 0', textAlign: 'center', fontSize: 15, lineHeight: 1.55, color: '#6F5A48' }}>
               Door een account aan te maken ga je akkoord met de{' '}
-              <Link href="/voorwaarden" style={{ color: '#B34500', fontWeight: 600 }}>voorwaarden</Link>
+              <Link href="/voorwaarden/gebruikers" style={{ color: '#B34500', fontWeight: 600 }}>voorwaarden voor gebruikers</Link>
               {' '}en de{' '}
               <Link href="/privacy" style={{ color: '#B34500', fontWeight: 600 }}>privacyverklaring</Link>.
             </p>

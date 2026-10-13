@@ -330,7 +330,7 @@ export default function WordPartner() {
           />
           <span>
             Ik ga akkoord met de{' '}
-            <Link href="/voorwaarden" target="_blank" style={{ color: '#B34500', fontWeight: 600 }}>algemene voorwaarden</Link>
+            <Link href={type === 'sportschool' ? '/voorwaarden/sportscholen' : '/voorwaarden/trainers'} target="_blank" style={{ color: '#B34500', fontWeight: 600 }}>{type === 'sportschool' ? 'voorwaarden voor sportscholen' : 'voorwaarden voor trainers'}</Link>
             {' '}en de{' '}
             <Link href="/privacy" target="_blank" style={{ color: '#B34500', fontWeight: 600 }}>privacyverklaring</Link>
             {' '}van Blijf Sterk, en ik ben bevoegd om deze aanmelding te doen.

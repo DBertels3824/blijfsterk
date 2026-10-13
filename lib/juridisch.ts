@@ -24,4 +24,6 @@ export const TARIEVEN = {
   matchvergoeding: 35,
   gratisMatchesFoundingPartner: 2,
   partnerabonnementPerMaand: 29,
+  // Geldt voor trainers én sportscholen (besloten 13 okt 2026: sportscholen
+  // betalen dezelfde matchvergoeding; de ledenbonus uit het partnerplan vervalt).
 };

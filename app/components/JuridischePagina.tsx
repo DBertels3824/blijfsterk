@@ -75,7 +75,7 @@ export default function JuridischePagina({
       {children}
 
       <p style={{ marginTop: 40, fontSize: 15, color: '#6F5A48' }}>
-        Zie ook: <Link href="/voorwaarden" style={{ color: '#B34500', fontWeight: 600 }}>Algemene voorwaarden</Link>
+        Zie ook: <Link href="/voorwaarden" style={{ color: '#B34500', fontWeight: 600 }}>Alle voorwaarden</Link>
         {' · '}
         <Link href="/privacy" style={{ color: '#B34500', fontWeight: 600 }}>Privacyverklaring</Link>
       </p>

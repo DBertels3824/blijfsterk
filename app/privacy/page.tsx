@@ -66,7 +66,7 @@ export default function PrivacyPagina() {
       <ul style={lijst}>
         <li style={lijstItem}>Welke oefeningen je hebt gedaan en wanneer. Daarmee tonen we je voortgang en je weekoverzicht.</li>
         <li style={lijstItem}>Je berichten aan de virtuele coach en de antwoorden daarop.</li>
-        <li style={lijstItem}>Je berichten in een gesprek met een trainer of sportschool.</li>
+        <li style={lijstItem}>Je berichten in een gesprek met een trainer of sportschool. Die gesprekken worden bewaard. Wij lezen niet routinematig mee, maar kunnen een gesprek inzien bij een klacht, bij een vermoeden van misbruik of als de wet dat vraagt.</li>
         <li style={lijstItem}>Als je meldingen aanzet: een technisch adres van je telefoon of browser om die meldingen te kunnen sturen. Geen locatie, geen contacten.</li>
         <li style={lijstItem}>Je beoordeling van een trainer, als je die geeft.</li>
         <li style={lijstItem}>Interesse in een product uit de winkel, als je dat formulier invult.</li>
