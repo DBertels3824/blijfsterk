@@ -311,6 +311,15 @@ export default function LoginPage() {
             {bezig ? 'Bezig...' : isRegistreren ? 'Account aanmaken' : 'Inloggen'}
           </button>
 
+          {isRegistreren && (
+            <p style={{ margin: '-6px 0 0', textAlign: 'center', fontSize: 15, lineHeight: 1.55, color: '#6F5A48' }}>
+              Door een account aan te maken ga je akkoord met de{' '}
+              <Link href="/voorwaarden" style={{ color: '#B34500', fontWeight: 600 }}>voorwaarden</Link>
+              {' '}en de{' '}
+              <Link href="/privacy" style={{ color: '#B34500', fontWeight: 600 }}>privacyverklaring</Link>.
+            </p>
+          )}
+
           {/* Twee rustige hulpknoppen. Wie zelf wil beginnen, kan ze gewoon negeren. */}
           {!isHelper && (
             <button type="button" onClick={() => wisselModus('helper')} style={knopSecundair}>
