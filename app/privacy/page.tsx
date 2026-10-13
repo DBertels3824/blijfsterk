@@ -9,7 +9,7 @@ export const metadata = {
 const HOOFDSTUKKEN = [
   { id: 'wie', titel: 'Wie is verantwoordelijk' },
   { id: 'gebruikers', titel: 'Gegevens van gebruikers' },
-  { id: 'partners', titel: 'Gegevens van trainers en sportscholen' },
+  { id: 'partners', titel: 'Gegevens van trainers, sportscholen en andere partners' },
   { id: 'kandidaten', titel: 'Trainers die wij uitnodigen' },
   { id: 'waarom', titel: 'Waarvoor we je gegevens gebruiken' },
   { id: 'coach', titel: 'De virtuele coach en kunstmatige intelligentie' },
@@ -72,13 +72,13 @@ export default function PrivacyPagina() {
         <li style={lijstItem}>Interesse in een product uit de winkel, als je dat formulier invult.</li>
       </ul>
 
-      <h2 id="partners" style={kop2}>3. Gegevens van trainers en sportscholen</h2>
+      <h2 id="partners" style={kop2}>3. Gegevens van trainers, sportscholen en andere partners</h2>
       <p style={alinea}>Meld je je aan als partner, dan bewaren we:</p>
       <ul style={lijst}>
         <li style={lijstItem}>Je naam, e-mailadres, telefoonnummer en plaats.</li>
-        <li style={lijstItem}>Je KvK-nummer en, als je dat hebt, je registratienummer bij NL Actief of EREPS.</li>
+        <li style={lijstItem}>Je KvK-nummer en, afhankelijk van je beroep, je registratienummer (bijvoorbeeld je BIG-nummer, of je nummer bij NL Actief, EREPS of een beroepsvereniging).</li>
         <li style={lijstItem}>Je antwoorden op de vragen over ervaring, diploma&rsquo;s, aanpak en verzekering.</li>
-        <li style={lijstItem}>De documenten die je uploadt: Verklaring Omtrent het Gedrag, polisblad van je verzekering, EHBO- of BHV-certificaat en eventueel je diploma. Deze staan in een afgeschermde opslag die alleen de beheerder van Blijf Sterk kan inzien.</li>
+        <li style={lijstItem}>De documenten die je uploadt: Verklaring Omtrent het Gedrag, polisblad van je verzekering, EHBO- of BHV-certificaat (niet voor voedingsdeskundigen) en eventueel je diploma. Deze staan in een afgeschermde opslag die alleen de beheerder van Blijf Sterk kan inzien.</li>
         <li style={lijstItem}>Je partnernummer, je matches, en je betalingen aan Blijf Sterk (bedrag, datum, status). Je bankgegevens zien wij niet; die verwerkt onze betaaldienst Mollie.</li>
         <li style={lijstItem}>Beoordelingen die gebruikers over je geven.</li>
       </ul>

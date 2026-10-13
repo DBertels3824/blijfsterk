@@ -28,7 +28,7 @@ const KEUZES = [
     href: '/voorwaarden/trainers',
     titel: 'Ik ben trainer of andere professional',
     sub: 'Voorwaarden voor trainers en andere partners',
-    tekst: 'Voor trainers, fysiotherapeuten en voedingsdeskundigen die gebruikers willen begeleiden. Met toelating, kosten en de afspraken over het contact.',
+    tekst: 'Voor trainers, fysiotherapeuten, sportmasseurs en voedingsdeskundigen die gebruikers willen begeleiden. Met toelating, kosten en de afspraken over het contact.',
   },
   {
     href: '/voorwaarden/sportscholen',

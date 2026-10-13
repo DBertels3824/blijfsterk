@@ -3,7 +3,7 @@ import VoorwaardenSlot, { SLOT_HOOFDSTUKKEN } from '@/app/components/Voorwaarden
 import { ONDERNEMING, TARIEVEN } from '@/lib/juridisch';
 
 export const metadata = {
-  title: 'Voorwaarden voor trainers — Blijf Sterk',
+  title: 'Voorwaarden voor trainers en andere partners — Blijf Sterk',
   description: 'De afspraken tussen Blijf Sterk en trainers, fysiotherapeuten, voedingsdeskundigen en andere partners.',
 };
 
@@ -33,7 +33,7 @@ export default function VoorwaardenTrainers() {
 
   return (
     <JuridischePagina
-      label="Voorwaarden voor trainers"
+      label="Voorwaarden voor trainers en andere partners"
       titel="Afspraken voor trainers en andere partners"
       intro="Dit zijn de afspraken voor trainers, fysiotherapeuten, voedingsdeskundigen en andere professionals die gebruikers van Blijf Sterk willen begeleiden. Aansluiten is gratis. Je betaalt pas als Blijf Sterk je een nieuwe klant oplevert."
     >
@@ -45,14 +45,16 @@ export default function VoorwaardenTrainers() {
         {bedrijfsregels.map((r) => <li key={r} style={lijstItem}>{r}</li>)}
       </ul>
       <p style={alinea}>In deze voorwaarden noemen we onszelf &ldquo;Blijf Sterk&rdquo; of &ldquo;wij&rdquo;. Jij bent de &ldquo;partner&rdquo;. Een gebruiker is iemand met een gewoon account die oefent met Blijf Sterk.</p>
-      <p style={alinea}>Deze voorwaarden gelden voor trainers en andere individuele professionals. Heb je een sportschool? Dan gelden de voorwaarden voor sportscholen. Doe je beide, dan gelden beide.</p>
+      <p style={alinea}>Deze voorwaarden gelden voor trainers, fysiotherapeuten, sportmasseurs, voedingsdeskundigen en andere individuele professionals. Heb je een sportschool? Dan gelden de voorwaarden voor sportscholen. Doe je beide, dan gelden beide.</p>
       <p style={alinea}>Door je aan te melden en het vinkje bij de aanmelding aan te zetten, ga je akkoord met deze voorwaarden en met onze privacyverklaring. Je verklaart dat je bevoegd bent om de aanmelding te doen.</p>
 
       <h2 id="toelating" style={kop2}>2. Toelating en toetsing</h2>
       <ul style={lijst}>
-        <li style={lijstItem}>Je meldt je aan met een geldig KvK-nummer en levert de gevraagde documenten aan: een Verklaring Omtrent het Gedrag (niet ouder dan twee jaar), het polisblad van je beroeps- of bedrijfsaansprakelijkheidsverzekering, een EHBO-, BHV- of reanimatiecertificaat, en een diploma of een registratienummer bij NL Actief of EREPS.</li>
+        <li style={lijstItem}>Je meldt je aan met een geldig KvK-nummer en levert een Verklaring Omtrent het Gedrag (niet ouder dan twee jaar) en het polisblad van je beroeps- of bedrijfsaansprakelijkheidsverzekering aan.</li>
+        <li style={lijstItem}>Trainers, fysiotherapeuten en sportmasseurs leveren ook een EHBO-, BHV- of reanimatiecertificaat aan. Voedingsdeskundigen hoeven dat niet.</li>
+        <li style={lijstItem}>Daarnaast vragen we een bewijs van je vakbekwaamheid. Trainers: een diploma of een registratienummer bij NL Actief of EREPS. Fysiotherapeuten: je BIG-nummer. Sportmasseurs en voedingsdeskundigen: een diploma of een registratienummer bij een beroepsvereniging of kwaliteitsregister.</li>
         <li style={lijstItem}>Alles wat je invult en aanlevert is juist en volledig. Verandert er iets, bijvoorbeeld doordat je verzekering of certificaat verloopt, dan laat je dat ons meteen weten en lever je een nieuw document aan.</li>
-        <li style={lijstItem}>Wij controleren je aanmelding. Als alles klopt, word je automatisch toegelaten. Zo niet, dan beoordeelt een medewerker van Blijf Sterk je aanmelding. Een registratienummer controleren wij steekproefsgewijs.</li>
+        <li style={lijstItem}>Wij controleren je aanmelding. Als alles klopt, word je meestal automatisch toegelaten. Bij fysiotherapeuten controleren wij altijd zelf de BIG-registratie in het BIG-register voordat je zichtbaar wordt. Klopt iets niet, dan beoordeelt een medewerker van Blijf Sterk je aanmelding. Registratienummers van andere registers controleren wij steekproefsgewijs.</li>
         <li style={lijstItem}>Wij beslissen of we je toelaten. We mogen een aanmelding weigeren als de documenten niet kloppen, als er een veiligheidsvraag met nee is beantwoord of als de samenwerking niet past bij Blijf Sterk. We leggen dan uit waarom.</li>
         <li style={lijstItem}>Je krijgt een partnernummer. Dat staat op je aanmelding en op elke betaling.</li>
         <li style={lijstItem}>Toelating betekent niet dat Blijf Sterk instaat voor jouw kwaliteit. Het is een controle op de documenten, geen keurmerk voor jouw begeleiding.</li>
