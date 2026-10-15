@@ -173,17 +173,35 @@ Terugkerende scheduled task: elke 3 weken op vrijdag. Eerste firing 25 sep 2026.
 - Persoonsgegevens zoals naam liever in auth user-metadata dan in een nieuwe kolom.
 - Nooit screenshots met zichtbare sleutels verwerken zonder op rotatie te wijzen.
 
+## Sessie 15 okt 2026 — domein en mailbox
+- **Mailbox `info@blijfsterk.nl` bestaat** (aangemaakt bij Yourhosting door Dirk) en werkt in Outlook (IMAP, `mail.yourhosting.nl`, poort 993 en 465, SSL/TLS). Daarmee is de mailbox-voorwaarde voor klantenservice fase 2 en `HULP_EMAIL` (`lib/admin.ts`, nu nog Dirks adres) vervuld. Nog niet gedaan: `HULP_EMAIL` omzetten; mailprovider met inkomende mail voor de agent.
+- **Domein blijfsterk.nl: in Vercel toegevoegd (door Dirk), DNS bij Yourhosting aangepast, wacht op doorwerking (tot enkele uren).** Claude kreeg 403 van de Vercel-koppeling (geen schrijfrechten; geen Vercel-CLI op de laptop) en kon het Yourhosting-paneel niet laden, dus Dirk deed het zelf. In Vercel staat `blijfsterk.nl` als redirect (308) naar `www.blijfsterk.nl`; de hoofdsite is dus `https://www.blijfsterk.nl`.
+  - DNS-beheer bij Yourhosting: Domeinen → blijfsterk.nl → DNS beheer (niet "Hosting & DNS"). Nameservers `firstfind.nl/.net`.
+  - Ingesteld (waarden die Vercel op 15 okt toonde): A `@` → `216.198.79.1`; CNAME `www` → `cfaca36a582a8061.vercel-dns-017.com`. SPF-record uitgebreid met `ip4:185.37.71.62` (oude A-adres, de mailserver) zodat uitgaande mail niet afvalt. MX, `mail`, `ftp`, `autoconfig`, DKIM en DMARC ongemoeid.
+  - Op 15 okt stonden A en www bij de nameserver nog op de oude waarden (SPF wel bijgewerkt). **Nog te doen:** `Resolve-DnsName blijfsterk.nl -Type A -Server 8.8.8.8` controleren (moet `216.198.79.1` geven), in Vercel op **Refresh** klikken (moet Valid Configuration tonen, SSL volgt vanzelf), test-mail van en naar `info@blijfsterk.nl`. Daarna: `vercel.app` in code vervangen door `https://www.blijfsterk.nl` (o.a. `SITE` in `scripts/maak-uitnodigingslinks.mjs`) en Supabase Site URL + Redirect URLs aanpassen (Dirk).
+
+**E-mailbasis voor de klantenservice-agent (15 okt, tsc EXIT:0, eslint schoon, Dirk commit zelf):** uitgebreid beschreven in `claude/klantenservice-agent.md` (fase 2). Kort:
+- **Uitgaande mail met logboek** (`lib/email.ts`, Resend): elke mail komt in `email_log`; zonder sleutels verstuurt niets en zegt het logboek waarom. Noodremmen: 100 mails per dag, geen mail naar het eigen ontvangstdomein.
+- **Inkomende route** `/api/klantenservice/mail`: controleert de webhook-handtekening, negeert automatische mail en lussen, verwerkt dezelfde mail nooit twee keer, koppelt aan een gesprek (`[#nummer]` in het onderwerp), bewaart de mail altijd vóór de assistent iets doet. Onbevestigde afzender (SPF/DKIM/DMARC): wel in het postvak, nooit een concept.
+- **Concept-postvak** in `/admin/klantenservice`: filter "Concept klaar", antwoord aanpassen en "Verstuur per mail", "Concept weggooien", plus het maillogboek. **De assistent verstuurt zelf nooit iets**; alleen Dirk via `/api/klantenservice/mail/verstuur`.
+- Assistent kent nu `kanaal: 'mail'` (regels in `MAIL_REGELS`), de actie `geen_antwoord_nodig` (bedankjes) en een noodgeval krijgt 112 + spoedmelding.
+- **Gevonden en opgelost:** `max_tokens` 700 was te krap (het model gebruikt een deel om na te denken) en kapte antwoorden midden in een zin af, ook in de chat. Nu 2000; een afgebroken mailtekst wordt nooit als concept bewaard.
+- **Database:** migratie "email" uitgevoerd (`sql/email.sql`): `email_log`, `support_concepten` met RLS en expliciete GRANTs; kolommen `support_berichten.message_id` en `support_tickets.mail_onderwerp`. Wekelijkse opruiming wist het logboek na 12 maanden.
+- **Nog niet live:** Dirk maakt een Resend-account, voegt het subdomein `hulp.blijfsterk.nl` toe, zet de DNS-regels bij Yourhosting, maakt een webhook (event `email.received`) en zet `RESEND_API_KEY`, `RESEND_WEBHOOK_SECRET` en `MAIL_VAN` in Vercel + redeploy. Stappen: zie het document, sectie "Instellen".
+- **Nog te doen daarna:** privacyverklaring/voorwaarden noemen Resend nog niet; massa-uitnodiging aan trainers pas na het oordeel van de jurist (zzp/eenmanszaak, toestemming, `email_bron = aangenomen`) en in kleine groepen; nog niet getest met een echte Resend-aanroep en de echte database.
+
 ## Openstaand
+- **Maildienst Resend instellen en e-mailagent live zetten** (zie hierboven en `claude/klantenservice-agent.md`). Code staat klaar, wacht op Dirk.
 - **EERST (13 okt, autonomie-check):** `SUPABASE_SERVICE_ROLE_KEY` in Vercel controleren en redeployen; `push_subscriptions` aanmaken; daarna `/admin/gezondheid` bouwen. Zie `claude/autonomie-check-2026-10-13.md`.
 - ~~`node scripts/vind-emails.mjs` opnieuw draaien~~ Gedaan: 6995 van 7681 kandidaten hebben een e-mailadres (gemeten 13 okt).
 - **Mollie-account aanmaken + `MOLLIE_API_KEY` in Vercel + redeploy.** Daarna testen met een test-sleutel. Later ook winkel aansluiten.
 - **Domein blijfsterk.nl:** in Vercel toevoegen (ik kan dat doen na "ja"), DNS bij Yourhosting (A `@`, CNAME `www`, MX laten staan), daarna `vercel.app` vervangen in code (`SITE` in `maak-uitnodigingslinks.mjs`, links) en Supabase Site URL.
 - Intro-video opnemen/genereren; LinkedIn-post plaatsen.
 - UX-items 2, 7, 11, 12 uit `claude/ux-analyse-2026-09-22.md` (5, 6, 8, 9, 10 gedaan op 30 sep).
-- Notificaties bij nieuwe chatberichten (mail naar trainer, push naar gebruiker) — wacht op domein-mailbox.
+- Notificaties bij nieuwe chatberichten (mail naar trainer, push naar gebruiker) — kan nu op `stuurMail` (`lib/email.ts`) worden gebouwd zodra Resend staat.
 - Beoordeling van de trainer na een match (sterren + zin) en automatisch op pauze na 2 slechte beoordelingen.
 - **Signaal naar een kind of verzorger over het oefenen (wens 13 okt):** alleen als de oudere dat zélf aanzet in het profiel (naam + e-mail van de naaste), met een wekelijks, vriendelijk mailtje (geen alarm). Blokkade: de app kan nog geen e-mail versturen. Nodig: mailprovider (bijv. Resend) + sleutel in Vercel, liefst na de domein-mailbox. Daarna: opt-in in `/intake`, cron naast `/api/cron/inactief`.
-- **Klantenservice fase 2: e-mail** (zie `claude/klantenservice-agent.md`; na domein-mailbox en mailprovider). Abonnement-incasso. Sponsorbrochure. KvK-adreslijst als aanvulling.
+- ~~Klantenservice fase 2: e-mail~~ gebouwd 15 okt (concept-modus), wacht op instellen Resend. Abonnement-incasso. Sponsorbrochure. KvK-adreslijst als aanvulling.
 - **Jurist:** conceptteksten op `/voorwaarden` en `/privacy` laten nakijken (beleidskeuzes: zie sessie 13 okt), daarna `JURIDISCH_CONCEPT` op false en bedrijfsgegevens in `lib/juridisch.ts` invullen. Fysiotherapeut/sportarts (oefeningen) vóór brede lancering. Optioneel externe beveiligingscheck.
 - Registratienummer NL Actief/EREPS wordt nog niet echt geverifieerd (geen API) — steekproef door Dirk.
 - Weekschema personaliseren; naam achteraf toevoegen voor bestaande accounts; eigen logo uit de sponsorbanner vóór lancering; architectuur-artifact bijwerken.

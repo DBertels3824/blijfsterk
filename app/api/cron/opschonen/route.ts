@@ -30,7 +30,11 @@ export async function GET(req: Request) {
       .lt('bijgewerkt_op', grens.toISOString())
       .select('id');
     if (error) throw error;
-    return NextResponse.json({ verwijderd: data?.length || 0 });
+
+    // Het maillogboek (adres, onderwerp, resultaat) bewaren we ook twaalf maanden.
+    const { data: logs, error: logFout } = await service.from('email_log').delete().lt('created_at', grens.toISOString()).select('id');
+    if (logFout) throw logFout;
+    return NextResponse.json({ verwijderd: data?.length || 0, maillogboek: logs?.length || 0 });
   } catch (fout) {
     console.error('Fout in /api/cron/opschonen:', fout);
     return NextResponse.json({ fout: 'Er ging iets mis' }, { status: 500 });

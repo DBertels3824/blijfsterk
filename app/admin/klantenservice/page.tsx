@@ -33,8 +33,23 @@ type Ticket = {
 
 type Bericht = { id: string; afzender: 'klant' | 'agent' | 'dirk' | 'systeem'; tekst: string; created_at: string };
 
+type Concept = { id: string; ticket_id: string; tekst: string };
+
+type LogRij = {
+  id: string;
+  created_at: string;
+  richting: 'uit' | 'in';
+  status: 'verstuurd' | 'mislukt' | 'overgeslagen' | 'ontvangen';
+  adres: string | null;
+  onderwerp: string | null;
+  reden: string | null;
+};
+
+const logKleur: Record<LogRij['status'], string> = { verstuurd: '#2E7D32', ontvangen: '#6F5A48', overgeslagen: '#9E5A18', mislukt: '#B3261E' };
+
 const FILTERS: { key: string; label: string }[] = [
   { key: 'aandacht', label: 'Aandacht nodig' },
+  { key: 'concept', label: 'Concept klaar' },
   { key: 'wacht_op_klant', label: 'Wacht op klant' },
   { key: 'open_chat', label: 'Lopende chats' },
   { key: 'opgelost', label: 'Opgelost' },
@@ -66,10 +81,19 @@ export default function KlantenserviceAdmin() {
   const [berichten, setBerichten] = useState<Bericht[]>([]);
   const [antwoord, setAntwoord] = useState('');
   const [melding, setMelding] = useState('');
+  const [concepten, setConcepten] = useState<Record<string, Concept>>({});
+  const [logRijen, setLogRijen] = useState<LogRij[]>([]);
+  const [bezig, setBezig] = useState(false);
 
   async function laadTickets() {
     const { data } = await supabase.from('support_tickets').select('*').order('laatste_bericht_op', { ascending: false }).limit(200);
     setTickets((data as Ticket[]) || []);
+    const { data: cs } = await supabase.from('support_concepten').select('id, ticket_id, tekst').eq('status', 'concept').order('created_at', { ascending: true });
+    const perTicket: Record<string, Concept> = {};
+    for (const c of (cs as Concept[]) || []) perTicket[c.ticket_id] = c;
+    setConcepten(perTicket);
+    const { data: log } = await supabase.from('email_log').select('id, created_at, richting, status, adres, onderwerp, reden').order('created_at', { ascending: false }).limit(30);
+    setLogRijen((log as LogRij[]) || []);
     setLaden(false);
   }
 
@@ -95,12 +119,12 @@ export default function KlantenserviceAdmin() {
   }, [router]);
 
   const aantallen = useMemo(() => {
-    const m: Record<string, number> = { alle: tickets.length };
+    const m: Record<string, number> = { alle: tickets.length, concept: tickets.filter((t) => concepten[t.id]).length };
     for (const t of tickets) m[t.status] = (m[t.status] || 0) + 1;
     return m;
-  }, [tickets]);
+  }, [tickets, concepten]);
 
-  const zichtbaar = tickets.filter((t) => filter === 'alle' || t.status === filter);
+  const zichtbaar = tickets.filter((t) => (filter === 'alle' ? true : filter === 'concept' ? !!concepten[t.id] : t.status === filter));
 
   async function openTicket(t: Ticket) {
     if (open === t.id) {
@@ -108,9 +132,47 @@ export default function KlantenserviceAdmin() {
       return;
     }
     setOpen(t.id);
-    setAntwoord('');
+    // Bij een concept staat de tekst al klaar in het antwoordvak, zodat je het kunt aanpassen.
+    setAntwoord(concepten[t.id]?.tekst || '');
     setMelding('');
     await laadBerichten(t.id);
+  }
+
+  // Mail versturen gaat via de server (die controleert dat jij het bent en schrijft het logboek).
+  async function verstuurMail(t: Ticket) {
+    const tekst = antwoord.trim();
+    if (!tekst || bezig) return;
+    if (!window.confirm(`Deze mail versturen naar ${t.email}?`)) return;
+    setBezig(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch('/api/klantenservice/mail/verstuur', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token || ''}` },
+        body: JSON.stringify({ ticketId: t.id, conceptId: concepten[t.id]?.id || null, tekst }),
+      });
+      const d = (await res.json().catch(() => ({}))) as { ok?: boolean; fout?: string };
+      if (d.ok) {
+        setAntwoord('');
+        setMelding(`Mail verstuurd naar ${t.email}.`);
+      } else {
+        setMelding(`Versturen mislukt: ${d.fout || 'onbekende fout'}`);
+      }
+    } catch {
+      setMelding('Versturen mislukt: geen verbinding.');
+    }
+    setBezig(false);
+    await laadBerichten(t.id);
+    await laadTickets();
+  }
+
+  async function gooiConceptWeg(t: Ticket) {
+    const c = concepten[t.id];
+    if (!c) return;
+    await supabase.from('support_concepten').update({ status: 'weggegooid', besloten_op: new Date().toISOString() }).eq('id', c.id);
+    setAntwoord('');
+    setMelding('Concept weggegooid.');
+    await laadTickets();
   }
 
   async function zetStatus(t: Ticket, status: string) {
@@ -188,7 +250,8 @@ export default function KlantenserviceAdmin() {
     <div style={{ maxWidth: 680, margin: '0 auto', padding: '24px 20px 60px' }}>
       <h1 style={{ fontSize: 26, margin: '0 0 6px' }}>Klantenservice</h1>
       <p style={{ color: '#6F5A48', margin: '0 0 18px' }}>
-        Gesprekken met de digitale hulp-assistent. Fouten en wensen komen hier beschreven binnen. Zet pushmeldingen aan
+        Gesprekken met de digitale hulp-assistent, per chat en per mail. Fouten en wensen komen hier beschreven binnen. Bij mail
+        schrijft de assistent een concept; jij keurt het goed. Zet pushmeldingen aan
         (pagina Zet Blijf Sterk op je telefoon) om een seintje te krijgen.
       </p>
 
@@ -236,8 +299,11 @@ export default function KlantenserviceAdmin() {
                   {t.categorie || 'geen categorie'}
                   {t.urgentie ? ` · urgentie ${t.urgentie}` : ''}
                   {t.aantal_meldingen > 1 ? ` · ${t.aantal_meldingen}× gemeld` : ''}
-                  {' · '}{t.naam || 'naam onbekend'} ({t.rol}) · {datum(t.laatste_bericht_op)}
+                  {' · '}{t.kanaal === 'mail' ? 'mail · ' : ''}{t.naam || 'naam onbekend'} ({t.rol}) · {datum(t.laatste_bericht_op)}
                 </div>
+                {concepten[t.id] && (
+                  <div style={{ marginTop: 8, fontSize: 15, fontWeight: 700, color: '#2E7D32' }}>Concept-antwoord klaar om te bekijken</div>
+                )}
                 {t.samenvatting && <div style={{ marginTop: 8, fontSize: 16, lineHeight: 1.55 }}>{t.samenvatting}</div>}
               </button>
 
@@ -265,15 +331,33 @@ export default function KlantenserviceAdmin() {
                     ))}
                   </div>
 
+                  {t.kanaal === 'mail' && concepten[t.id] && (
+                    <div style={{ fontSize: 15, color: '#2E7D32', fontWeight: 700, marginBottom: 6 }}>
+                      Concept van de assistent. Lees het goed, pas het aan en verstuur het. Er gaat niets weg voordat jij op Verstuur drukt.
+                    </div>
+                  )}
                   <textarea
                     value={antwoord}
                     onChange={(e) => setAntwoord(e.target.value)}
-                    rows={3}
-                    placeholder="Antwoord aan de klant (verschijnt in de chat)..."
+                    rows={t.kanaal === 'mail' ? 8 : 3}
+                    placeholder={t.kanaal === 'mail' ? `Antwoord per mail aan ${t.email || 'de klant'}...` : 'Antwoord aan de klant (verschijnt in de chat)...'}
                     style={{ fontFamily: 'inherit', fontSize: 16, width: '100%', boxSizing: 'border-box', borderRadius: 12, border: '2px solid #F3E4C8', padding: 12 }}
                   />
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 10 }}>
-                    <button onClick={() => stuurAntwoord(t)} style={{ ...knop, border: 'none', background: 'linear-gradient(135deg,#FFBE0A,#FF8601)', color: '#3A1E00' }}>Stuur antwoord</button>
+                    {t.kanaal === 'mail' ? (
+                      <>
+                        <button
+                          onClick={() => verstuurMail(t)}
+                          disabled={bezig || !t.email}
+                          style={{ ...knop, border: 'none', background: 'linear-gradient(135deg,#FFBE0A,#FF8601)', color: '#3A1E00', opacity: bezig || !t.email ? 0.6 : 1 }}
+                        >
+                          {bezig ? 'Bezig...' : 'Verstuur per mail'}
+                        </button>
+                        {concepten[t.id] && <button onClick={() => gooiConceptWeg(t)} style={knop}>Concept weggooien</button>}
+                      </>
+                    ) : (
+                      <button onClick={() => stuurAntwoord(t)} style={{ ...knop, border: 'none', background: 'linear-gradient(135deg,#FFBE0A,#FF8601)', color: '#3A1E00' }}>Stuur antwoord</button>
+                    )}
                     {t.status !== 'opgelost' && <button onClick={() => zetStatus(t, 'opgelost')} style={{ ...knop, color: '#2E7D32' }}>Opgelost</button>}
                     {t.status === 'opgelost' && <button onClick={() => zetStatus(t, 'aandacht')} style={knop}>Heropenen</button>}
                     {t.agent_actief ? (
@@ -282,7 +366,7 @@ export default function KlantenserviceAdmin() {
                       <button onClick={() => zetAgent(t, true)} style={knop}>Assistent weer laten antwoorden</button>
                     )}
                     {(t.categorie === 'fout' || t.categorie === 'wens') && <button onClick={() => kopieerOpdracht(t)} style={knop}>Kopieer voor Claude Code</button>}
-                    {t.email && (
+                    {t.email && t.kanaal !== 'mail' && (
                       <a href={`mailto:${t.email}?subject=${encodeURIComponent(`Blijf Sterk, melding ${t.nummer}`)}`} style={{ ...knop, display: 'inline-flex', alignItems: 'center', textDecoration: 'none' }}>Mail</a>
                     )}
                     <button onClick={() => verwijder(t)} style={{ ...knop, color: '#B3261E' }}>Verwijderen</button>
@@ -293,6 +377,24 @@ export default function KlantenserviceAdmin() {
           ))}
         </div>
       )}
+
+      <details style={{ marginTop: 28, borderRadius: 16, border: '2px solid #F3E4C8', background: '#FFFFFF', padding: '12px 16px' }}>
+        <summary style={{ cursor: 'pointer', fontWeight: 700, fontSize: 16 }}>Maillogboek (laatste 30)</summary>
+        {logRijen.length === 0 ? (
+          <p style={{ color: '#6F5A48', margin: '10px 0 0' }}>Nog geen mail verstuurd of ontvangen.</p>
+        ) : (
+          <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {logRijen.map((r) => (
+              <div key={r.id} style={{ fontSize: 15, lineHeight: 1.45, borderBottom: '1px solid #F3E4C8', paddingBottom: 8 }}>
+                <span style={{ fontWeight: 700, color: logKleur[r.status] }}>{r.richting === 'uit' ? 'Uit' : 'In'} · {r.status}</span>
+                <span style={{ color: '#6F5A48' }}> · {datum(r.created_at)} · {r.adres || 'onbekend'}</span>
+                <div>{r.onderwerp || '(geen onderwerp)'}</div>
+                {r.reden && <div style={{ color: '#6F5A48' }}>{r.reden}</div>}
+              </div>
+            ))}
+          </div>
+        )}
+      </details>
     </div>
   );
 }
