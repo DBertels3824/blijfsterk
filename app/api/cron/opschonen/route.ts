@@ -34,7 +34,12 @@ export async function GET(req: Request) {
     // Het maillogboek (adres, onderwerp, resultaat) bewaren we ook twaalf maanden.
     const { data: logs, error: logFout } = await service.from('email_log').delete().lt('created_at', grens.toISOString()).select('id');
     if (logFout) throw logFout;
-    return NextResponse.json({ verwijderd: data?.length || 0, maillogboek: logs?.length || 0 });
+
+    // Het coachgebruik (alleen wie en wanneer, voor de limiet) hoeft maar een week mee.
+    const weekGeleden = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+    const { data: coach, error: coachFout } = await service.from('coach_gebruik').delete().lt('created_at', weekGeleden).select('id');
+    if (coachFout) throw coachFout;
+    return NextResponse.json({ verwijderd: data?.length || 0, maillogboek: logs?.length || 0, coachgebruik: coach?.length || 0 });
   } catch (fout) {
     console.error('Fout in /api/cron/opschonen:', fout);
     return NextResponse.json({ fout: 'Er ging iets mis' }, { status: 500 });

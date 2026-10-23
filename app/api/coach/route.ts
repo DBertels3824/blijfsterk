@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
+import { createClient } from '@supabase/supabase-js';
+import { controleerCoachToegang, profielVeld, schoonBerichten } from '@/lib/coach-toegang';
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -40,31 +42,44 @@ Blijf verder binnen praktische, algemene voeding: geen advies bij eetstoornissen
 
 export async function POST(req: Request) {
   try {
-  const { profiel, berichten } = await req.json();
-  const isOpeningsbericht = !berichten || berichten.length === 0;
+  // Alleen ingelogde gebruikers, met een limiet per gebruiker (zie lib/coach-toegang.ts). Zonder
+  // deze controle kon iedereen die het webadres kent kosten maken op de Anthropic-rekening.
+  const service = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+  const token = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '');
+  const toegang = await controleerCoachToegang(service, token);
+  if (!toegang.ok) {
+    return NextResponse.json({ tekst: toegang.tekst, agent: 'Blijf Sterk Coach' }, { status: toegang.status });
+  }
+
+  const { profiel, berichten: ruwe } = await req.json();
+  const berichten = schoonBerichten(ruwe);
+  if (!berichten) {
+    return NextResponse.json({ tekst: 'Dit bericht is te lang. Maak het korter.', agent: 'Blijf Sterk Coach' }, { status: 400 });
+  }
+  const isOpeningsbericht = berichten.length === 0;
 
   const profielTekst = `
-Naam: ${profiel?.naam || 'onbekend'}
-Doelen: ${(profiel?.doelen && profiel.doelen.length ? profiel.doelen.join(', ') : profiel?.doel) || 'onbekend'}
-Huidige situatie: ${profiel?.huidige_staat || 'onbekend'}
-Ervaring: ${profiel?.ervaring || 'onbekend'}
-Dagen per week beschikbaar: ${profiel?.dagen_per_week || 'onbekend'}
-Voorkeur trainingsvorm: ${profiel?.voorkeur || 'onbekend'}
-Dagelijkse activiteit: ${profiel?.dagelijkse_activiteit || 'onbekend'}
-Werksituatie: ${profiel?.werksituatie || 'onbekend'}
-Eetpatroon: ${profiel?.eetpatroon || 'onbekend'}
-Supplementen: ${profiel?.supplementen || 'onbekend'}
-Eiwitinname: ${profiel?.eiwitten || 'onbekend'}
-Gewenst resultaat: ${profiel?.gewenst_resultaat || 'onbekend'}
+Naam: ${profielVeld(profiel?.naam)}
+Doelen: ${profielVeld(Array.isArray(profiel?.doelen) && profiel.doelen.length ? profiel.doelen.join(', ') : profiel?.doel)}
+Huidige situatie: ${profielVeld(profiel?.huidige_staat)}
+Ervaring: ${profielVeld(profiel?.ervaring)}
+Dagen per week beschikbaar: ${profielVeld(profiel?.dagen_per_week)}
+Voorkeur trainingsvorm: ${profielVeld(profiel?.voorkeur)}
+Dagelijkse activiteit: ${profielVeld(profiel?.dagelijkse_activiteit)}
+Werksituatie: ${profielVeld(profiel?.werksituatie)}
+Eetpatroon: ${profielVeld(profiel?.eetpatroon)}
+Supplementen: ${profielVeld(profiel?.supplementen)}
+Eiwitinname: ${profielVeld(profiel?.eiwitten)}
+Gewenst resultaat: ${profielVeld(profiel?.gewenst_resultaat)}
 Risicosignalen: ${profiel?.risicoGesignaleerd ? 'ja, wees extra voorzichtig' : 'nee'}`;
 
-  const ruweBerichten = berichten && berichten.length > 0
-    ? berichten
-    : [{ role: 'user', content: 'Geef me een kort, bemoedigend welkom en verwijs me meteen naar de oefeningenbibliotheek om vandaag te beginnen, gebaseerd op mijn profiel.' }];
-
-  // Alleen role en content doorsturen naar de Anthropic API — extra velden zoals "agent"
-  // (dat we zelf toevoegen voor het label in de chat) mag de API niet zien.
-  const gespreksberichten = ruweBerichten.map((b: any) => ({ role: b.role, content: b.content }));
+  // schoonBerichten laat alleen role en content over — extra velden zoals "agent" (dat we zelf
+  // toevoegen voor het label in de chat) mag de Anthropic API niet zien.
+  const gespreksberichten = isOpeningsbericht
+    ? [{ role: 'user' as const, content: 'Geef me een kort, bemoedigend welkom en verwijs me meteen naar de oefeningenbibliotheek om vandaag te beginnen, gebaseerd op mijn profiel.' }]
+    : berichten;
 
   const laatsteGebruikersBericht = [...gespreksberichten].reverse().find((b: any) => b.role === 'user');
 

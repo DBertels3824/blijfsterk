@@ -111,13 +111,16 @@ export default function CoachWidget() {
 
   const vraagCoach = async (nieuweBerichten: Bericht[]) => {
     try {
+      // De server controleert het inlogbewijs en past een limiet per gebruiker toe.
+      const { data: { session } } = await supabase.auth.getSession();
       const res = await fetch('/api/coach', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token || ''}` },
         body: JSON.stringify({ profiel: profielRef.current, berichten: nieuweBerichten }),
       });
-      if (!res.ok) throw new Error('coach-fout');
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
+      // Bij "even wachten" (429) of "log eerst in" (401) staat er een nette tekst van de server in.
+      if (!res.ok && !data.tekst) throw new Error('coach-fout');
       if (!data.tekst) throw new Error('coach-leeg');
       setBerichten((huidig) => [
         ...huidig,
