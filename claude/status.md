@@ -198,7 +198,14 @@ Terugkerende scheduled task: elke 3 weken op vrijdag. Eerste firing 25 sep 2026.
   - **Nog te controleren na de deploy:** `curl -X POST https://blijfsterk.vercel.app/api/coach` zonder token moet 401 geven; en één keer zelf de coach openen om te zien dat hij nog antwoordt. Niet getest tegen een echte Supabase-sessie (lokaal ontbreekt `SUPABASE_SERVICE_ROLE_KEY`).
   - Bestaande lint-fouten in `CoachWidget.tsx` (9) en `app/api/coach/route.ts` (2, `any`) stonden er al; niet door deze wijziging.
 
+## Sessie 30 okt 2026 — voorstel: virtuele coach die persoonlijk begeleidt
+- Dirk wil een betaalde, persoonlijke, opbeurende coach die leden op afspraak (bijv. 3x per week) "opbelt" en in beeld samen oefent, met bijhouden van wat gedaan is. Idee van Dirk erbij: **zorgverzekeraars** als betaler of pilotpartner. Uitgewerkt als **voorstel** (niets gebouwd) in `claude/voorstel-virtuele-coach-sessies.md`: code stuurt de sessie (oefeningen alleen uit de bibliotheek), AI praat eromheen; toon en geheugen; fasen 0-3; verzekeraarscase met harde privacyregels (alleen totalen, nooit per persoon); proef met 10 testers om de kosten te meten vóór de prijs.
+- Beslissingen voor Dirk: sectie 11 van het voorstel.
+- **Doel (Dirk, 30 okt):** de coach is een opstap. Basis thuis **zonder gewichten**, daarna echt trainen bij een sportschool of personal trainer, liefst in een klein groepje (sociale voordelen). Staat in sectie 1b van het voorstel. Gevolgen: programma in niveaus; huidige band-/flesje-oefeningen (6 van 12) vallen uit de basis en voor armen/schouders/rug zijn nieuwe oefeningen zonder gewicht nodig (fysio-controle); groepsvormings-agent komt vooraan. Dirk is **niet tevreden over de huidige video's**; wat hem tegenvalt is nog niet bekend.
+- **Cadeau van kinderen (Dirk, 30 okt):** kinderen die willen dat hun ouders zelfstandig blijven, geven de coach cadeau (3/6/12 maanden). Account blijft van de ouder, geen meekijken, geen drukmiddel. Voorstel in sectie 7d; wacht op Mollie en jurist.
+
 ## Openstaand
+- **Voorstel virtuele coach-sessies:** beslissingen van Dirk (sectie 11 in `claude/voorstel-virtuele-coach-sessies.md`), daarna fase 0 bouwen.
 - ~~`/api/coach` afschermen~~ Gebouwd 22 okt; wacht op commit, push en de controle na de deploy (zie sessie 22 okt).
 - **Video-bestanden echt achter login?** Nu openbaar per webadres. Pas nodig als de lessen betaald product worden (privé-opslag met tijdelijke links).
 - **Voorstel proef zonder account:** beslissingen van Dirk (sectie 9 in `claude/voorstel-proef-zonder-account.md`), daarna fase 0 bouwen.
